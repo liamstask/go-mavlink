@@ -2,7 +2,7 @@
 
 a [Go](http://golang.org/) package for reading/writing [mavlink](http://qgroundcontrol.org/mavlink/start) messages.
 
-[![Build Status](https://travis-ci.org/liamstask/go-mavlink.svg)](https://travis-ci.org/liamstask/go-mavlink)
+[![Build Status](https://travis-ci.org/liamstask/go-mavlink.svg)](https://travis-ci.org/liamstask/go-mavlink) [![GoDoc](https://godoc.org/github.com/liamstask/go-mavlink/mavlink?status.svg)](https://godoc.org/github.com/liamstask/go-mavlink/mavlink)
 
 still under development, not necessarily ready for production use
 
