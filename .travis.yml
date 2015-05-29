@@ -1,0 +1,8 @@
+
+language: go
+
+go:
+  - 1.4
+  - tip
+
+# script defaults to `go test -v ./...` which is all we need
