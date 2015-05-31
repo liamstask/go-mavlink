@@ -3,12 +3,17 @@ package main
 import (
 	"bytes"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"go/format"
 	"io"
 	"io/ioutil"
+	"sort"
+	"strconv"
 	"strings"
 	"text/template"
+
+	"github.com/liamstask/go-mavlink/x25"
 )
 
 type Dialect struct {
@@ -54,39 +59,55 @@ type MessageField struct {
 	Description string `xml:",innerxml"`
 	GoType      string
 	BitSize     int
-	ArrayLength int
-	ByteOffset  int
-	PackOp      string
+	ArrayLen    int
 }
 
-func (msg *Message) Size() (size int) {
-	for _, f := range msg.Fields {
+var funcMap = template.FuncMap{
+	"UpperCamelCase": UpperCamelCase,
+}
+
+func (m *Message) Size() (size int) {
+	for _, f := range m.Fields {
 		bitSize := f.BitSize
-		if f.ArrayLength > 0 {
-			bitSize *= f.ArrayLength
+		if f.ArrayLen > 0 {
+			bitSize *= f.ArrayLen
 		}
 		size += bitSize
 	}
 	return size / 8
 }
 
-func (msg *Message) CRCExtra() uint8 {
-	// hash := x25.NewHash()
+// CRC extra calculation: http://www.mavlink.org/mavlink/crc_extra_calculation
+func (m *Message) CRCExtra() uint8 {
+	hash := x25.New()
 
-	// fmt.Fprint(hash, msg.Name+" ")
-	for _, f := range msg.Fields {
+	fmt.Fprint(hash, m.Name+" ")
+	for _, f := range m.Fields {
 		cType := f.CType
 		if cType == "uint8_t_mavlink_version" {
 			cType = "uint8_t"
 		}
-		// fmt.Fprint(hash, cType+" "+f.Name+" ")
-		if f.ArrayLength > 0 {
-			// hash.WriteByte(byte(f.ArrayLength))
+		fmt.Fprint(hash, cType+" "+f.Name+" ")
+		if f.ArrayLen > 0 {
+			hash.Write([]byte{byte(f.ArrayLen)})
 		}
 	}
 
-	return 0
-	// return uint8((hash.Sum & 0xFF) ^ (hash.Sum >> 8))
+	crc := hash.Sum16()
+	return uint8((crc & 0xFF) ^ (crc >> 8))
+}
+
+// implementation of sort.Interface for Message
+func (m *Message) Len() int {
+	return len(m.Fields)
+}
+
+func (m *Message) Less(i, j int) bool {
+	return m.Fields[i].BitSize < m.Fields[j].BitSize
+}
+
+func (m *Message) Swap(i, j int) {
+	m.Fields[i], m.Fields[j] = m.Fields[j], m.Fields[i]
 }
 
 // convert names to upper camel case
@@ -148,6 +169,39 @@ func c2goPrimitive(ctype string) string {
 	}
 }
 
+func GoTypeInfo(s string) (string, int, int, error) {
+
+	var name string
+	var bitsz, arraylen int
+	var err error
+
+	// array? leave the [N] but convert the primitive type name
+	if idx := strings.IndexByte(s, '['); idx < 0 {
+		name = c2goPrimitive(s)
+	} else {
+		name = s[idx:] + c2goPrimitive(s[:idx])
+		if arraylen, err = strconv.Atoi(s[idx+1 : len(s)-1]); err != nil {
+			return "", 0, 0, err
+		}
+	}
+
+	// determine bit size for this type
+	if strings.HasSuffix(name, "byte") {
+		bitsz = 8
+	} else {
+		t := name[strings.IndexByte(name, ']')+1:]
+		if sizeStart := strings.IndexAny(t, "8136"); sizeStart != -1 {
+			if bitsz, err = strconv.Atoi(t[sizeStart:]); err != nil {
+				return "", 0, 0, err
+			}
+		} else {
+			return "", 0, 0, errors.New("Unknown message field size")
+		}
+	}
+
+	return name, bitsz, arraylen, nil
+}
+
 // return the corresponding go type for the given c type
 func c2goType(c string) string {
 
@@ -180,8 +234,8 @@ func (d *Dialect) GenerateGo(w io.Writer) error {
 	bb.WriteString("//////////////////////////////////////////////////\n\n")
 
 	err := d.generateEnums(&bb)
-	d.generateMsgIds(&bb)
 	d.generateClasses(&bb)
+	d.generateMsgIds(&bb)
 
 	dofmt := true
 	formatted := bb.Bytes()
@@ -231,6 +285,12 @@ func (d *Dialect) generateMsgIds(w io.Writer) error {
 const ({{range .Messages}}
 	MSG_ID_{{.Name}} = {{.ID}}{{end}}
 )
+
+// CRC Extra, indexed by msg id
+// http://www.mavlink.org/mavlink/crc_extra_calculation
+var crcExtras = map[uint8]uint8{ {{range .Messages}}
+	{{.ID}}: {{.CRCExtra}}, // MSG_ID_{{.Name}}{{end}}
+}
 `
 	return template.Must(template.New("msgIds").Parse(msgIdTmpl)).Execute(w, d)
 }
@@ -242,10 +302,10 @@ func (d *Dialect) generateClasses(w io.Writer) error {
 
 	classesTmpl := `
 {{range .Messages}}
-{{$name := .Name }}
+{{$name := .Name | UpperCamelCase}}
 // {{.Description}}
 type {{$name}} struct { {{range .Fields}}
-  {{.Name }} {{.GoType}} // {{.Description}}{{end}}
+  {{.Name | UpperCamelCase}} {{.GoType}} // {{.Description}}{{end}}
 }
 
 func (self *{{$name}}) MsgID() uint8 {
@@ -253,13 +313,13 @@ func (self *{{$name}}) MsgID() uint8 {
 }
 
 func (self *{{$name}}) MsgName() string {
-	return "{{.Name}}"
+	return "{{.Name | UpperCamelCase}}"
 }
 
 func (self *{{$name}}) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{} { {{range .Fields}}
-		&self.{{.Name}},{{end}}
+		&self.{{.Name | UpperCamelCase}},{{end}}
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -274,7 +334,7 @@ func (self *{{$name}}) Pack(p *Packet) error {
 func (self *{{$name}}) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{} { {{range .Fields}}
-		&self.{{.Name}},{{end}}
+		&self.{{.Name | UpperCamelCase}},{{end}}
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -286,16 +346,20 @@ func (self *{{$name}}) Unpack(p *Packet) error {
 `
 	for _, m := range d.Messages {
 		m.Description = strings.Replace(m.Description, "\n", "\n// ", -1)
-		m.Name = UpperCamelCase(m.Name)
 
 		for _, f := range m.Fields {
-			f.Name = UpperCamelCase(f.Name)
 			f.Description = strings.Replace(f.Description, "\n", " ", -1)
-			f.GoType = c2goType(f.CType)
+			goname, gosz, golen, err := GoTypeInfo(f.CType)
+			if err != nil {
+				return err
+			}
+			f.GoType, f.BitSize, f.ArrayLen = goname, gosz, golen
 		}
 
-		// sort.Stable(sort.Reverse(m))
+		// ensure fields are sorted according to their size,
+		// http://www.mavlink.org/mavlink/crc_extra_calculation
+		sort.Stable(sort.Reverse(m))
 	}
 
-	return template.Must(template.New("classesTmpl").Parse(classesTmpl)).Execute(w, d)
+	return template.Must(template.New("classesTmpl").Funcs(funcMap).Parse(classesTmpl)).Execute(w, d)
 }

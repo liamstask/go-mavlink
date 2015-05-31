@@ -6,22 +6,36 @@ import (
 
 func TestTypeConversions(t *testing.T) {
 
-	cases := []struct{ in, want string }{
-		{"char", "byte"},
-		{"uint8_t", "uint8"},
-		{"uint16_t", "uint16"},
-		{"uint32_t", "uint32"},
-		{"uint64_t", "uint64"},
-		{"float", "float32"},
-		{"double", "float64"},
-		{"char[10]", "[10]byte"},
-		{"float[30]", "[30]float32"},
+	cases := []struct {
+		in              string
+		name            string
+		bitsz, arraylen int
+	}{
+		{"char", "byte", 8, 0},
+		{"uint8_t", "uint8", 8, 0},
+		{"uint16_t", "uint16", 16, 0},
+		{"uint32_t", "uint32", 32, 0},
+		{"uint64_t", "uint64", 64, 0},
+		{"float", "float32", 32, 0},
+		{"double", "float64", 64, 0},
+		{"char[10]", "[10]byte", 8, 10},
+		{"float[30]", "[30]float32", 32, 30},
 	}
 
 	for _, c := range cases {
-		got := c2goType(c.in)
-		if got != c.want {
-			t.Errorf("Type Conversion for %q, got %q, want %q", c.in, got, c.want)
+		name, bitsz, arraylen, err := GoTypeInfo(c.in)
+		// XXX: should test some cases that generate errors...
+		if err != nil {
+			t.Error("Type conversion err:", err)
+		}
+		if name != c.name {
+			t.Errorf("Type Conversion for %q, got name %q, want %q", c.in, name, c.name)
+		}
+		if bitsz != c.bitsz {
+			t.Errorf("Type Conversion for %q, got bitsz %q, want %q", c.in, bitsz, c.bitsz)
+		}
+		if arraylen != c.arraylen {
+			t.Errorf("Type Conversion for %q, got arraylen %q, want %q", c.in, arraylen, c.arraylen)
 		}
 	}
 }
