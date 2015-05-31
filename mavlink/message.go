@@ -15,6 +15,11 @@ const (
 	numChecksumBytes = 2
 )
 
+var (
+	ErrUnknownMsgID = errors.New("unknown msg id")
+	ErrCrcFail      = errors.New("checksum did not match")
+)
+
 // basic type for encoding/decoding mavlink messages.
 // use the Pack() and Unpack() routines on specific message
 // types to convert them to/from the Packet type.
@@ -109,10 +114,19 @@ func (dec *Decoder) Decode() (*Packet, error) {
 	p.Payload = buf[:n-numChecksumBytes]
 	crc.Write(p.Payload)
 
+	// add crcextra to crc
+	// http://www.mavlink.org/mavlink/crc_extra_calculation
+	if crcx, ok := crcExtras[p.MsgID]; ok {
+		crc.WriteByte(crcx)
+	} else {
+		return nil, ErrUnknownMsgID
+	}
+
 	p.Checksum = bytesToU16(buf[n-numChecksumBytes:])
+
 	// does the transmitted checksum match our computed checksum?
 	if p.Checksum != crc.Sum16() {
-		return nil, errors.New("bad checksum")
+		return nil, ErrCrcFail
 	}
 
 	return &p, nil
@@ -147,6 +161,11 @@ func (enc *Encoder) EncodePacket(p *Packet) error {
 		return err
 	}
 	crc.Write(p.Payload)
+	if crcx, ok := crcExtras[p.MsgID]; ok {
+		crc.WriteByte(crcx)
+	} else {
+		return ErrUnknownMsgID
+	}
 
 	crcBytes := u16ToBytes(crc.Sum16())
 	if err := enc.writeAndCheck(crcBytes); err != nil {
@@ -172,10 +191,10 @@ func (enc *Encoder) writeAndCheck(p []byte) error {
 }
 
 func u16ToBytes(v uint16) []byte {
-	return []byte{byte(v >> 8), byte(v & 0xff)}
+	return []byte{byte(v & 0xff), byte(v >> 8)}
 }
 
 func bytesToU16(p []byte) uint16 {
 	// NB: does not check size of p
-	return (uint16(p[0]) << 8) | uint16(p[1])
+	return (uint16(p[1]) << 8) | uint16(p[0])
 }

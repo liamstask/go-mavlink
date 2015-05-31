@@ -46,3 +46,12 @@ func TestRoundTrip(t *testing.T) {
 		}
 	}
 }
+
+func TestDecode(t *testing.T) {
+	// decode a known good byte stream
+	pktbytes := []byte{0xfe, 0x09, 0x0, 0x01, 0xC8, 0x00, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5A, 0x3E}
+	_, err := NewDecoder(bytes.NewBuffer(pktbytes)).Decode()
+	if err != nil {
+		t.Errorf("Decode fail:", err)
+	}
+}
