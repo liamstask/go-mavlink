@@ -5,4 +5,8 @@ go:
   - 1.4
   - tip
 
-# script defaults to `go test -v ./...` which is all we need
+# run mavgen on the mavlink package, and run tests
+
+script:
+  - go generate github.com/liamstask/go-mavlink/mavlink
+  - go test -v ./...
