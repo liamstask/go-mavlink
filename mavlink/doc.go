@@ -1,4 +1,3 @@
-
 /*
 Package mavlink provides support for encoding/decoding mavlink (http://qgroundcontrol.org/mavlink/start) messages.
 

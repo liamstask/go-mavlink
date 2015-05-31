@@ -508,133 +508,12 @@ const (
 	MAV_BATTERY_TYPE_PAYLOAD        = 4 // Payload battery
 )
 
-// Message IDs
-const (
-	MSG_ID_HEARTBEAT                               = 0
-	MSG_ID_SYS_STATUS                              = 1
-	MSG_ID_SYSTEM_TIME                             = 2
-	MSG_ID_PING                                    = 4
-	MSG_ID_CHANGE_OPERATOR_CONTROL                 = 5
-	MSG_ID_CHANGE_OPERATOR_CONTROL_ACK             = 6
-	MSG_ID_AUTH_KEY                                = 7
-	MSG_ID_SET_MODE                                = 11
-	MSG_ID_PARAM_REQUEST_READ                      = 20
-	MSG_ID_PARAM_REQUEST_LIST                      = 21
-	MSG_ID_PARAM_VALUE                             = 22
-	MSG_ID_PARAM_SET                               = 23
-	MSG_ID_GPS_RAW_INT                             = 24
-	MSG_ID_GPS_STATUS                              = 25
-	MSG_ID_SCALED_IMU                              = 26
-	MSG_ID_RAW_IMU                                 = 27
-	MSG_ID_RAW_PRESSURE                            = 28
-	MSG_ID_SCALED_PRESSURE                         = 29
-	MSG_ID_ATTITUDE                                = 30
-	MSG_ID_ATTITUDE_QUATERNION                     = 31
-	MSG_ID_LOCAL_POSITION_NED                      = 32
-	MSG_ID_GLOBAL_POSITION_INT                     = 33
-	MSG_ID_RC_CHANNELS_SCALED                      = 34
-	MSG_ID_RC_CHANNELS_RAW                         = 35
-	MSG_ID_SERVO_OUTPUT_RAW                        = 36
-	MSG_ID_MISSION_REQUEST_PARTIAL_LIST            = 37
-	MSG_ID_MISSION_WRITE_PARTIAL_LIST              = 38
-	MSG_ID_MISSION_ITEM                            = 39
-	MSG_ID_MISSION_REQUEST                         = 40
-	MSG_ID_MISSION_SET_CURRENT                     = 41
-	MSG_ID_MISSION_CURRENT                         = 42
-	MSG_ID_MISSION_REQUEST_LIST                    = 43
-	MSG_ID_MISSION_COUNT                           = 44
-	MSG_ID_MISSION_CLEAR_ALL                       = 45
-	MSG_ID_MISSION_ITEM_REACHED                    = 46
-	MSG_ID_MISSION_ACK                             = 47
-	MSG_ID_SET_GPS_GLOBAL_ORIGIN                   = 48
-	MSG_ID_GPS_GLOBAL_ORIGIN                       = 49
-	MSG_ID_PARAM_MAP_RC                            = 50
-	MSG_ID_SAFETY_SET_ALLOWED_AREA                 = 54
-	MSG_ID_SAFETY_ALLOWED_AREA                     = 55
-	MSG_ID_ATTITUDE_QUATERNION_COV                 = 61
-	MSG_ID_NAV_CONTROLLER_OUTPUT                   = 62
-	MSG_ID_GLOBAL_POSITION_INT_COV                 = 63
-	MSG_ID_LOCAL_POSITION_NED_COV                  = 64
-	MSG_ID_RC_CHANNELS                             = 65
-	MSG_ID_REQUEST_DATA_STREAM                     = 66
-	MSG_ID_DATA_STREAM                             = 67
-	MSG_ID_MANUAL_CONTROL                          = 69
-	MSG_ID_RC_CHANNELS_OVERRIDE                    = 70
-	MSG_ID_MISSION_ITEM_INT                        = 73
-	MSG_ID_VFR_HUD                                 = 74
-	MSG_ID_COMMAND_INT                             = 75
-	MSG_ID_COMMAND_LONG                            = 76
-	MSG_ID_COMMAND_ACK                             = 77
-	MSG_ID_MANUAL_SETPOINT                         = 81
-	MSG_ID_SET_ATTITUDE_TARGET                     = 82
-	MSG_ID_ATTITUDE_TARGET                         = 83
-	MSG_ID_SET_POSITION_TARGET_LOCAL_NED           = 84
-	MSG_ID_POSITION_TARGET_LOCAL_NED               = 85
-	MSG_ID_SET_POSITION_TARGET_GLOBAL_INT          = 86
-	MSG_ID_POSITION_TARGET_GLOBAL_INT              = 87
-	MSG_ID_LOCAL_POSITION_NED_SYSTEM_GLOBAL_OFFSET = 89
-	MSG_ID_HIL_STATE                               = 90
-	MSG_ID_HIL_CONTROLS                            = 91
-	MSG_ID_HIL_RC_INPUTS_RAW                       = 92
-	MSG_ID_OPTICAL_FLOW                            = 100
-	MSG_ID_GLOBAL_VISION_POSITION_ESTIMATE         = 101
-	MSG_ID_VISION_POSITION_ESTIMATE                = 102
-	MSG_ID_VISION_SPEED_ESTIMATE                   = 103
-	MSG_ID_VICON_POSITION_ESTIMATE                 = 104
-	MSG_ID_HIGHRES_IMU                             = 105
-	MSG_ID_OPTICAL_FLOW_RAD                        = 106
-	MSG_ID_HIL_SENSOR                              = 107
-	MSG_ID_SIM_STATE                               = 108
-	MSG_ID_RADIO_STATUS                            = 109
-	MSG_ID_FILE_TRANSFER_PROTOCOL                  = 110
-	MSG_ID_TIMESYNC                                = 111
-	MSG_ID_CAMERA_TRIGGER                          = 112
-	MSG_ID_HIL_GPS                                 = 113
-	MSG_ID_HIL_OPTICAL_FLOW                        = 114
-	MSG_ID_HIL_STATE_QUATERNION                    = 115
-	MSG_ID_SCALED_IMU2                             = 116
-	MSG_ID_LOG_REQUEST_LIST                        = 117
-	MSG_ID_LOG_ENTRY                               = 118
-	MSG_ID_LOG_REQUEST_DATA                        = 119
-	MSG_ID_LOG_DATA                                = 120
-	MSG_ID_LOG_ERASE                               = 121
-	MSG_ID_LOG_REQUEST_END                         = 122
-	MSG_ID_GPS_INJECT_DATA                         = 123
-	MSG_ID_GPS2_RAW                                = 124
-	MSG_ID_POWER_STATUS                            = 125
-	MSG_ID_SERIAL_CONTROL                          = 126
-	MSG_ID_GPS_RTK                                 = 127
-	MSG_ID_GPS2_RTK                                = 128
-	MSG_ID_SCALED_IMU3                             = 129
-	MSG_ID_DATA_TRANSMISSION_HANDSHAKE             = 130
-	MSG_ID_ENCAPSULATED_DATA                       = 131
-	MSG_ID_DISTANCE_SENSOR                         = 132
-	MSG_ID_TERRAIN_REQUEST                         = 133
-	MSG_ID_TERRAIN_DATA                            = 134
-	MSG_ID_TERRAIN_CHECK                           = 135
-	MSG_ID_TERRAIN_REPORT                          = 136
-	MSG_ID_SCALED_PRESSURE2                        = 137
-	MSG_ID_ATT_POS_MOCAP                           = 138
-	MSG_ID_SET_ACTUATOR_CONTROL_TARGET             = 139
-	MSG_ID_ACTUATOR_CONTROL_TARGET                 = 140
-	MSG_ID_BATTERY_STATUS                          = 147
-	MSG_ID_AUTOPILOT_VERSION                       = 148
-	MSG_ID_LANDING_TARGET                          = 149
-	MSG_ID_V2_EXTENSION                            = 248
-	MSG_ID_MEMORY_VECT                             = 249
-	MSG_ID_DEBUG_VECT                              = 250
-	MSG_ID_NAMED_VALUE_FLOAT                       = 251
-	MSG_ID_NAMED_VALUE_INT                         = 252
-	MSG_ID_STATUSTEXT                              = 253
-	MSG_ID_DEBUG                                   = 254
-)
-
 // The heartbeat message shows that a system is present and responding. The type of the MAV and Autopilot hardware allow the receiving system to treat further messages from this system appropriate (e.g. by laying out the user interface based on the autopilot).
 type Heartbeat struct {
+	CustomMode     uint32 // A bitfield for use for autopilot-specific flags.
 	Type           uint8  // Type of the MAV (quadrotor, helicopter, etc., up to 15 types, defined in MAV_TYPE ENUM)
 	Autopilot      uint8  // Autopilot type / class. defined in MAV_AUTOPILOT ENUM
 	BaseMode       uint8  // System mode bitfield, see MAV_MODE_FLAG ENUM in mavlink/include/mavlink_types.h
-	CustomMode     uint32 // A bitfield for use for autopilot-specific flags.
 	SystemStatus   uint8  // System status flag, see MAV_STATE ENUM
 	MavlinkVersion uint8  // MAVLink version, not writable by user, gets added by protocol because of magic data type: uint8_t_mavlink_version
 }
@@ -650,10 +529,10 @@ func (self *Heartbeat) MsgName() string {
 func (self *Heartbeat) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.CustomMode,
 		&self.Type,
 		&self.Autopilot,
 		&self.BaseMode,
-		&self.CustomMode,
 		&self.SystemStatus,
 		&self.MavlinkVersion,
 	} {
@@ -670,10 +549,10 @@ func (self *Heartbeat) Pack(p *Packet) error {
 func (self *Heartbeat) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.CustomMode,
 		&self.Type,
 		&self.Autopilot,
 		&self.BaseMode,
-		&self.CustomMode,
 		&self.SystemStatus,
 		&self.MavlinkVersion,
 	} {
@@ -692,13 +571,13 @@ type SysStatus struct {
 	Load                         uint16 // Maximum usage in percent of the mainloop time, (0%: 0, 100%: 1000) should be always below 1000
 	VoltageBattery               uint16 // Battery voltage, in millivolts (1 = 1 millivolt)
 	CurrentBattery               int16  // Battery current, in 10*milliamperes (1 = 10 milliampere), -1: autopilot does not measure the current
-	BatteryRemaining             int8   // Remaining battery energy: (0%: 0, 100%: 100), -1: autopilot estimate the remaining battery
 	DropRateComm                 uint16 // Communication drops in percent, (0%: 0, 100%: 10'000), (UART, I2C, SPI, CAN), dropped packets on all links (packets that were corrupted on reception on the MAV)
 	ErrorsComm                   uint16 // Communication errors (UART, I2C, SPI, CAN), dropped packets on all links (packets that were corrupted on reception on the MAV)
 	ErrorsCount1                 uint16 // Autopilot-specific errors
 	ErrorsCount2                 uint16 // Autopilot-specific errors
 	ErrorsCount3                 uint16 // Autopilot-specific errors
 	ErrorsCount4                 uint16 // Autopilot-specific errors
+	BatteryRemaining             int8   // Remaining battery energy: (0%: 0, 100%: 100), -1: autopilot estimate the remaining battery
 }
 
 func (self *SysStatus) MsgID() uint8 {
@@ -718,13 +597,13 @@ func (self *SysStatus) Pack(p *Packet) error {
 		&self.Load,
 		&self.VoltageBattery,
 		&self.CurrentBattery,
-		&self.BatteryRemaining,
 		&self.DropRateComm,
 		&self.ErrorsComm,
 		&self.ErrorsCount1,
 		&self.ErrorsCount2,
 		&self.ErrorsCount3,
 		&self.ErrorsCount4,
+		&self.BatteryRemaining,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -745,13 +624,13 @@ func (self *SysStatus) Unpack(p *Packet) error {
 		&self.Load,
 		&self.VoltageBattery,
 		&self.CurrentBattery,
-		&self.BatteryRemaining,
 		&self.DropRateComm,
 		&self.ErrorsComm,
 		&self.ErrorsCount1,
 		&self.ErrorsCount2,
 		&self.ErrorsCount3,
 		&self.ErrorsCount4,
+		&self.BatteryRemaining,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -989,9 +868,9 @@ func (self *AuthKey) Unpack(p *Packet) error {
 
 // Set the system mode, as defined by enum MAV_MODE. There is no target component id as the mode is by definition for the overall aircraft, not only for one component.
 type SetMode struct {
+	CustomMode   uint32 // The new autopilot-specific mode. This field can be ignored by an autopilot.
 	TargetSystem uint8  // The system setting the mode
 	BaseMode     uint8  // The new base mode
-	CustomMode   uint32 // The new autopilot-specific mode. This field can be ignored by an autopilot.
 }
 
 func (self *SetMode) MsgID() uint8 {
@@ -1005,9 +884,9 @@ func (self *SetMode) MsgName() string {
 func (self *SetMode) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.CustomMode,
 		&self.TargetSystem,
 		&self.BaseMode,
-		&self.CustomMode,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -1022,9 +901,9 @@ func (self *SetMode) Pack(p *Packet) error {
 func (self *SetMode) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.CustomMode,
 		&self.TargetSystem,
 		&self.BaseMode,
-		&self.CustomMode,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -1035,10 +914,10 @@ func (self *SetMode) Unpack(p *Packet) error {
 
 // Request to read the onboard parameter with the param_id string id. Onboard parameters are stored as key[const char*] -> value[float]. This allows to send a parameter to any other component (such as the GCS) without the need of previous knowledge of possible parameter names. Thus the same GCS can store different parameters for different autopilots. See also http://qgroundcontrol.org/parameter_interface for a full documentation of QGroundControl and IMU code.
 type ParamRequestRead struct {
+	ParamIndex      int16    // Parameter index. Send -1 to use the param ID field as identifier (else the param id will be ignored)
 	TargetSystem    uint8    // System ID
 	TargetComponent uint8    // Component ID
 	ParamId         [16]byte // Onboard parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes storage if the ID is stored as string
-	ParamIndex      int16    // Parameter index. Send -1 to use the param ID field as identifier (else the param id will be ignored)
 }
 
 func (self *ParamRequestRead) MsgID() uint8 {
@@ -1052,10 +931,10 @@ func (self *ParamRequestRead) MsgName() string {
 func (self *ParamRequestRead) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.ParamIndex,
 		&self.TargetSystem,
 		&self.TargetComponent,
 		&self.ParamId,
-		&self.ParamIndex,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -1070,10 +949,10 @@ func (self *ParamRequestRead) Pack(p *Packet) error {
 func (self *ParamRequestRead) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.ParamIndex,
 		&self.TargetSystem,
 		&self.TargetComponent,
 		&self.ParamId,
-		&self.ParamIndex,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -1127,11 +1006,11 @@ func (self *ParamRequestList) Unpack(p *Packet) error {
 
 // Emit the value of a onboard parameter. The inclusion of param_count and param_index in the message allows the recipient to keep track of received parameters and allows him to re-request missing parameters after a loss or timeout.
 type ParamValue struct {
-	ParamId    [16]byte // Onboard parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes storage if the ID is stored as string
 	ParamValue float32  // Onboard parameter value
-	ParamType  uint8    // Onboard parameter type: see the MAV_PARAM_TYPE enum for supported data types.
 	ParamCount uint16   // Total number of onboard parameters
 	ParamIndex uint16   // Index of this onboard parameter
+	ParamId    [16]byte // Onboard parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes storage if the ID is stored as string
+	ParamType  uint8    // Onboard parameter type: see the MAV_PARAM_TYPE enum for supported data types.
 }
 
 func (self *ParamValue) MsgID() uint8 {
@@ -1145,11 +1024,11 @@ func (self *ParamValue) MsgName() string {
 func (self *ParamValue) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.ParamId,
 		&self.ParamValue,
-		&self.ParamType,
 		&self.ParamCount,
 		&self.ParamIndex,
+		&self.ParamId,
+		&self.ParamType,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -1164,11 +1043,11 @@ func (self *ParamValue) Pack(p *Packet) error {
 func (self *ParamValue) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.ParamId,
 		&self.ParamValue,
-		&self.ParamType,
 		&self.ParamCount,
 		&self.ParamIndex,
+		&self.ParamId,
+		&self.ParamType,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -1179,10 +1058,10 @@ func (self *ParamValue) Unpack(p *Packet) error {
 
 // Set a parameter value TEMPORARILY to RAM. It will be reset to default on system reboot. Send the ACTION MAV_ACTION_STORAGE_WRITE to PERMANENTLY write the RAM contents to EEPROM. IMPORTANT: The receiving component should acknowledge the new parameter value by sending a param_value message to all communication partners. This will also ensure that multiple GCS all have an up-to-date list of all parameters. If the sending GCS did not receive a PARAM_VALUE message within its timeout time, it should re-send the PARAM_SET message.
 type ParamSet struct {
+	ParamValue      float32  // Onboard parameter value
 	TargetSystem    uint8    // System ID
 	TargetComponent uint8    // Component ID
 	ParamId         [16]byte // Onboard parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes storage if the ID is stored as string
-	ParamValue      float32  // Onboard parameter value
 	ParamType       uint8    // Onboard parameter type: see the MAV_PARAM_TYPE enum for supported data types.
 }
 
@@ -1197,10 +1076,10 @@ func (self *ParamSet) MsgName() string {
 func (self *ParamSet) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.ParamValue,
 		&self.TargetSystem,
 		&self.TargetComponent,
 		&self.ParamId,
-		&self.ParamValue,
 		&self.ParamType,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -1216,10 +1095,10 @@ func (self *ParamSet) Pack(p *Packet) error {
 func (self *ParamSet) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.ParamValue,
 		&self.TargetSystem,
 		&self.TargetComponent,
 		&self.ParamId,
-		&self.ParamValue,
 		&self.ParamType,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -1233,7 +1112,6 @@ func (self *ParamSet) Unpack(p *Packet) error {
 //                 NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate. Coordinate frame is right-handed, Z-axis up (GPS frame).
 type GpsRawInt struct {
 	TimeUsec          uint64 // Timestamp (microseconds since UNIX epoch or microseconds since system boot)
-	FixType           uint8  // 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS, 5: RTK. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.
 	Lat               int32  // Latitude (WGS84), in degrees * 1E7
 	Lon               int32  // Longitude (WGS84), in degrees * 1E7
 	Alt               int32  // Altitude (AMSL, NOT WGS84), in meters * 1000 (positive for up). Note that virtually all GPS modules provide the AMSL altitude in addition to the WGS84 altitude.
@@ -1241,6 +1119,7 @@ type GpsRawInt struct {
 	Epv               uint16 // GPS VDOP vertical dilution of position in cm (m*100). If unknown, set to: UINT16_MAX
 	Vel               uint16 // GPS ground speed (m/s * 100). If unknown, set to: UINT16_MAX
 	Cog               uint16 // Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
+	FixType           uint8  // 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS, 5: RTK. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.
 	SatellitesVisible uint8  // Number of satellites visible. If unknown, set to 255
 }
 
@@ -1256,7 +1135,6 @@ func (self *GpsRawInt) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.FixType,
 		&self.Lat,
 		&self.Lon,
 		&self.Alt,
@@ -1264,6 +1142,7 @@ func (self *GpsRawInt) Pack(p *Packet) error {
 		&self.Epv,
 		&self.Vel,
 		&self.Cog,
+		&self.FixType,
 		&self.SatellitesVisible,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -1280,7 +1159,6 @@ func (self *GpsRawInt) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.FixType,
 		&self.Lat,
 		&self.Lon,
 		&self.Alt,
@@ -1288,6 +1166,7 @@ func (self *GpsRawInt) Unpack(p *Packet) error {
 		&self.Epv,
 		&self.Vel,
 		&self.Cog,
+		&self.FixType,
 		&self.SatellitesVisible,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -1832,7 +1711,6 @@ func (self *GlobalPositionInt) Unpack(p *Packet) error {
 // The scaled values of the RC channels received. (-100%) -10000, (0%) 0, (100%) 10000. Channels that are inactive should be set to UINT16_MAX.
 type RcChannelsScaled struct {
 	TimeBootMs  uint32 // Timestamp (milliseconds since system boot)
-	Port        uint8  // Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows for more than 8 servos.
 	Chan1Scaled int16  // RC channel 1 value scaled, (-100%) -10000, (0%) 0, (100%) 10000, (invalid) INT16_MAX.
 	Chan2Scaled int16  // RC channel 2 value scaled, (-100%) -10000, (0%) 0, (100%) 10000, (invalid) INT16_MAX.
 	Chan3Scaled int16  // RC channel 3 value scaled, (-100%) -10000, (0%) 0, (100%) 10000, (invalid) INT16_MAX.
@@ -1841,6 +1719,7 @@ type RcChannelsScaled struct {
 	Chan6Scaled int16  // RC channel 6 value scaled, (-100%) -10000, (0%) 0, (100%) 10000, (invalid) INT16_MAX.
 	Chan7Scaled int16  // RC channel 7 value scaled, (-100%) -10000, (0%) 0, (100%) 10000, (invalid) INT16_MAX.
 	Chan8Scaled int16  // RC channel 8 value scaled, (-100%) -10000, (0%) 0, (100%) 10000, (invalid) INT16_MAX.
+	Port        uint8  // Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows for more than 8 servos.
 	Rssi        uint8  // Receive signal strength indicator, 0: 0%, 100: 100%, 255: invalid/unknown.
 }
 
@@ -1856,7 +1735,6 @@ func (self *RcChannelsScaled) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Port,
 		&self.Chan1Scaled,
 		&self.Chan2Scaled,
 		&self.Chan3Scaled,
@@ -1865,6 +1743,7 @@ func (self *RcChannelsScaled) Pack(p *Packet) error {
 		&self.Chan6Scaled,
 		&self.Chan7Scaled,
 		&self.Chan8Scaled,
+		&self.Port,
 		&self.Rssi,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -1881,7 +1760,6 @@ func (self *RcChannelsScaled) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Port,
 		&self.Chan1Scaled,
 		&self.Chan2Scaled,
 		&self.Chan3Scaled,
@@ -1890,6 +1768,7 @@ func (self *RcChannelsScaled) Unpack(p *Packet) error {
 		&self.Chan6Scaled,
 		&self.Chan7Scaled,
 		&self.Chan8Scaled,
+		&self.Port,
 		&self.Rssi,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -1902,7 +1781,6 @@ func (self *RcChannelsScaled) Unpack(p *Packet) error {
 // The RAW values of the RC channels received. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification.
 type RcChannelsRaw struct {
 	TimeBootMs uint32 // Timestamp (milliseconds since system boot)
-	Port       uint8  // Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows for more than 8 servos.
 	Chan1Raw   uint16 // RC channel 1 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
 	Chan2Raw   uint16 // RC channel 2 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
 	Chan3Raw   uint16 // RC channel 3 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
@@ -1911,6 +1789,7 @@ type RcChannelsRaw struct {
 	Chan6Raw   uint16 // RC channel 6 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
 	Chan7Raw   uint16 // RC channel 7 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
 	Chan8Raw   uint16 // RC channel 8 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
+	Port       uint8  // Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows for more than 8 servos.
 	Rssi       uint8  // Receive signal strength indicator, 0: 0%, 100: 100%, 255: invalid/unknown.
 }
 
@@ -1926,7 +1805,6 @@ func (self *RcChannelsRaw) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Port,
 		&self.Chan1Raw,
 		&self.Chan2Raw,
 		&self.Chan3Raw,
@@ -1935,6 +1813,7 @@ func (self *RcChannelsRaw) Pack(p *Packet) error {
 		&self.Chan6Raw,
 		&self.Chan7Raw,
 		&self.Chan8Raw,
+		&self.Port,
 		&self.Rssi,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -1951,7 +1830,6 @@ func (self *RcChannelsRaw) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Port,
 		&self.Chan1Raw,
 		&self.Chan2Raw,
 		&self.Chan3Raw,
@@ -1960,6 +1838,7 @@ func (self *RcChannelsRaw) Unpack(p *Packet) error {
 		&self.Chan6Raw,
 		&self.Chan7Raw,
 		&self.Chan8Raw,
+		&self.Port,
 		&self.Rssi,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -1972,7 +1851,6 @@ func (self *RcChannelsRaw) Unpack(p *Packet) error {
 // The RAW values of the servo outputs (for RC input from the remote, use the RC_CHANNELS messages). The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%.
 type ServoOutputRaw struct {
 	TimeUsec  uint32 // Timestamp (microseconds since system boot)
-	Port      uint8  // Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows to encode more than 8 servos.
 	Servo1Raw uint16 // Servo output 1 value, in microseconds
 	Servo2Raw uint16 // Servo output 2 value, in microseconds
 	Servo3Raw uint16 // Servo output 3 value, in microseconds
@@ -1981,6 +1859,7 @@ type ServoOutputRaw struct {
 	Servo6Raw uint16 // Servo output 6 value, in microseconds
 	Servo7Raw uint16 // Servo output 7 value, in microseconds
 	Servo8Raw uint16 // Servo output 8 value, in microseconds
+	Port      uint8  // Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows to encode more than 8 servos.
 }
 
 func (self *ServoOutputRaw) MsgID() uint8 {
@@ -1995,7 +1874,6 @@ func (self *ServoOutputRaw) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.Port,
 		&self.Servo1Raw,
 		&self.Servo2Raw,
 		&self.Servo3Raw,
@@ -2004,6 +1882,7 @@ func (self *ServoOutputRaw) Pack(p *Packet) error {
 		&self.Servo6Raw,
 		&self.Servo7Raw,
 		&self.Servo8Raw,
+		&self.Port,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2019,7 +1898,6 @@ func (self *ServoOutputRaw) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.Port,
 		&self.Servo1Raw,
 		&self.Servo2Raw,
 		&self.Servo3Raw,
@@ -2028,6 +1906,7 @@ func (self *ServoOutputRaw) Unpack(p *Packet) error {
 		&self.Servo6Raw,
 		&self.Servo7Raw,
 		&self.Servo8Raw,
+		&self.Port,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2038,10 +1917,10 @@ func (self *ServoOutputRaw) Unpack(p *Packet) error {
 
 // Request a partial list of mission items from the system/component. http://qgroundcontrol.org/mavlink/waypoint_protocol. If start and end index are the same, just send one waypoint.
 type MissionRequestPartialList struct {
-	TargetSystem    uint8 // System ID
-	TargetComponent uint8 // Component ID
 	StartIndex      int16 // Start index, 0 by default
 	EndIndex        int16 // End index, -1 by default (-1: send list to end). Else a valid index of the list
+	TargetSystem    uint8 // System ID
+	TargetComponent uint8 // Component ID
 }
 
 func (self *MissionRequestPartialList) MsgID() uint8 {
@@ -2055,10 +1934,10 @@ func (self *MissionRequestPartialList) MsgName() string {
 func (self *MissionRequestPartialList) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
 		&self.StartIndex,
 		&self.EndIndex,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2073,10 +1952,10 @@ func (self *MissionRequestPartialList) Pack(p *Packet) error {
 func (self *MissionRequestPartialList) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
 		&self.StartIndex,
 		&self.EndIndex,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2087,10 +1966,10 @@ func (self *MissionRequestPartialList) Unpack(p *Packet) error {
 
 // This message is sent to the MAV to write a partial list. If start index == end index, only one item will be transmitted / updated. If the start index is NOT 0 and above the current list size, this request should be REJECTED!
 type MissionWritePartialList struct {
-	TargetSystem    uint8 // System ID
-	TargetComponent uint8 // Component ID
 	StartIndex      int16 // Start index, 0 by default and smaller / equal to the largest index of the current onboard list.
 	EndIndex        int16 // End index, equal or greater than start index.
+	TargetSystem    uint8 // System ID
+	TargetComponent uint8 // Component ID
 }
 
 func (self *MissionWritePartialList) MsgID() uint8 {
@@ -2104,10 +1983,10 @@ func (self *MissionWritePartialList) MsgName() string {
 func (self *MissionWritePartialList) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
 		&self.StartIndex,
 		&self.EndIndex,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2122,10 +2001,10 @@ func (self *MissionWritePartialList) Pack(p *Packet) error {
 func (self *MissionWritePartialList) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
 		&self.StartIndex,
 		&self.EndIndex,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2137,13 +2016,6 @@ func (self *MissionWritePartialList) Unpack(p *Packet) error {
 // Message encoding a mission item. This message is emitted to announce
 //                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). See also http://qgroundcontrol.org/mavlink/waypoint_protocol.
 type MissionItem struct {
-	TargetSystem    uint8   // System ID
-	TargetComponent uint8   // Component ID
-	Seq             uint16  // Sequence
-	Frame           uint8   // The coordinate system of the MISSION. see MAV_FRAME in mavlink_types.h
-	Command         uint16  // The scheduled action for the MISSION. see MAV_CMD in common.xml MAVLink specs
-	Current         uint8   // false:0, true:1
-	Autocontinue    uint8   // autocontinue to next wp
 	Param1          float32 // PARAM1, see MAV_CMD enum
 	Param2          float32 // PARAM2, see MAV_CMD enum
 	Param3          float32 // PARAM3, see MAV_CMD enum
@@ -2151,6 +2023,13 @@ type MissionItem struct {
 	X               float32 // PARAM5 / local: x position, global: latitude
 	Y               float32 // PARAM6 / y position: global: longitude
 	Z               float32 // PARAM7 / z position: global: altitude (relative or absolute, depending on frame.
+	Seq             uint16  // Sequence
+	Command         uint16  // The scheduled action for the MISSION. see MAV_CMD in common.xml MAVLink specs
+	TargetSystem    uint8   // System ID
+	TargetComponent uint8   // Component ID
+	Frame           uint8   // The coordinate system of the MISSION. see MAV_FRAME in mavlink_types.h
+	Current         uint8   // false:0, true:1
+	Autocontinue    uint8   // autocontinue to next wp
 }
 
 func (self *MissionItem) MsgID() uint8 {
@@ -2164,13 +2043,6 @@ func (self *MissionItem) MsgName() string {
 func (self *MissionItem) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Seq,
-		&self.Frame,
-		&self.Command,
-		&self.Current,
-		&self.Autocontinue,
 		&self.Param1,
 		&self.Param2,
 		&self.Param3,
@@ -2178,6 +2050,13 @@ func (self *MissionItem) Pack(p *Packet) error {
 		&self.X,
 		&self.Y,
 		&self.Z,
+		&self.Seq,
+		&self.Command,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Frame,
+		&self.Current,
+		&self.Autocontinue,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2192,13 +2071,6 @@ func (self *MissionItem) Pack(p *Packet) error {
 func (self *MissionItem) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Seq,
-		&self.Frame,
-		&self.Command,
-		&self.Current,
-		&self.Autocontinue,
 		&self.Param1,
 		&self.Param2,
 		&self.Param3,
@@ -2206,6 +2078,13 @@ func (self *MissionItem) Unpack(p *Packet) error {
 		&self.X,
 		&self.Y,
 		&self.Z,
+		&self.Seq,
+		&self.Command,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Frame,
+		&self.Current,
+		&self.Autocontinue,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2216,9 +2095,9 @@ func (self *MissionItem) Unpack(p *Packet) error {
 
 // Request the information of the mission item with the sequence number seq. The response of the system to this message should be a MISSION_ITEM message. http://qgroundcontrol.org/mavlink/waypoint_protocol
 type MissionRequest struct {
+	Seq             uint16 // Sequence
 	TargetSystem    uint8  // System ID
 	TargetComponent uint8  // Component ID
-	Seq             uint16 // Sequence
 }
 
 func (self *MissionRequest) MsgID() uint8 {
@@ -2232,9 +2111,9 @@ func (self *MissionRequest) MsgName() string {
 func (self *MissionRequest) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.Seq,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.Seq,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2249,9 +2128,9 @@ func (self *MissionRequest) Pack(p *Packet) error {
 func (self *MissionRequest) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.Seq,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.Seq,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2262,9 +2141,9 @@ func (self *MissionRequest) Unpack(p *Packet) error {
 
 // Set the mission item with sequence number seq as current item. This means that the MAV will continue to this mission item on the shortest path (not following the mission items in-between).
 type MissionSetCurrent struct {
+	Seq             uint16 // Sequence
 	TargetSystem    uint8  // System ID
 	TargetComponent uint8  // Component ID
-	Seq             uint16 // Sequence
 }
 
 func (self *MissionSetCurrent) MsgID() uint8 {
@@ -2278,9 +2157,9 @@ func (self *MissionSetCurrent) MsgName() string {
 func (self *MissionSetCurrent) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.Seq,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.Seq,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2295,9 +2174,9 @@ func (self *MissionSetCurrent) Pack(p *Packet) error {
 func (self *MissionSetCurrent) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.Seq,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.Seq,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2391,9 +2270,9 @@ func (self *MissionRequestList) Unpack(p *Packet) error {
 
 // This message is emitted as response to MISSION_REQUEST_LIST by the MAV and to initiate a write transaction. The GCS can then request the individual mission item based on the knowledge of the total number of MISSIONs.
 type MissionCount struct {
+	Count           uint16 // Number of mission items in the sequence
 	TargetSystem    uint8  // System ID
 	TargetComponent uint8  // Component ID
-	Count           uint16 // Number of mission items in the sequence
 }
 
 func (self *MissionCount) MsgID() uint8 {
@@ -2407,9 +2286,9 @@ func (self *MissionCount) MsgName() string {
 func (self *MissionCount) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.Count,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.Count,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2424,9 +2303,9 @@ func (self *MissionCount) Pack(p *Packet) error {
 func (self *MissionCount) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.Count,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.Count,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2566,10 +2445,10 @@ func (self *MissionAck) Unpack(p *Packet) error {
 
 // As local waypoints exist, the global MISSION reference allows to transform between the local coordinate frame and the global (GPS) coordinate frame. This can be necessary when e.g. in- and outdoor settings are connected and the MAV should move from in- to outdoor.
 type SetGpsGlobalOrigin struct {
-	TargetSystem uint8 // System ID
 	Latitude     int32 // Latitude (WGS84), in degrees * 1E7
 	Longitude    int32 // Longitude (WGS84, in degrees * 1E7
 	Altitude     int32 // Altitude (AMSL), in meters * 1000 (positive for up)
+	TargetSystem uint8 // System ID
 }
 
 func (self *SetGpsGlobalOrigin) MsgID() uint8 {
@@ -2583,10 +2462,10 @@ func (self *SetGpsGlobalOrigin) MsgName() string {
 func (self *SetGpsGlobalOrigin) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
 		&self.Latitude,
 		&self.Longitude,
 		&self.Altitude,
+		&self.TargetSystem,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2601,10 +2480,10 @@ func (self *SetGpsGlobalOrigin) Pack(p *Packet) error {
 func (self *SetGpsGlobalOrigin) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
 		&self.Latitude,
 		&self.Longitude,
 		&self.Altitude,
+		&self.TargetSystem,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2661,15 +2540,15 @@ func (self *GpsGlobalOrigin) Unpack(p *Packet) error {
 
 // Bind a RC channel to a parameter. The parameter should change accoding to the RC channel value.
 type ParamMapRc struct {
-	TargetSystem            uint8    // System ID
-	TargetComponent         uint8    // Component ID
-	ParamId                 [16]byte // Onboard parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes storage if the ID is stored as string
-	ParamIndex              int16    // Parameter index. Send -1 to use the param ID field as identifier (else the param id will be ignored), send -2 to disable any existing map for this rc_channel_index.
-	ParameterRcChannelIndex uint8    // Index of parameter RC channel. Not equal to the RC channel id. Typically correpsonds to a potentiometer-knob on the RC.
 	ParamValue0             float32  // Initial parameter value
 	Scale                   float32  // Scale, maps the RC range [-1, 1] to a parameter value
 	ParamValueMin           float32  // Minimum param value. The protocol does not define if this overwrites an onboard minimum value. (Depends on implementation)
 	ParamValueMax           float32  // Maximum param value. The protocol does not define if this overwrites an onboard maximum value. (Depends on implementation)
+	ParamIndex              int16    // Parameter index. Send -1 to use the param ID field as identifier (else the param id will be ignored), send -2 to disable any existing map for this rc_channel_index.
+	TargetSystem            uint8    // System ID
+	TargetComponent         uint8    // Component ID
+	ParamId                 [16]byte // Onboard parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes storage if the ID is stored as string
+	ParameterRcChannelIndex uint8    // Index of parameter RC channel. Not equal to the RC channel id. Typically correpsonds to a potentiometer-knob on the RC.
 }
 
 func (self *ParamMapRc) MsgID() uint8 {
@@ -2683,15 +2562,15 @@ func (self *ParamMapRc) MsgName() string {
 func (self *ParamMapRc) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.ParamId,
-		&self.ParamIndex,
-		&self.ParameterRcChannelIndex,
 		&self.ParamValue0,
 		&self.Scale,
 		&self.ParamValueMin,
 		&self.ParamValueMax,
+		&self.ParamIndex,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.ParamId,
+		&self.ParameterRcChannelIndex,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2706,15 +2585,15 @@ func (self *ParamMapRc) Pack(p *Packet) error {
 func (self *ParamMapRc) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.ParamId,
-		&self.ParamIndex,
-		&self.ParameterRcChannelIndex,
 		&self.ParamValue0,
 		&self.Scale,
 		&self.ParamValueMin,
 		&self.ParamValueMax,
+		&self.ParamIndex,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.ParamId,
+		&self.ParameterRcChannelIndex,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2725,15 +2604,15 @@ func (self *ParamMapRc) Unpack(p *Packet) error {
 
 // Set a safety zone (volume), which is defined by two corners of a cube. This message can be used to tell the MAV which setpoints/MISSIONs to accept and which to reject. Safety areas are often enforced by national or competition regulations.
 type SafetySetAllowedArea struct {
-	TargetSystem    uint8   // System ID
-	TargetComponent uint8   // Component ID
-	Frame           uint8   // Coordinate frame, as defined by MAV_FRAME enum in mavlink_types.h. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z axis down.
 	P1x             float32 // x position 1 / Latitude 1
 	P1y             float32 // y position 1 / Longitude 1
 	P1z             float32 // z position 1 / Altitude 1
 	P2x             float32 // x position 2 / Latitude 2
 	P2y             float32 // y position 2 / Longitude 2
 	P2z             float32 // z position 2 / Altitude 2
+	TargetSystem    uint8   // System ID
+	TargetComponent uint8   // Component ID
+	Frame           uint8   // Coordinate frame, as defined by MAV_FRAME enum in mavlink_types.h. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z axis down.
 }
 
 func (self *SafetySetAllowedArea) MsgID() uint8 {
@@ -2747,15 +2626,15 @@ func (self *SafetySetAllowedArea) MsgName() string {
 func (self *SafetySetAllowedArea) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Frame,
 		&self.P1x,
 		&self.P1y,
 		&self.P1z,
 		&self.P2x,
 		&self.P2y,
 		&self.P2z,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Frame,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2770,15 +2649,15 @@ func (self *SafetySetAllowedArea) Pack(p *Packet) error {
 func (self *SafetySetAllowedArea) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Frame,
 		&self.P1x,
 		&self.P1y,
 		&self.P1z,
 		&self.P2x,
 		&self.P2y,
 		&self.P2z,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Frame,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2789,13 +2668,13 @@ func (self *SafetySetAllowedArea) Unpack(p *Packet) error {
 
 // Read out the safety zone the MAV currently assumes.
 type SafetyAllowedArea struct {
-	Frame uint8   // Coordinate frame, as defined by MAV_FRAME enum in mavlink_types.h. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z axis down.
 	P1x   float32 // x position 1 / Latitude 1
 	P1y   float32 // y position 1 / Longitude 1
 	P1z   float32 // z position 1 / Altitude 1
 	P2x   float32 // x position 2 / Latitude 2
 	P2y   float32 // y position 2 / Longitude 2
 	P2z   float32 // z position 2 / Altitude 2
+	Frame uint8   // Coordinate frame, as defined by MAV_FRAME enum in mavlink_types.h. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z axis down.
 }
 
 func (self *SafetyAllowedArea) MsgID() uint8 {
@@ -2809,13 +2688,13 @@ func (self *SafetyAllowedArea) MsgName() string {
 func (self *SafetyAllowedArea) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.Frame,
 		&self.P1x,
 		&self.P1y,
 		&self.P1z,
 		&self.P2x,
 		&self.P2y,
 		&self.P2z,
+		&self.Frame,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2830,13 +2709,13 @@ func (self *SafetyAllowedArea) Pack(p *Packet) error {
 func (self *SafetyAllowedArea) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.Frame,
 		&self.P1x,
 		&self.P1y,
 		&self.P1z,
 		&self.P2x,
 		&self.P2y,
 		&self.P2z,
+		&self.Frame,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2904,12 +2783,12 @@ func (self *AttitudeQuaternionCov) Unpack(p *Packet) error {
 type NavControllerOutput struct {
 	NavRoll       float32 // Current desired roll in degrees
 	NavPitch      float32 // Current desired pitch in degrees
-	NavBearing    int16   // Current desired heading in degrees
-	TargetBearing int16   // Bearing to current MISSION/target in degrees
-	WpDist        uint16  // Distance to active MISSION in meters
 	AltError      float32 // Current altitude error in meters
 	AspdError     float32 // Current airspeed error in meters/second
 	XtrackError   float32 // Current crosstrack error on x-y plane in meters
+	NavBearing    int16   // Current desired heading in degrees
+	TargetBearing int16   // Bearing to current MISSION/target in degrees
+	WpDist        uint16  // Distance to active MISSION in meters
 }
 
 func (self *NavControllerOutput) MsgID() uint8 {
@@ -2925,12 +2804,12 @@ func (self *NavControllerOutput) Pack(p *Packet) error {
 	for _, f := range []interface{}{
 		&self.NavRoll,
 		&self.NavPitch,
-		&self.NavBearing,
-		&self.TargetBearing,
-		&self.WpDist,
 		&self.AltError,
 		&self.AspdError,
 		&self.XtrackError,
+		&self.NavBearing,
+		&self.TargetBearing,
+		&self.WpDist,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2947,12 +2826,12 @@ func (self *NavControllerOutput) Unpack(p *Packet) error {
 	for _, f := range []interface{}{
 		&self.NavRoll,
 		&self.NavPitch,
-		&self.NavBearing,
-		&self.TargetBearing,
-		&self.WpDist,
 		&self.AltError,
 		&self.AspdError,
 		&self.XtrackError,
+		&self.NavBearing,
+		&self.TargetBearing,
+		&self.WpDist,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -2963,9 +2842,8 @@ func (self *NavControllerOutput) Unpack(p *Packet) error {
 
 // The filtered global position (e.g. fused GPS and accelerometers). The position is in GPS-frame (right-handed, Z-up). It  is designed as scaled integer message since the resolution of float is not sufficient. NOTE: This message is intended for onboard networks / companion computers and higher-bandwidth links and optimized for accuracy and completeness. Please use the GLOBAL_POSITION_INT message for a minimal subset.
 type GlobalPositionIntCov struct {
-	TimeBootMs    uint32      // Timestamp (milliseconds since system boot)
 	TimeUtc       uint64      // Timestamp (microseconds since UNIX epoch) in UTC. 0 for unknown. Commonly filled by the precision time source of a GPS receiver.
-	EstimatorType uint8       // Class id of the estimator this estimate originated from.
+	TimeBootMs    uint32      // Timestamp (milliseconds since system boot)
 	Lat           int32       // Latitude, expressed as degrees * 1E7
 	Lon           int32       // Longitude, expressed as degrees * 1E7
 	Alt           int32       // Altitude in meters, expressed as * 1000 (millimeters), above MSL
@@ -2974,6 +2852,7 @@ type GlobalPositionIntCov struct {
 	Vy            float32     // Ground Y Speed (Longitude), expressed as m/s
 	Vz            float32     // Ground Z Speed (Altitude), expressed as m/s
 	Covariance    [36]float32 // Covariance matrix (first six entries are the first ROW, next six entries are the second row, etc.)
+	EstimatorType uint8       // Class id of the estimator this estimate originated from.
 }
 
 func (self *GlobalPositionIntCov) MsgID() uint8 {
@@ -2987,9 +2866,8 @@ func (self *GlobalPositionIntCov) MsgName() string {
 func (self *GlobalPositionIntCov) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TimeBootMs,
 		&self.TimeUtc,
-		&self.EstimatorType,
+		&self.TimeBootMs,
 		&self.Lat,
 		&self.Lon,
 		&self.Alt,
@@ -2998,6 +2876,7 @@ func (self *GlobalPositionIntCov) Pack(p *Packet) error {
 		&self.Vy,
 		&self.Vz,
 		&self.Covariance,
+		&self.EstimatorType,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3012,9 +2891,8 @@ func (self *GlobalPositionIntCov) Pack(p *Packet) error {
 func (self *GlobalPositionIntCov) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TimeBootMs,
 		&self.TimeUtc,
-		&self.EstimatorType,
+		&self.TimeBootMs,
 		&self.Lat,
 		&self.Lon,
 		&self.Alt,
@@ -3023,6 +2901,7 @@ func (self *GlobalPositionIntCov) Unpack(p *Packet) error {
 		&self.Vy,
 		&self.Vz,
 		&self.Covariance,
+		&self.EstimatorType,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3033,9 +2912,8 @@ func (self *GlobalPositionIntCov) Unpack(p *Packet) error {
 
 // The filtered local position (e.g. fused computer vision and accelerometers). Coordinate frame is right-handed, Z-axis down (aeronautical frame, NED / north-east-down convention)
 type LocalPositionNedCov struct {
-	TimeBootMs    uint32      // Timestamp (milliseconds since system boot). 0 for system without monotonic timestamp
 	TimeUtc       uint64      // Timestamp (microseconds since UNIX epoch) in UTC. 0 for unknown. Commonly filled by the precision time source of a GPS receiver.
-	EstimatorType uint8       // Class id of the estimator this estimate originated from.
+	TimeBootMs    uint32      // Timestamp (milliseconds since system boot). 0 for system without monotonic timestamp
 	X             float32     // X Position
 	Y             float32     // Y Position
 	Z             float32     // Z Position
@@ -3046,6 +2924,7 @@ type LocalPositionNedCov struct {
 	Ay            float32     // Y Acceleration (m/s^2)
 	Az            float32     // Z Acceleration (m/s^2)
 	Covariance    [45]float32 // Covariance matrix upper right triangular (first nine entries are the first ROW, next eight entries are the second row, etc.)
+	EstimatorType uint8       // Class id of the estimator this estimate originated from.
 }
 
 func (self *LocalPositionNedCov) MsgID() uint8 {
@@ -3059,9 +2938,8 @@ func (self *LocalPositionNedCov) MsgName() string {
 func (self *LocalPositionNedCov) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TimeBootMs,
 		&self.TimeUtc,
-		&self.EstimatorType,
+		&self.TimeBootMs,
 		&self.X,
 		&self.Y,
 		&self.Z,
@@ -3072,6 +2950,7 @@ func (self *LocalPositionNedCov) Pack(p *Packet) error {
 		&self.Ay,
 		&self.Az,
 		&self.Covariance,
+		&self.EstimatorType,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3086,9 +2965,8 @@ func (self *LocalPositionNedCov) Pack(p *Packet) error {
 func (self *LocalPositionNedCov) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TimeBootMs,
 		&self.TimeUtc,
-		&self.EstimatorType,
+		&self.TimeBootMs,
 		&self.X,
 		&self.Y,
 		&self.Z,
@@ -3099,6 +2977,7 @@ func (self *LocalPositionNedCov) Unpack(p *Packet) error {
 		&self.Ay,
 		&self.Az,
 		&self.Covariance,
+		&self.EstimatorType,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3110,7 +2989,6 @@ func (self *LocalPositionNedCov) Unpack(p *Packet) error {
 // The PPM values of the RC channels received. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification.
 type RcChannels struct {
 	TimeBootMs uint32 // Timestamp (milliseconds since system boot)
-	Chancount  uint8  // Total number of RC channels being received. This can be larger than 18, indicating that more channels are available but not given in this message. This value should be 0 when no RC channels are available.
 	Chan1Raw   uint16 // RC channel 1 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
 	Chan2Raw   uint16 // RC channel 2 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
 	Chan3Raw   uint16 // RC channel 3 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
@@ -3129,6 +3007,7 @@ type RcChannels struct {
 	Chan16Raw  uint16 // RC channel 16 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
 	Chan17Raw  uint16 // RC channel 17 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
 	Chan18Raw  uint16 // RC channel 18 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
+	Chancount  uint8  // Total number of RC channels being received. This can be larger than 18, indicating that more channels are available but not given in this message. This value should be 0 when no RC channels are available.
 	Rssi       uint8  // Receive signal strength indicator, 0: 0%, 100: 100%, 255: invalid/unknown.
 }
 
@@ -3144,7 +3023,6 @@ func (self *RcChannels) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Chancount,
 		&self.Chan1Raw,
 		&self.Chan2Raw,
 		&self.Chan3Raw,
@@ -3163,6 +3041,7 @@ func (self *RcChannels) Pack(p *Packet) error {
 		&self.Chan16Raw,
 		&self.Chan17Raw,
 		&self.Chan18Raw,
+		&self.Chancount,
 		&self.Rssi,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -3179,7 +3058,6 @@ func (self *RcChannels) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Chancount,
 		&self.Chan1Raw,
 		&self.Chan2Raw,
 		&self.Chan3Raw,
@@ -3198,6 +3076,7 @@ func (self *RcChannels) Unpack(p *Packet) error {
 		&self.Chan16Raw,
 		&self.Chan17Raw,
 		&self.Chan18Raw,
+		&self.Chancount,
 		&self.Rssi,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -3209,10 +3088,10 @@ func (self *RcChannels) Unpack(p *Packet) error {
 
 //
 type RequestDataStream struct {
+	ReqMessageRate  uint16 // The requested interval between two messages of this type
 	TargetSystem    uint8  // The target requested to send the message stream.
 	TargetComponent uint8  // The target requested to send the message stream.
 	ReqStreamId     uint8  // The ID of the requested data stream
-	ReqMessageRate  uint16 // The requested interval between two messages of this type
 	StartStop       uint8  // 1 to start sending, 0 to stop sending.
 }
 
@@ -3227,10 +3106,10 @@ func (self *RequestDataStream) MsgName() string {
 func (self *RequestDataStream) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.ReqMessageRate,
 		&self.TargetSystem,
 		&self.TargetComponent,
 		&self.ReqStreamId,
-		&self.ReqMessageRate,
 		&self.StartStop,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -3246,10 +3125,10 @@ func (self *RequestDataStream) Pack(p *Packet) error {
 func (self *RequestDataStream) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.ReqMessageRate,
 		&self.TargetSystem,
 		&self.TargetComponent,
 		&self.ReqStreamId,
-		&self.ReqMessageRate,
 		&self.StartStop,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -3261,8 +3140,8 @@ func (self *RequestDataStream) Unpack(p *Packet) error {
 
 //
 type DataStream struct {
-	StreamId    uint8  // The ID of the requested data stream
 	MessageRate uint16 // The requested interval between two messages of this type
+	StreamId    uint8  // The ID of the requested data stream
 	OnOff       uint8  // 1 stream is enabled, 0 stream is stopped.
 }
 
@@ -3277,8 +3156,8 @@ func (self *DataStream) MsgName() string {
 func (self *DataStream) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.StreamId,
 		&self.MessageRate,
+		&self.StreamId,
 		&self.OnOff,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -3294,8 +3173,8 @@ func (self *DataStream) Pack(p *Packet) error {
 func (self *DataStream) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.StreamId,
 		&self.MessageRate,
+		&self.StreamId,
 		&self.OnOff,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -3307,12 +3186,12 @@ func (self *DataStream) Unpack(p *Packet) error {
 
 // This message provides an API for manually controlling the vehicle using standard joystick axes nomenclature, along with a joystick-like input device. Unused axes can be disabled an buttons are also transmit as boolean values of their
 type ManualControl struct {
-	Target  uint8  // The system to be controlled.
 	X       int16  // X-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is invalid. Generally corresponds to forward(1000)-backward(-1000) movement on a joystick and the pitch of a vehicle.
 	Y       int16  // Y-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is invalid. Generally corresponds to left(-1000)-right(1000) movement on a joystick and the roll of a vehicle.
 	Z       int16  // Z-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is invalid. Generally corresponds to a separate slider movement with maximum being 1000 and minimum being -1000 on a joystick and the thrust of a vehicle.
 	R       int16  // R-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is invalid. Generally corresponds to a twisting of the joystick, with counter-clockwise being 1000 and clockwise being -1000, and the yaw of a vehicle.
 	Buttons uint16 // A bitfield corresponding to the joystick buttons' current state, 1 for pressed, 0 for released. The lowest bit corresponds to Button 1.
+	Target  uint8  // The system to be controlled.
 }
 
 func (self *ManualControl) MsgID() uint8 {
@@ -3326,12 +3205,12 @@ func (self *ManualControl) MsgName() string {
 func (self *ManualControl) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.Target,
 		&self.X,
 		&self.Y,
 		&self.Z,
 		&self.R,
 		&self.Buttons,
+		&self.Target,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3346,12 +3225,12 @@ func (self *ManualControl) Pack(p *Packet) error {
 func (self *ManualControl) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.Target,
 		&self.X,
 		&self.Y,
 		&self.Z,
 		&self.R,
 		&self.Buttons,
+		&self.Target,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3362,8 +3241,6 @@ func (self *ManualControl) Unpack(p *Packet) error {
 
 // The RAW values of the RC channels sent to the MAV to override info received from the RC radio. A value of UINT16_MAX means no change to that channel. A value of 0 means control of that channel should be released back to the RC radio. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification.
 type RcChannelsOverride struct {
-	TargetSystem    uint8  // System ID
-	TargetComponent uint8  // Component ID
 	Chan1Raw        uint16 // RC channel 1 value, in microseconds. A value of UINT16_MAX means to ignore this field.
 	Chan2Raw        uint16 // RC channel 2 value, in microseconds. A value of UINT16_MAX means to ignore this field.
 	Chan3Raw        uint16 // RC channel 3 value, in microseconds. A value of UINT16_MAX means to ignore this field.
@@ -3372,6 +3249,8 @@ type RcChannelsOverride struct {
 	Chan6Raw        uint16 // RC channel 6 value, in microseconds. A value of UINT16_MAX means to ignore this field.
 	Chan7Raw        uint16 // RC channel 7 value, in microseconds. A value of UINT16_MAX means to ignore this field.
 	Chan8Raw        uint16 // RC channel 8 value, in microseconds. A value of UINT16_MAX means to ignore this field.
+	TargetSystem    uint8  // System ID
+	TargetComponent uint8  // Component ID
 }
 
 func (self *RcChannelsOverride) MsgID() uint8 {
@@ -3385,8 +3264,6 @@ func (self *RcChannelsOverride) MsgName() string {
 func (self *RcChannelsOverride) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
 		&self.Chan1Raw,
 		&self.Chan2Raw,
 		&self.Chan3Raw,
@@ -3395,6 +3272,8 @@ func (self *RcChannelsOverride) Pack(p *Packet) error {
 		&self.Chan6Raw,
 		&self.Chan7Raw,
 		&self.Chan8Raw,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3409,8 +3288,6 @@ func (self *RcChannelsOverride) Pack(p *Packet) error {
 func (self *RcChannelsOverride) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
 		&self.Chan1Raw,
 		&self.Chan2Raw,
 		&self.Chan3Raw,
@@ -3419,6 +3296,8 @@ func (self *RcChannelsOverride) Unpack(p *Packet) error {
 		&self.Chan6Raw,
 		&self.Chan7Raw,
 		&self.Chan8Raw,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3430,13 +3309,6 @@ func (self *RcChannelsOverride) Unpack(p *Packet) error {
 // Message encoding a mission item. This message is emitted to announce
 //                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). See alsohttp://qgroundcontrol.org/mavlink/waypoint_protocol.
 type MissionItemInt struct {
-	TargetSystem    uint8   // System ID
-	TargetComponent uint8   // Component ID
-	Seq             uint16  // Waypoint ID (sequence number). Starts at zero. Increases monotonically for each waypoint, no gaps in the sequence (0,1,2,3,4).
-	Frame           uint8   // The coordinate system of the MISSION. see MAV_FRAME in mavlink_types.h
-	Command         uint16  // The scheduled action for the MISSION. see MAV_CMD in common.xml MAVLink specs
-	Current         uint8   // false:0, true:1
-	Autocontinue    uint8   // autocontinue to next wp
 	Param1          float32 // PARAM1, see MAV_CMD enum
 	Param2          float32 // PARAM2, see MAV_CMD enum
 	Param3          float32 // PARAM3, see MAV_CMD enum
@@ -3444,6 +3316,13 @@ type MissionItemInt struct {
 	X               int32   // PARAM5 / local: x position in meters * 1e4, global: latitude in degrees * 10^7
 	Y               int32   // PARAM6 / y position: local: x position in meters * 1e4, global: longitude in degrees *10^7
 	Z               float32 // PARAM7 / z position: global: altitude in meters (relative or absolute, depending on frame.
+	Seq             uint16  // Waypoint ID (sequence number). Starts at zero. Increases monotonically for each waypoint, no gaps in the sequence (0,1,2,3,4).
+	Command         uint16  // The scheduled action for the MISSION. see MAV_CMD in common.xml MAVLink specs
+	TargetSystem    uint8   // System ID
+	TargetComponent uint8   // Component ID
+	Frame           uint8   // The coordinate system of the MISSION. see MAV_FRAME in mavlink_types.h
+	Current         uint8   // false:0, true:1
+	Autocontinue    uint8   // autocontinue to next wp
 }
 
 func (self *MissionItemInt) MsgID() uint8 {
@@ -3457,13 +3336,6 @@ func (self *MissionItemInt) MsgName() string {
 func (self *MissionItemInt) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Seq,
-		&self.Frame,
-		&self.Command,
-		&self.Current,
-		&self.Autocontinue,
 		&self.Param1,
 		&self.Param2,
 		&self.Param3,
@@ -3471,6 +3343,13 @@ func (self *MissionItemInt) Pack(p *Packet) error {
 		&self.X,
 		&self.Y,
 		&self.Z,
+		&self.Seq,
+		&self.Command,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Frame,
+		&self.Current,
+		&self.Autocontinue,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3485,13 +3364,6 @@ func (self *MissionItemInt) Pack(p *Packet) error {
 func (self *MissionItemInt) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Seq,
-		&self.Frame,
-		&self.Command,
-		&self.Current,
-		&self.Autocontinue,
 		&self.Param1,
 		&self.Param2,
 		&self.Param3,
@@ -3499,6 +3371,13 @@ func (self *MissionItemInt) Unpack(p *Packet) error {
 		&self.X,
 		&self.Y,
 		&self.Z,
+		&self.Seq,
+		&self.Command,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Frame,
+		&self.Current,
+		&self.Autocontinue,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3511,10 +3390,10 @@ func (self *MissionItemInt) Unpack(p *Packet) error {
 type VfrHud struct {
 	Airspeed    float32 // Current airspeed in m/s
 	Groundspeed float32 // Current ground speed in m/s
-	Heading     int16   // Current heading in degrees, in compass units (0..360, 0=north)
-	Throttle    uint16  // Current throttle setting in integer percent, 0 to 100
 	Alt         float32 // Current altitude (MSL), in meters
 	Climb       float32 // Current climb rate in meters/second
+	Heading     int16   // Current heading in degrees, in compass units (0..360, 0=north)
+	Throttle    uint16  // Current throttle setting in integer percent, 0 to 100
 }
 
 func (self *VfrHud) MsgID() uint8 {
@@ -3530,10 +3409,10 @@ func (self *VfrHud) Pack(p *Packet) error {
 	for _, f := range []interface{}{
 		&self.Airspeed,
 		&self.Groundspeed,
-		&self.Heading,
-		&self.Throttle,
 		&self.Alt,
 		&self.Climb,
+		&self.Heading,
+		&self.Throttle,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3550,10 +3429,10 @@ func (self *VfrHud) Unpack(p *Packet) error {
 	for _, f := range []interface{}{
 		&self.Airspeed,
 		&self.Groundspeed,
-		&self.Heading,
-		&self.Throttle,
 		&self.Alt,
 		&self.Climb,
+		&self.Heading,
+		&self.Throttle,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3564,12 +3443,6 @@ func (self *VfrHud) Unpack(p *Packet) error {
 
 // Message encoding a command with parameters as scaled integers. Scaling depends on the actual command value.
 type CommandInt struct {
-	TargetSystem    uint8   // System ID
-	TargetComponent uint8   // Component ID
-	Frame           uint8   // The coordinate system of the COMMAND. see MAV_FRAME in mavlink_types.h
-	Command         uint16  // The scheduled action for the mission item. see MAV_CMD in common.xml MAVLink specs
-	Current         uint8   // false:0, true:1
-	Autocontinue    uint8   // autocontinue to next wp
 	Param1          float32 // PARAM1, see MAV_CMD enum
 	Param2          float32 // PARAM2, see MAV_CMD enum
 	Param3          float32 // PARAM3, see MAV_CMD enum
@@ -3577,6 +3450,12 @@ type CommandInt struct {
 	X               int32   // PARAM5 / local: x position in meters * 1e4, global: latitude in degrees * 10^7
 	Y               int32   // PARAM6 / local: y position in meters * 1e4, global: longitude in degrees * 10^7
 	Z               float32 // PARAM7 / z position: global: altitude in meters (relative or absolute, depending on frame.
+	Command         uint16  // The scheduled action for the mission item. see MAV_CMD in common.xml MAVLink specs
+	TargetSystem    uint8   // System ID
+	TargetComponent uint8   // Component ID
+	Frame           uint8   // The coordinate system of the COMMAND. see MAV_FRAME in mavlink_types.h
+	Current         uint8   // false:0, true:1
+	Autocontinue    uint8   // autocontinue to next wp
 }
 
 func (self *CommandInt) MsgID() uint8 {
@@ -3590,12 +3469,6 @@ func (self *CommandInt) MsgName() string {
 func (self *CommandInt) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Frame,
-		&self.Command,
-		&self.Current,
-		&self.Autocontinue,
 		&self.Param1,
 		&self.Param2,
 		&self.Param3,
@@ -3603,6 +3476,12 @@ func (self *CommandInt) Pack(p *Packet) error {
 		&self.X,
 		&self.Y,
 		&self.Z,
+		&self.Command,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Frame,
+		&self.Current,
+		&self.Autocontinue,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3617,12 +3496,6 @@ func (self *CommandInt) Pack(p *Packet) error {
 func (self *CommandInt) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Frame,
-		&self.Command,
-		&self.Current,
-		&self.Autocontinue,
 		&self.Param1,
 		&self.Param2,
 		&self.Param3,
@@ -3630,6 +3503,12 @@ func (self *CommandInt) Unpack(p *Packet) error {
 		&self.X,
 		&self.Y,
 		&self.Z,
+		&self.Command,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Frame,
+		&self.Current,
+		&self.Autocontinue,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3640,10 +3519,6 @@ func (self *CommandInt) Unpack(p *Packet) error {
 
 // Send a command with up to seven parameters to the MAV
 type CommandLong struct {
-	TargetSystem    uint8   // System which should execute the command
-	TargetComponent uint8   // Component which should execute the command, 0 for all components
-	Command         uint16  // Command ID, as defined by MAV_CMD enum.
-	Confirmation    uint8   // 0: First transmission of this command. 1-255: Confirmation transmissions (e.g. for kill command)
 	Param1          float32 // Parameter 1, as defined by MAV_CMD enum.
 	Param2          float32 // Parameter 2, as defined by MAV_CMD enum.
 	Param3          float32 // Parameter 3, as defined by MAV_CMD enum.
@@ -3651,6 +3526,10 @@ type CommandLong struct {
 	Param5          float32 // Parameter 5, as defined by MAV_CMD enum.
 	Param6          float32 // Parameter 6, as defined by MAV_CMD enum.
 	Param7          float32 // Parameter 7, as defined by MAV_CMD enum.
+	Command         uint16  // Command ID, as defined by MAV_CMD enum.
+	TargetSystem    uint8   // System which should execute the command
+	TargetComponent uint8   // Component which should execute the command, 0 for all components
+	Confirmation    uint8   // 0: First transmission of this command. 1-255: Confirmation transmissions (e.g. for kill command)
 }
 
 func (self *CommandLong) MsgID() uint8 {
@@ -3664,10 +3543,6 @@ func (self *CommandLong) MsgName() string {
 func (self *CommandLong) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Command,
-		&self.Confirmation,
 		&self.Param1,
 		&self.Param2,
 		&self.Param3,
@@ -3675,6 +3550,10 @@ func (self *CommandLong) Pack(p *Packet) error {
 		&self.Param5,
 		&self.Param6,
 		&self.Param7,
+		&self.Command,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Confirmation,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3689,10 +3568,6 @@ func (self *CommandLong) Pack(p *Packet) error {
 func (self *CommandLong) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Command,
-		&self.Confirmation,
 		&self.Param1,
 		&self.Param2,
 		&self.Param3,
@@ -3700,6 +3575,10 @@ func (self *CommandLong) Unpack(p *Packet) error {
 		&self.Param5,
 		&self.Param6,
 		&self.Param7,
+		&self.Command,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.Confirmation,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3812,14 +3691,14 @@ func (self *ManualSetpoint) Unpack(p *Packet) error {
 // Set the vehicle attitude and body angular rates.
 type SetAttitudeTarget struct {
 	TimeBootMs      uint32     // Timestamp in milliseconds since system boot
-	TargetSystem    uint8      // System ID
-	TargetComponent uint8      // Component ID
-	TypeMask        uint8      // Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 6: reserved, bit 7: throttle, bit 8: attitude
 	Q               [4]float32 // Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
 	BodyRollRate    float32    // Body roll rate in radians per second
 	BodyPitchRate   float32    // Body roll rate in radians per second
 	BodyYawRate     float32    // Body roll rate in radians per second
 	Thrust          float32    // Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)
+	TargetSystem    uint8      // System ID
+	TargetComponent uint8      // Component ID
+	TypeMask        uint8      // Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 6: reserved, bit 7: throttle, bit 8: attitude
 }
 
 func (self *SetAttitudeTarget) MsgID() uint8 {
@@ -3834,14 +3713,14 @@ func (self *SetAttitudeTarget) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.TypeMask,
 		&self.Q,
 		&self.BodyRollRate,
 		&self.BodyPitchRate,
 		&self.BodyYawRate,
 		&self.Thrust,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.TypeMask,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3857,14 +3736,14 @@ func (self *SetAttitudeTarget) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.TypeMask,
 		&self.Q,
 		&self.BodyRollRate,
 		&self.BodyPitchRate,
 		&self.BodyYawRate,
 		&self.Thrust,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.TypeMask,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3876,12 +3755,12 @@ func (self *SetAttitudeTarget) Unpack(p *Packet) error {
 // Set the vehicle attitude and body angular rates.
 type AttitudeTarget struct {
 	TimeBootMs    uint32     // Timestamp in milliseconds since system boot
-	TypeMask      uint8      // Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 7: reserved, bit 8: attitude
 	Q             [4]float32 // Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
 	BodyRollRate  float32    // Body roll rate in radians per second
 	BodyPitchRate float32    // Body roll rate in radians per second
 	BodyYawRate   float32    // Body roll rate in radians per second
 	Thrust        float32    // Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)
+	TypeMask      uint8      // Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 7: reserved, bit 8: attitude
 }
 
 func (self *AttitudeTarget) MsgID() uint8 {
@@ -3896,12 +3775,12 @@ func (self *AttitudeTarget) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.TypeMask,
 		&self.Q,
 		&self.BodyRollRate,
 		&self.BodyPitchRate,
 		&self.BodyYawRate,
 		&self.Thrust,
+		&self.TypeMask,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3917,12 +3796,12 @@ func (self *AttitudeTarget) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.TypeMask,
 		&self.Q,
 		&self.BodyRollRate,
 		&self.BodyPitchRate,
 		&self.BodyYawRate,
 		&self.Thrust,
+		&self.TypeMask,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3934,10 +3813,6 @@ func (self *AttitudeTarget) Unpack(p *Packet) error {
 // Set vehicle position, velocity and acceleration setpoint in local frame.
 type SetPositionTargetLocalNed struct {
 	TimeBootMs      uint32  // Timestamp in milliseconds since system boot
-	TargetSystem    uint8   // System ID
-	TargetComponent uint8   // Component ID
-	CoordinateFrame uint8   // Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED = 8, MAV_FRAME_BODY_OFFSET_NED = 9
-	TypeMask        uint16  // Bitmask to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 10 is set the floats afx afy afz should be interpreted as force instead of acceleration. Mapping: bit 1: x, bit 2: y, bit 3: z, bit 4: vx, bit 5: vy, bit 6: vz, bit 7: ax, bit 8: ay, bit 9: az, bit 10: is force setpoint, bit 11: yaw, bit 12: yaw rate
 	X               float32 // X Position in NED frame in meters
 	Y               float32 // Y Position in NED frame in meters
 	Z               float32 // Z Position in NED frame in meters (note, altitude is negative in NED)
@@ -3949,6 +3824,10 @@ type SetPositionTargetLocalNed struct {
 	Afz             float32 // Z acceleration or force (if bit 10 of type_mask is set) in NED frame in meter / s^2 or N
 	Yaw             float32 // yaw setpoint in rad
 	YawRate         float32 // yaw rate setpoint in rad/s
+	TypeMask        uint16  // Bitmask to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 10 is set the floats afx afy afz should be interpreted as force instead of acceleration. Mapping: bit 1: x, bit 2: y, bit 3: z, bit 4: vx, bit 5: vy, bit 6: vz, bit 7: ax, bit 8: ay, bit 9: az, bit 10: is force setpoint, bit 11: yaw, bit 12: yaw rate
+	TargetSystem    uint8   // System ID
+	TargetComponent uint8   // Component ID
+	CoordinateFrame uint8   // Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED = 8, MAV_FRAME_BODY_OFFSET_NED = 9
 }
 
 func (self *SetPositionTargetLocalNed) MsgID() uint8 {
@@ -3963,10 +3842,6 @@ func (self *SetPositionTargetLocalNed) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.CoordinateFrame,
-		&self.TypeMask,
 		&self.X,
 		&self.Y,
 		&self.Z,
@@ -3978,6 +3853,10 @@ func (self *SetPositionTargetLocalNed) Pack(p *Packet) error {
 		&self.Afz,
 		&self.Yaw,
 		&self.YawRate,
+		&self.TypeMask,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.CoordinateFrame,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -3993,10 +3872,6 @@ func (self *SetPositionTargetLocalNed) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.CoordinateFrame,
-		&self.TypeMask,
 		&self.X,
 		&self.Y,
 		&self.Z,
@@ -4008,6 +3883,10 @@ func (self *SetPositionTargetLocalNed) Unpack(p *Packet) error {
 		&self.Afz,
 		&self.Yaw,
 		&self.YawRate,
+		&self.TypeMask,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.CoordinateFrame,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4019,8 +3898,6 @@ func (self *SetPositionTargetLocalNed) Unpack(p *Packet) error {
 // Set vehicle position, velocity and acceleration setpoint in local frame.
 type PositionTargetLocalNed struct {
 	TimeBootMs      uint32  // Timestamp in milliseconds since system boot
-	CoordinateFrame uint8   // Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED = 8, MAV_FRAME_BODY_OFFSET_NED = 9
-	TypeMask        uint16  // Bitmask to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 10 is set the floats afx afy afz should be interpreted as force instead of acceleration. Mapping: bit 1: x, bit 2: y, bit 3: z, bit 4: vx, bit 5: vy, bit 6: vz, bit 7: ax, bit 8: ay, bit 9: az, bit 10: is force setpoint, bit 11: yaw, bit 12: yaw rate
 	X               float32 // X Position in NED frame in meters
 	Y               float32 // Y Position in NED frame in meters
 	Z               float32 // Z Position in NED frame in meters (note, altitude is negative in NED)
@@ -4032,6 +3909,8 @@ type PositionTargetLocalNed struct {
 	Afz             float32 // Z acceleration or force (if bit 10 of type_mask is set) in NED frame in meter / s^2 or N
 	Yaw             float32 // yaw setpoint in rad
 	YawRate         float32 // yaw rate setpoint in rad/s
+	TypeMask        uint16  // Bitmask to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 10 is set the floats afx afy afz should be interpreted as force instead of acceleration. Mapping: bit 1: x, bit 2: y, bit 3: z, bit 4: vx, bit 5: vy, bit 6: vz, bit 7: ax, bit 8: ay, bit 9: az, bit 10: is force setpoint, bit 11: yaw, bit 12: yaw rate
+	CoordinateFrame uint8   // Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED = 8, MAV_FRAME_BODY_OFFSET_NED = 9
 }
 
 func (self *PositionTargetLocalNed) MsgID() uint8 {
@@ -4046,8 +3925,6 @@ func (self *PositionTargetLocalNed) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.CoordinateFrame,
-		&self.TypeMask,
 		&self.X,
 		&self.Y,
 		&self.Z,
@@ -4059,6 +3936,8 @@ func (self *PositionTargetLocalNed) Pack(p *Packet) error {
 		&self.Afz,
 		&self.Yaw,
 		&self.YawRate,
+		&self.TypeMask,
+		&self.CoordinateFrame,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4074,8 +3953,6 @@ func (self *PositionTargetLocalNed) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.CoordinateFrame,
-		&self.TypeMask,
 		&self.X,
 		&self.Y,
 		&self.Z,
@@ -4087,6 +3964,8 @@ func (self *PositionTargetLocalNed) Unpack(p *Packet) error {
 		&self.Afz,
 		&self.Yaw,
 		&self.YawRate,
+		&self.TypeMask,
+		&self.CoordinateFrame,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4098,10 +3977,6 @@ func (self *PositionTargetLocalNed) Unpack(p *Packet) error {
 // Set vehicle position, velocity and acceleration setpoint in the WGS84 coordinate system.
 type SetPositionTargetGlobalInt struct {
 	TimeBootMs      uint32  // Timestamp in milliseconds since system boot. The rationale for the timestamp in the setpoint is to allow the system to compensate for the transport delay of the setpoint. This allows the system to compensate processing latency.
-	TargetSystem    uint8   // System ID
-	TargetComponent uint8   // Component ID
-	CoordinateFrame uint8   // Valid options are: MAV_FRAME_GLOBAL_INT = 5, MAV_FRAME_GLOBAL_RELATIVE_ALT_INT = 6, MAV_FRAME_GLOBAL_TERRAIN_ALT_INT = 11
-	TypeMask        uint16  // Bitmask to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 10 is set the floats afx afy afz should be interpreted as force instead of acceleration. Mapping: bit 1: x, bit 2: y, bit 3: z, bit 4: vx, bit 5: vy, bit 6: vz, bit 7: ax, bit 8: ay, bit 9: az, bit 10: is force setpoint, bit 11: yaw, bit 12: yaw rate
 	LatInt          int32   // X Position in WGS84 frame in 1e7 * meters
 	LonInt          int32   // Y Position in WGS84 frame in 1e7 * meters
 	Alt             float32 // Altitude in meters in AMSL altitude, not WGS84 if absolute or relative, above terrain if GLOBAL_TERRAIN_ALT_INT
@@ -4113,6 +3988,10 @@ type SetPositionTargetGlobalInt struct {
 	Afz             float32 // Z acceleration or force (if bit 10 of type_mask is set) in NED frame in meter / s^2 or N
 	Yaw             float32 // yaw setpoint in rad
 	YawRate         float32 // yaw rate setpoint in rad/s
+	TypeMask        uint16  // Bitmask to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 10 is set the floats afx afy afz should be interpreted as force instead of acceleration. Mapping: bit 1: x, bit 2: y, bit 3: z, bit 4: vx, bit 5: vy, bit 6: vz, bit 7: ax, bit 8: ay, bit 9: az, bit 10: is force setpoint, bit 11: yaw, bit 12: yaw rate
+	TargetSystem    uint8   // System ID
+	TargetComponent uint8   // Component ID
+	CoordinateFrame uint8   // Valid options are: MAV_FRAME_GLOBAL_INT = 5, MAV_FRAME_GLOBAL_RELATIVE_ALT_INT = 6, MAV_FRAME_GLOBAL_TERRAIN_ALT_INT = 11
 }
 
 func (self *SetPositionTargetGlobalInt) MsgID() uint8 {
@@ -4127,10 +4006,6 @@ func (self *SetPositionTargetGlobalInt) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.CoordinateFrame,
-		&self.TypeMask,
 		&self.LatInt,
 		&self.LonInt,
 		&self.Alt,
@@ -4142,6 +4017,10 @@ func (self *SetPositionTargetGlobalInt) Pack(p *Packet) error {
 		&self.Afz,
 		&self.Yaw,
 		&self.YawRate,
+		&self.TypeMask,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.CoordinateFrame,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4157,10 +4036,6 @@ func (self *SetPositionTargetGlobalInt) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.CoordinateFrame,
-		&self.TypeMask,
 		&self.LatInt,
 		&self.LonInt,
 		&self.Alt,
@@ -4172,6 +4047,10 @@ func (self *SetPositionTargetGlobalInt) Unpack(p *Packet) error {
 		&self.Afz,
 		&self.Yaw,
 		&self.YawRate,
+		&self.TypeMask,
+		&self.TargetSystem,
+		&self.TargetComponent,
+		&self.CoordinateFrame,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4183,8 +4062,6 @@ func (self *SetPositionTargetGlobalInt) Unpack(p *Packet) error {
 // Set vehicle position, velocity and acceleration setpoint in the WGS84 coordinate system.
 type PositionTargetGlobalInt struct {
 	TimeBootMs      uint32  // Timestamp in milliseconds since system boot. The rationale for the timestamp in the setpoint is to allow the system to compensate for the transport delay of the setpoint. This allows the system to compensate processing latency.
-	CoordinateFrame uint8   // Valid options are: MAV_FRAME_GLOBAL_INT = 5, MAV_FRAME_GLOBAL_RELATIVE_ALT_INT = 6, MAV_FRAME_GLOBAL_TERRAIN_ALT_INT = 11
-	TypeMask        uint16  // Bitmask to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 10 is set the floats afx afy afz should be interpreted as force instead of acceleration. Mapping: bit 1: x, bit 2: y, bit 3: z, bit 4: vx, bit 5: vy, bit 6: vz, bit 7: ax, bit 8: ay, bit 9: az, bit 10: is force setpoint, bit 11: yaw, bit 12: yaw rate
 	LatInt          int32   // X Position in WGS84 frame in 1e7 * meters
 	LonInt          int32   // Y Position in WGS84 frame in 1e7 * meters
 	Alt             float32 // Altitude in meters in AMSL altitude, not WGS84 if absolute or relative, above terrain if GLOBAL_TERRAIN_ALT_INT
@@ -4196,6 +4073,8 @@ type PositionTargetGlobalInt struct {
 	Afz             float32 // Z acceleration or force (if bit 10 of type_mask is set) in NED frame in meter / s^2 or N
 	Yaw             float32 // yaw setpoint in rad
 	YawRate         float32 // yaw rate setpoint in rad/s
+	TypeMask        uint16  // Bitmask to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 10 is set the floats afx afy afz should be interpreted as force instead of acceleration. Mapping: bit 1: x, bit 2: y, bit 3: z, bit 4: vx, bit 5: vy, bit 6: vz, bit 7: ax, bit 8: ay, bit 9: az, bit 10: is force setpoint, bit 11: yaw, bit 12: yaw rate
+	CoordinateFrame uint8   // Valid options are: MAV_FRAME_GLOBAL_INT = 5, MAV_FRAME_GLOBAL_RELATIVE_ALT_INT = 6, MAV_FRAME_GLOBAL_TERRAIN_ALT_INT = 11
 }
 
 func (self *PositionTargetGlobalInt) MsgID() uint8 {
@@ -4210,8 +4089,6 @@ func (self *PositionTargetGlobalInt) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.CoordinateFrame,
-		&self.TypeMask,
 		&self.LatInt,
 		&self.LonInt,
 		&self.Alt,
@@ -4223,6 +4100,8 @@ func (self *PositionTargetGlobalInt) Pack(p *Packet) error {
 		&self.Afz,
 		&self.Yaw,
 		&self.YawRate,
+		&self.TypeMask,
+		&self.CoordinateFrame,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4238,8 +4117,6 @@ func (self *PositionTargetGlobalInt) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.CoordinateFrame,
-		&self.TypeMask,
 		&self.LatInt,
 		&self.LonInt,
 		&self.Alt,
@@ -4251,6 +4128,8 @@ func (self *PositionTargetGlobalInt) Unpack(p *Packet) error {
 		&self.Afz,
 		&self.Yaw,
 		&self.YawRate,
+		&self.TypeMask,
+		&self.CoordinateFrame,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4554,13 +4433,13 @@ func (self *HilRcInputsRaw) Unpack(p *Packet) error {
 // Optical flow from a flow sensor (e.g. optical mouse sensor)
 type OpticalFlow struct {
 	TimeUsec       uint64  // Timestamp (UNIX)
-	SensorId       uint8   // Sensor ID
-	FlowX          int16   // Flow in pixels * 10 in x-sensor direction (dezi-pixels)
-	FlowY          int16   // Flow in pixels * 10 in y-sensor direction (dezi-pixels)
 	FlowCompMX     float32 // Flow in meters in x-sensor direction, angular-speed compensated
 	FlowCompMY     float32 // Flow in meters in y-sensor direction, angular-speed compensated
-	Quality        uint8   // Optical flow quality / confidence. 0: bad, 255: maximum quality
 	GroundDistance float32 // Ground distance in meters. Positive value: distance known. Negative value: Unknown distance
+	FlowX          int16   // Flow in pixels * 10 in x-sensor direction (dezi-pixels)
+	FlowY          int16   // Flow in pixels * 10 in y-sensor direction (dezi-pixels)
+	SensorId       uint8   // Sensor ID
+	Quality        uint8   // Optical flow quality / confidence. 0: bad, 255: maximum quality
 }
 
 func (self *OpticalFlow) MsgID() uint8 {
@@ -4575,13 +4454,13 @@ func (self *OpticalFlow) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.SensorId,
-		&self.FlowX,
-		&self.FlowY,
 		&self.FlowCompMX,
 		&self.FlowCompMY,
-		&self.Quality,
 		&self.GroundDistance,
+		&self.FlowX,
+		&self.FlowY,
+		&self.SensorId,
+		&self.Quality,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4597,13 +4476,13 @@ func (self *OpticalFlow) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.SensorId,
-		&self.FlowX,
-		&self.FlowY,
 		&self.FlowCompMX,
 		&self.FlowCompMY,
-		&self.Quality,
 		&self.GroundDistance,
+		&self.FlowX,
+		&self.FlowY,
+		&self.SensorId,
+		&self.Quality,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4920,17 +4799,17 @@ func (self *HighresImu) Unpack(p *Packet) error {
 // Optical flow from an angular rate flow sensor (e.g. PX4FLOW or mouse sensor)
 type OpticalFlowRad struct {
 	TimeUsec            uint64  // Timestamp (microseconds, synced to UNIX time or since system boot)
-	SensorId            uint8   // Sensor ID
 	IntegrationTimeUs   uint32  // Integration time in microseconds. Divide integrated_x and integrated_y by the integration time to obtain average flow. The integration time also indicates the.
 	IntegratedX         float32 // Flow in radians around X axis (Sensor RH rotation about the X axis induces a positive flow. Sensor linear motion along the positive Y axis induces a negative flow.)
 	IntegratedY         float32 // Flow in radians around Y axis (Sensor RH rotation about the Y axis induces a positive flow. Sensor linear motion along the positive X axis induces a positive flow.)
 	IntegratedXgyro     float32 // RH rotation around X axis (rad)
 	IntegratedYgyro     float32 // RH rotation around Y axis (rad)
 	IntegratedZgyro     float32 // RH rotation around Z axis (rad)
-	Temperature         int16   // Temperature * 100 in centi-degrees Celsius
-	Quality             uint8   // Optical flow quality / confidence. 0: no valid flow, 255: maximum quality
 	TimeDeltaDistanceUs uint32  // Time in microseconds since the distance was sampled.
 	Distance            float32 // Distance to the center of the flow field in meters. Positive value (including zero): distance known. Negative value: Unknown distance.
+	Temperature         int16   // Temperature * 100 in centi-degrees Celsius
+	SensorId            uint8   // Sensor ID
+	Quality             uint8   // Optical flow quality / confidence. 0: no valid flow, 255: maximum quality
 }
 
 func (self *OpticalFlowRad) MsgID() uint8 {
@@ -4945,17 +4824,17 @@ func (self *OpticalFlowRad) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.SensorId,
 		&self.IntegrationTimeUs,
 		&self.IntegratedX,
 		&self.IntegratedY,
 		&self.IntegratedXgyro,
 		&self.IntegratedYgyro,
 		&self.IntegratedZgyro,
-		&self.Temperature,
-		&self.Quality,
 		&self.TimeDeltaDistanceUs,
 		&self.Distance,
+		&self.Temperature,
+		&self.SensorId,
+		&self.Quality,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -4971,17 +4850,17 @@ func (self *OpticalFlowRad) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.SensorId,
 		&self.IntegrationTimeUs,
 		&self.IntegratedX,
 		&self.IntegratedY,
 		&self.IntegratedXgyro,
 		&self.IntegratedYgyro,
 		&self.IntegratedZgyro,
-		&self.Temperature,
-		&self.Quality,
 		&self.TimeDeltaDistanceUs,
 		&self.Distance,
+		&self.Temperature,
+		&self.SensorId,
+		&self.Quality,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5174,13 +5053,13 @@ func (self *SimState) Unpack(p *Packet) error {
 
 // Status generated by radio and injected into MAVLink stream.
 type RadioStatus struct {
+	Rxerrors uint16 // Receive errors
+	Fixed    uint16 // Count of error corrected packets
 	Rssi     uint8  // Local signal strength
 	Remrssi  uint8  // Remote signal strength
 	Txbuf    uint8  // Remaining free buffer space in percent.
 	Noise    uint8  // Background noise level
 	Remnoise uint8  // Remote background noise level
-	Rxerrors uint16 // Receive errors
-	Fixed    uint16 // Count of error corrected packets
 }
 
 func (self *RadioStatus) MsgID() uint8 {
@@ -5194,13 +5073,13 @@ func (self *RadioStatus) MsgName() string {
 func (self *RadioStatus) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.Rxerrors,
+		&self.Fixed,
 		&self.Rssi,
 		&self.Remrssi,
 		&self.Txbuf,
 		&self.Noise,
 		&self.Remnoise,
-		&self.Rxerrors,
-		&self.Fixed,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5215,13 +5094,13 @@ func (self *RadioStatus) Pack(p *Packet) error {
 func (self *RadioStatus) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.Rxerrors,
+		&self.Fixed,
 		&self.Rssi,
 		&self.Remrssi,
 		&self.Txbuf,
 		&self.Noise,
 		&self.Remnoise,
-		&self.Rxerrors,
-		&self.Fixed,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5369,7 +5248,6 @@ func (self *CameraTrigger) Unpack(p *Packet) error {
 //                  NOT the global position estimate of the sytem, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate. Coordinate frame is right-handed, Z-axis up (GPS frame).
 type HilGps struct {
 	TimeUsec          uint64 // Timestamp (microseconds since UNIX epoch or microseconds since system boot)
-	FixType           uint8  // 0-1: no fix, 2: 2D fix, 3: 3D fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.
 	Lat               int32  // Latitude (WGS84), in degrees * 1E7
 	Lon               int32  // Longitude (WGS84), in degrees * 1E7
 	Alt               int32  // Altitude (AMSL, not WGS84), in meters * 1000 (positive for up)
@@ -5380,6 +5258,7 @@ type HilGps struct {
 	Ve                int16  // GPS velocity in cm/s in EAST direction in earth-fixed NED frame
 	Vd                int16  // GPS velocity in cm/s in DOWN direction in earth-fixed NED frame
 	Cog               uint16 // Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: 65535
+	FixType           uint8  // 0-1: no fix, 2: 2D fix, 3: 3D fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.
 	SatellitesVisible uint8  // Number of satellites visible. If unknown, set to 255
 }
 
@@ -5395,7 +5274,6 @@ func (self *HilGps) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.FixType,
 		&self.Lat,
 		&self.Lon,
 		&self.Alt,
@@ -5406,6 +5284,7 @@ func (self *HilGps) Pack(p *Packet) error {
 		&self.Ve,
 		&self.Vd,
 		&self.Cog,
+		&self.FixType,
 		&self.SatellitesVisible,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -5422,7 +5301,6 @@ func (self *HilGps) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.FixType,
 		&self.Lat,
 		&self.Lon,
 		&self.Alt,
@@ -5433,6 +5311,7 @@ func (self *HilGps) Unpack(p *Packet) error {
 		&self.Ve,
 		&self.Vd,
 		&self.Cog,
+		&self.FixType,
 		&self.SatellitesVisible,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -5445,17 +5324,17 @@ func (self *HilGps) Unpack(p *Packet) error {
 // Simulated optical flow from a flow sensor (e.g. PX4FLOW or optical mouse sensor)
 type HilOpticalFlow struct {
 	TimeUsec            uint64  // Timestamp (microseconds, synced to UNIX time or since system boot)
-	SensorId            uint8   // Sensor ID
 	IntegrationTimeUs   uint32  // Integration time in microseconds. Divide integrated_x and integrated_y by the integration time to obtain average flow. The integration time also indicates the.
 	IntegratedX         float32 // Flow in radians around X axis (Sensor RH rotation about the X axis induces a positive flow. Sensor linear motion along the positive Y axis induces a negative flow.)
 	IntegratedY         float32 // Flow in radians around Y axis (Sensor RH rotation about the Y axis induces a positive flow. Sensor linear motion along the positive X axis induces a positive flow.)
 	IntegratedXgyro     float32 // RH rotation around X axis (rad)
 	IntegratedYgyro     float32 // RH rotation around Y axis (rad)
 	IntegratedZgyro     float32 // RH rotation around Z axis (rad)
-	Temperature         int16   // Temperature * 100 in centi-degrees Celsius
-	Quality             uint8   // Optical flow quality / confidence. 0: no valid flow, 255: maximum quality
 	TimeDeltaDistanceUs uint32  // Time in microseconds since the distance was sampled.
 	Distance            float32 // Distance to the center of the flow field in meters. Positive value (including zero): distance known. Negative value: Unknown distance.
+	Temperature         int16   // Temperature * 100 in centi-degrees Celsius
+	SensorId            uint8   // Sensor ID
+	Quality             uint8   // Optical flow quality / confidence. 0: no valid flow, 255: maximum quality
 }
 
 func (self *HilOpticalFlow) MsgID() uint8 {
@@ -5470,17 +5349,17 @@ func (self *HilOpticalFlow) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.SensorId,
 		&self.IntegrationTimeUs,
 		&self.IntegratedX,
 		&self.IntegratedY,
 		&self.IntegratedXgyro,
 		&self.IntegratedYgyro,
 		&self.IntegratedZgyro,
-		&self.Temperature,
-		&self.Quality,
 		&self.TimeDeltaDistanceUs,
 		&self.Distance,
+		&self.Temperature,
+		&self.SensorId,
+		&self.Quality,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5496,17 +5375,17 @@ func (self *HilOpticalFlow) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.SensorId,
 		&self.IntegrationTimeUs,
 		&self.IntegratedX,
 		&self.IntegratedY,
 		&self.IntegratedXgyro,
 		&self.IntegratedYgyro,
 		&self.IntegratedZgyro,
-		&self.Temperature,
-		&self.Quality,
 		&self.TimeDeltaDistanceUs,
 		&self.Distance,
+		&self.Temperature,
+		&self.SensorId,
+		&self.Quality,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5669,10 +5548,10 @@ func (self *ScaledImu2) Unpack(p *Packet) error {
 
 // Request a list of available logs. On some systems calling this may stop on-board logging until LOG_REQUEST_END is called.
 type LogRequestList struct {
-	TargetSystem    uint8  // System ID
-	TargetComponent uint8  // Component ID
 	Start           uint16 // First log id (0 for first available)
 	End             uint16 // Last log id (0xffff for last available)
+	TargetSystem    uint8  // System ID
+	TargetComponent uint8  // Component ID
 }
 
 func (self *LogRequestList) MsgID() uint8 {
@@ -5686,10 +5565,10 @@ func (self *LogRequestList) MsgName() string {
 func (self *LogRequestList) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
 		&self.Start,
 		&self.End,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5704,10 +5583,10 @@ func (self *LogRequestList) Pack(p *Packet) error {
 func (self *LogRequestList) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
 		&self.Start,
 		&self.End,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5718,11 +5597,11 @@ func (self *LogRequestList) Unpack(p *Packet) error {
 
 // Reply to LOG_REQUEST_LIST
 type LogEntry struct {
+	TimeUtc    uint32 // UTC timestamp of log in seconds since 1970, or 0 if not available
+	Size       uint32 // Size of the log (may be approximate) in bytes
 	Id         uint16 // Log id
 	NumLogs    uint16 // Total number of logs
 	LastLogNum uint16 // High log number
-	TimeUtc    uint32 // UTC timestamp of log in seconds since 1970, or 0 if not available
-	Size       uint32 // Size of the log (may be approximate) in bytes
 }
 
 func (self *LogEntry) MsgID() uint8 {
@@ -5736,11 +5615,11 @@ func (self *LogEntry) MsgName() string {
 func (self *LogEntry) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.TimeUtc,
+		&self.Size,
 		&self.Id,
 		&self.NumLogs,
 		&self.LastLogNum,
-		&self.TimeUtc,
-		&self.Size,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5755,11 +5634,11 @@ func (self *LogEntry) Pack(p *Packet) error {
 func (self *LogEntry) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.TimeUtc,
+		&self.Size,
 		&self.Id,
 		&self.NumLogs,
 		&self.LastLogNum,
-		&self.TimeUtc,
-		&self.Size,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5770,11 +5649,11 @@ func (self *LogEntry) Unpack(p *Packet) error {
 
 // Request a chunk of a log
 type LogRequestData struct {
-	TargetSystem    uint8  // System ID
-	TargetComponent uint8  // Component ID
-	Id              uint16 // Log id (from LOG_ENTRY reply)
 	Ofs             uint32 // Offset into the log
 	Count           uint32 // Number of bytes
+	Id              uint16 // Log id (from LOG_ENTRY reply)
+	TargetSystem    uint8  // System ID
+	TargetComponent uint8  // Component ID
 }
 
 func (self *LogRequestData) MsgID() uint8 {
@@ -5788,11 +5667,11 @@ func (self *LogRequestData) MsgName() string {
 func (self *LogRequestData) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Id,
 		&self.Ofs,
 		&self.Count,
+		&self.Id,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5807,11 +5686,11 @@ func (self *LogRequestData) Pack(p *Packet) error {
 func (self *LogRequestData) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetSystem,
-		&self.TargetComponent,
-		&self.Id,
 		&self.Ofs,
 		&self.Count,
+		&self.Id,
+		&self.TargetSystem,
+		&self.TargetComponent,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -5822,8 +5701,8 @@ func (self *LogRequestData) Unpack(p *Packet) error {
 
 // Reply to LOG_REQUEST_DATA
 type LogData struct {
-	Id    uint16    // Log id (from LOG_ENTRY reply)
 	Ofs   uint32    // Offset into the log
+	Id    uint16    // Log id (from LOG_ENTRY reply)
 	Count uint8     // Number of bytes (zero for end of log)
 	Data  [90]uint8 // log data
 }
@@ -5839,8 +5718,8 @@ func (self *LogData) MsgName() string {
 func (self *LogData) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.Id,
 		&self.Ofs,
+		&self.Id,
 		&self.Count,
 		&self.Data,
 	} {
@@ -5857,8 +5736,8 @@ func (self *LogData) Pack(p *Packet) error {
 func (self *LogData) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.Id,
 		&self.Ofs,
+		&self.Id,
 		&self.Count,
 		&self.Data,
 	} {
@@ -6007,17 +5886,17 @@ func (self *GpsInjectData) Unpack(p *Packet) error {
 // Second GPS data. Coordinate frame is right-handed, Z-axis up (GPS frame).
 type Gps2Raw struct {
 	TimeUsec          uint64 // Timestamp (microseconds since UNIX epoch or microseconds since system boot)
-	FixType           uint8  // 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS fix, 5: RTK Fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.
 	Lat               int32  // Latitude (WGS84), in degrees * 1E7
 	Lon               int32  // Longitude (WGS84), in degrees * 1E7
 	Alt               int32  // Altitude (AMSL, not WGS84), in meters * 1000 (positive for up)
+	DgpsAge           uint32 // Age of DGPS info
 	Eph               uint16 // GPS HDOP horizontal dilution of position in cm (m*100). If unknown, set to: UINT16_MAX
 	Epv               uint16 // GPS VDOP vertical dilution of position in cm (m*100). If unknown, set to: UINT16_MAX
 	Vel               uint16 // GPS ground speed (m/s * 100). If unknown, set to: UINT16_MAX
 	Cog               uint16 // Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
+	FixType           uint8  // 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS fix, 5: RTK Fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.
 	SatellitesVisible uint8  // Number of satellites visible. If unknown, set to 255
 	DgpsNumch         uint8  // Number of DGPS satellites
-	DgpsAge           uint32 // Age of DGPS info
 }
 
 func (self *Gps2Raw) MsgID() uint8 {
@@ -6032,17 +5911,17 @@ func (self *Gps2Raw) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.FixType,
 		&self.Lat,
 		&self.Lon,
 		&self.Alt,
+		&self.DgpsAge,
 		&self.Eph,
 		&self.Epv,
 		&self.Vel,
 		&self.Cog,
+		&self.FixType,
 		&self.SatellitesVisible,
 		&self.DgpsNumch,
-		&self.DgpsAge,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6058,17 +5937,17 @@ func (self *Gps2Raw) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.FixType,
 		&self.Lat,
 		&self.Lon,
 		&self.Alt,
+		&self.DgpsAge,
 		&self.Eph,
 		&self.Epv,
 		&self.Vel,
 		&self.Cog,
+		&self.FixType,
 		&self.SatellitesVisible,
 		&self.DgpsNumch,
-		&self.DgpsAge,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6125,10 +6004,10 @@ func (self *PowerStatus) Unpack(p *Packet) error {
 
 // Control a serial port. This can be used for raw access to an onboard serial peripheral such as a GPS or telemetry radio. It is designed to make it possible to update the devices firmware via MAVLink messages or change the devices settings. A message with zero bytes can be used to change just the baudrate.
 type SerialControl struct {
+	Baudrate uint32    // Baudrate of transfer. Zero means no change.
+	Timeout  uint16    // Timeout for reply data in milliseconds
 	Device   uint8     // See SERIAL_CONTROL_DEV enum
 	Flags    uint8     // See SERIAL_CONTROL_FLAG enum
-	Timeout  uint16    // Timeout for reply data in milliseconds
-	Baudrate uint32    // Baudrate of transfer. Zero means no change.
 	Count    uint8     // how many bytes in this transfer
 	Data     [70]uint8 // serial data
 }
@@ -6144,10 +6023,10 @@ func (self *SerialControl) MsgName() string {
 func (self *SerialControl) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.Baudrate,
+		&self.Timeout,
 		&self.Device,
 		&self.Flags,
-		&self.Timeout,
-		&self.Baudrate,
 		&self.Count,
 		&self.Data,
 	} {
@@ -6164,10 +6043,10 @@ func (self *SerialControl) Pack(p *Packet) error {
 func (self *SerialControl) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.Baudrate,
+		&self.Timeout,
 		&self.Device,
 		&self.Flags,
-		&self.Timeout,
-		&self.Baudrate,
 		&self.Count,
 		&self.Data,
 	} {
@@ -6181,18 +6060,18 @@ func (self *SerialControl) Unpack(p *Packet) error {
 // RTK GPS data. Gives information on the relative baseline calculation the GPS is reporting
 type GpsRtk struct {
 	TimeLastBaselineMs uint32 // Time since boot of last baseline message received in ms.
-	RtkReceiverId      uint8  // Identification of connected RTK receiver.
-	Wn                 uint16 // GPS Week Number of last baseline
 	Tow                uint32 // GPS Time of Week of last baseline
-	RtkHealth          uint8  // GPS-specific health report for RTK data.
-	RtkRate            uint8  // Rate of baseline messages being received by GPS, in HZ
-	Nsats              uint8  // Current number of sats used for RTK calculation.
-	BaselineCoordsType uint8  // Coordinate system of baseline. 0 == ECEF, 1 == NED
 	BaselineAMm        int32  // Current baseline in ECEF x or NED north component in mm.
 	BaselineBMm        int32  // Current baseline in ECEF y or NED east component in mm.
 	BaselineCMm        int32  // Current baseline in ECEF z or NED down component in mm.
 	Accuracy           uint32 // Current estimate of baseline accuracy.
 	IarNumHypotheses   int32  // Current number of integer ambiguity hypotheses.
+	Wn                 uint16 // GPS Week Number of last baseline
+	RtkReceiverId      uint8  // Identification of connected RTK receiver.
+	RtkHealth          uint8  // GPS-specific health report for RTK data.
+	RtkRate            uint8  // Rate of baseline messages being received by GPS, in HZ
+	Nsats              uint8  // Current number of sats used for RTK calculation.
+	BaselineCoordsType uint8  // Coordinate system of baseline. 0 == ECEF, 1 == NED
 }
 
 func (self *GpsRtk) MsgID() uint8 {
@@ -6207,18 +6086,18 @@ func (self *GpsRtk) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeLastBaselineMs,
-		&self.RtkReceiverId,
-		&self.Wn,
 		&self.Tow,
-		&self.RtkHealth,
-		&self.RtkRate,
-		&self.Nsats,
-		&self.BaselineCoordsType,
 		&self.BaselineAMm,
 		&self.BaselineBMm,
 		&self.BaselineCMm,
 		&self.Accuracy,
 		&self.IarNumHypotheses,
+		&self.Wn,
+		&self.RtkReceiverId,
+		&self.RtkHealth,
+		&self.RtkRate,
+		&self.Nsats,
+		&self.BaselineCoordsType,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6234,18 +6113,18 @@ func (self *GpsRtk) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeLastBaselineMs,
-		&self.RtkReceiverId,
-		&self.Wn,
 		&self.Tow,
-		&self.RtkHealth,
-		&self.RtkRate,
-		&self.Nsats,
-		&self.BaselineCoordsType,
 		&self.BaselineAMm,
 		&self.BaselineBMm,
 		&self.BaselineCMm,
 		&self.Accuracy,
 		&self.IarNumHypotheses,
+		&self.Wn,
+		&self.RtkReceiverId,
+		&self.RtkHealth,
+		&self.RtkRate,
+		&self.Nsats,
+		&self.BaselineCoordsType,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6257,18 +6136,18 @@ func (self *GpsRtk) Unpack(p *Packet) error {
 // RTK GPS data. Gives information on the relative baseline calculation the GPS is reporting
 type Gps2Rtk struct {
 	TimeLastBaselineMs uint32 // Time since boot of last baseline message received in ms.
-	RtkReceiverId      uint8  // Identification of connected RTK receiver.
-	Wn                 uint16 // GPS Week Number of last baseline
 	Tow                uint32 // GPS Time of Week of last baseline
-	RtkHealth          uint8  // GPS-specific health report for RTK data.
-	RtkRate            uint8  // Rate of baseline messages being received by GPS, in HZ
-	Nsats              uint8  // Current number of sats used for RTK calculation.
-	BaselineCoordsType uint8  // Coordinate system of baseline. 0 == ECEF, 1 == NED
 	BaselineAMm        int32  // Current baseline in ECEF x or NED north component in mm.
 	BaselineBMm        int32  // Current baseline in ECEF y or NED east component in mm.
 	BaselineCMm        int32  // Current baseline in ECEF z or NED down component in mm.
 	Accuracy           uint32 // Current estimate of baseline accuracy.
 	IarNumHypotheses   int32  // Current number of integer ambiguity hypotheses.
+	Wn                 uint16 // GPS Week Number of last baseline
+	RtkReceiverId      uint8  // Identification of connected RTK receiver.
+	RtkHealth          uint8  // GPS-specific health report for RTK data.
+	RtkRate            uint8  // Rate of baseline messages being received by GPS, in HZ
+	Nsats              uint8  // Current number of sats used for RTK calculation.
+	BaselineCoordsType uint8  // Coordinate system of baseline. 0 == ECEF, 1 == NED
 }
 
 func (self *Gps2Rtk) MsgID() uint8 {
@@ -6283,18 +6162,18 @@ func (self *Gps2Rtk) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeLastBaselineMs,
-		&self.RtkReceiverId,
-		&self.Wn,
 		&self.Tow,
-		&self.RtkHealth,
-		&self.RtkRate,
-		&self.Nsats,
-		&self.BaselineCoordsType,
 		&self.BaselineAMm,
 		&self.BaselineBMm,
 		&self.BaselineCMm,
 		&self.Accuracy,
 		&self.IarNumHypotheses,
+		&self.Wn,
+		&self.RtkReceiverId,
+		&self.RtkHealth,
+		&self.RtkRate,
+		&self.Nsats,
+		&self.BaselineCoordsType,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6310,18 +6189,18 @@ func (self *Gps2Rtk) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeLastBaselineMs,
-		&self.RtkReceiverId,
-		&self.Wn,
 		&self.Tow,
-		&self.RtkHealth,
-		&self.RtkRate,
-		&self.Nsats,
-		&self.BaselineCoordsType,
 		&self.BaselineAMm,
 		&self.BaselineBMm,
 		&self.BaselineCMm,
 		&self.Accuracy,
 		&self.IarNumHypotheses,
+		&self.Wn,
+		&self.RtkReceiverId,
+		&self.RtkHealth,
+		&self.RtkRate,
+		&self.Nsats,
+		&self.BaselineCoordsType,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6399,11 +6278,11 @@ func (self *ScaledImu3) Unpack(p *Packet) error {
 
 //
 type DataTransmissionHandshake struct {
-	Type       uint8  // type of requested/acknowledged data (as defined in ENUM DATA_TYPES in mavlink/include/mavlink_types.h)
 	Size       uint32 // total data size in bytes (set on ACK only)
 	Width      uint16 // Width of a matrix or image
 	Height     uint16 // Height of a matrix or image
 	Packets    uint16 // number of packets beeing sent (set on ACK only)
+	Type       uint8  // type of requested/acknowledged data (as defined in ENUM DATA_TYPES in mavlink/include/mavlink_types.h)
 	Payload    uint8  // payload size per packet (normally 253 byte, see DATA field size in message ENCAPSULATED_DATA) (set on ACK only)
 	JpgQuality uint8  // JPEG quality out of [1,100]
 }
@@ -6419,11 +6298,11 @@ func (self *DataTransmissionHandshake) MsgName() string {
 func (self *DataTransmissionHandshake) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.Type,
 		&self.Size,
 		&self.Width,
 		&self.Height,
 		&self.Packets,
+		&self.Type,
 		&self.Payload,
 		&self.JpgQuality,
 	} {
@@ -6440,11 +6319,11 @@ func (self *DataTransmissionHandshake) Pack(p *Packet) error {
 func (self *DataTransmissionHandshake) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.Type,
 		&self.Size,
 		&self.Width,
 		&self.Height,
 		&self.Packets,
+		&self.Type,
 		&self.Payload,
 		&self.JpgQuality,
 	} {
@@ -6561,10 +6440,10 @@ func (self *DistanceSensor) Unpack(p *Packet) error {
 
 // Request for terrain data and terrain status
 type TerrainRequest struct {
+	Mask        uint64 // Bitmask of requested 4x4 grids (row major 8x7 array of grids, 56 bits)
 	Lat         int32  // Latitude of SW corner of first grid (degrees *10^7)
 	Lon         int32  // Longitude of SW corner of first grid (in degrees *10^7)
 	GridSpacing uint16 // Grid spacing in meters
-	Mask        uint64 // Bitmask of requested 4x4 grids (row major 8x7 array of grids, 56 bits)
 }
 
 func (self *TerrainRequest) MsgID() uint8 {
@@ -6578,10 +6457,10 @@ func (self *TerrainRequest) MsgName() string {
 func (self *TerrainRequest) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.Mask,
 		&self.Lat,
 		&self.Lon,
 		&self.GridSpacing,
-		&self.Mask,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6596,10 +6475,10 @@ func (self *TerrainRequest) Pack(p *Packet) error {
 func (self *TerrainRequest) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.Mask,
 		&self.Lat,
 		&self.Lon,
 		&self.GridSpacing,
-		&self.Mask,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6613,8 +6492,8 @@ type TerrainData struct {
 	Lat         int32     // Latitude of SW corner of first grid (degrees *10^7)
 	Lon         int32     // Longitude of SW corner of first grid (in degrees *10^7)
 	GridSpacing uint16    // Grid spacing in meters
-	Gridbit     uint8     // bit within the terrain request mask
 	Data        [16]int16 // Terrain data in meters AMSL
+	Gridbit     uint8     // bit within the terrain request mask
 }
 
 func (self *TerrainData) MsgID() uint8 {
@@ -6631,8 +6510,8 @@ func (self *TerrainData) Pack(p *Packet) error {
 		&self.Lat,
 		&self.Lon,
 		&self.GridSpacing,
-		&self.Gridbit,
 		&self.Data,
+		&self.Gridbit,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6650,8 +6529,8 @@ func (self *TerrainData) Unpack(p *Packet) error {
 		&self.Lat,
 		&self.Lon,
 		&self.GridSpacing,
-		&self.Gridbit,
 		&self.Data,
+		&self.Gridbit,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6707,9 +6586,9 @@ func (self *TerrainCheck) Unpack(p *Packet) error {
 type TerrainReport struct {
 	Lat           int32   // Latitude (degrees *10^7)
 	Lon           int32   // Longitude (degrees *10^7)
-	Spacing       uint16  // grid spacing (zero if terrain at this location unavailable)
 	TerrainHeight float32 // Terrain height in meters AMSL
 	CurrentHeight float32 // Current vehicle height above lat/lon terrain height (meters)
+	Spacing       uint16  // grid spacing (zero if terrain at this location unavailable)
 	Pending       uint16  // Number of 4x4 terrain blocks waiting to be received or read from disk
 	Loaded        uint16  // Number of 4x4 terrain blocks in memory
 }
@@ -6727,9 +6606,9 @@ func (self *TerrainReport) Pack(p *Packet) error {
 	for _, f := range []interface{}{
 		&self.Lat,
 		&self.Lon,
-		&self.Spacing,
 		&self.TerrainHeight,
 		&self.CurrentHeight,
+		&self.Spacing,
 		&self.Pending,
 		&self.Loaded,
 	} {
@@ -6748,9 +6627,9 @@ func (self *TerrainReport) Unpack(p *Packet) error {
 	for _, f := range []interface{}{
 		&self.Lat,
 		&self.Lon,
-		&self.Spacing,
 		&self.TerrainHeight,
 		&self.CurrentHeight,
+		&self.Spacing,
 		&self.Pending,
 		&self.Loaded,
 	} {
@@ -6865,10 +6744,10 @@ func (self *AttPosMocap) Unpack(p *Packet) error {
 // Set the vehicle attitude and body angular rates.
 type SetActuatorControlTarget struct {
 	TimeUsec        uint64     // Timestamp (micros since boot or Unix epoch)
+	Controls        [8]float32 // Actuator controls. Normed to -1..+1 where 0 is neutral position. Throttle for single rotation direction motors is 0..1, negative range for reverse direction. Standard mapping for attitude controls (group 0): (index 0-7): roll, pitch, yaw, throttle, flaps, spoilers, airbrakes, landing gear. Load a pass-through mixer to repurpose them as generic outputs.
 	GroupMlx        uint8      // Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser should use this field to difference between instances.
 	TargetSystem    uint8      // System ID
 	TargetComponent uint8      // Component ID
-	Controls        [8]float32 // Actuator controls. Normed to -1..+1 where 0 is neutral position. Throttle for single rotation direction motors is 0..1, negative range for reverse direction. Standard mapping for attitude controls (group 0): (index 0-7): roll, pitch, yaw, throttle, flaps, spoilers, airbrakes, landing gear. Load a pass-through mixer to repurpose them as generic outputs.
 }
 
 func (self *SetActuatorControlTarget) MsgID() uint8 {
@@ -6883,10 +6762,10 @@ func (self *SetActuatorControlTarget) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
+		&self.Controls,
 		&self.GroupMlx,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.Controls,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6902,10 +6781,10 @@ func (self *SetActuatorControlTarget) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
+		&self.Controls,
 		&self.GroupMlx,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.Controls,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6917,8 +6796,8 @@ func (self *SetActuatorControlTarget) Unpack(p *Packet) error {
 // Set the vehicle attitude and body angular rates.
 type ActuatorControlTarget struct {
 	TimeUsec uint64     // Timestamp (micros since boot or Unix epoch)
-	GroupMlx uint8      // Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser should use this field to difference between instances.
 	Controls [8]float32 // Actuator controls. Normed to -1..+1 where 0 is neutral position. Throttle for single rotation direction motors is 0..1, negative range for reverse direction. Standard mapping for attitude controls (group 0): (index 0-7): roll, pitch, yaw, throttle, flaps, spoilers, airbrakes, landing gear. Load a pass-through mixer to repurpose them as generic outputs.
+	GroupMlx uint8      // Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser should use this field to difference between instances.
 }
 
 func (self *ActuatorControlTarget) MsgID() uint8 {
@@ -6933,8 +6812,8 @@ func (self *ActuatorControlTarget) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.GroupMlx,
 		&self.Controls,
+		&self.GroupMlx,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6950,8 +6829,8 @@ func (self *ActuatorControlTarget) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeUsec,
-		&self.GroupMlx,
 		&self.Controls,
+		&self.GroupMlx,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -6962,14 +6841,14 @@ func (self *ActuatorControlTarget) Unpack(p *Packet) error {
 
 // Battery information
 type BatteryStatus struct {
-	Id               uint8      // Battery ID
-	BatteryFunction  uint8      // Function of the battery
-	Type             uint8      // Type (chemistry) of the battery
+	CurrentConsumed  int32      // Consumed charge, in milliampere hours (1 = 1 mAh), -1: autopilot does not provide mAh consumption estimate
+	EnergyConsumed   int32      // Consumed energy, in 100*Joules (intergrated U*I*dt)  (1 = 100 Joule), -1: autopilot does not provide energy consumption estimate
 	Temperature      int16      // Temperature of the battery in centi-degrees celsius. INT16_MAX for unknown temperature.
 	Voltages         [10]uint16 // Battery voltage of cells, in millivolts (1 = 1 millivolt)
 	CurrentBattery   int16      // Battery current, in 10*milliamperes (1 = 10 milliampere), -1: autopilot does not measure the current
-	CurrentConsumed  int32      // Consumed charge, in milliampere hours (1 = 1 mAh), -1: autopilot does not provide mAh consumption estimate
-	EnergyConsumed   int32      // Consumed energy, in 100*Joules (intergrated U*I*dt)  (1 = 100 Joule), -1: autopilot does not provide energy consumption estimate
+	Id               uint8      // Battery ID
+	BatteryFunction  uint8      // Function of the battery
+	Type             uint8      // Type (chemistry) of the battery
 	BatteryRemaining int8       // Remaining battery energy: (0%: 0, 100%: 100), -1: autopilot does not estimate the remaining battery
 }
 
@@ -6984,14 +6863,14 @@ func (self *BatteryStatus) MsgName() string {
 func (self *BatteryStatus) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.Id,
-		&self.BatteryFunction,
-		&self.Type,
+		&self.CurrentConsumed,
+		&self.EnergyConsumed,
 		&self.Temperature,
 		&self.Voltages,
 		&self.CurrentBattery,
-		&self.CurrentConsumed,
-		&self.EnergyConsumed,
+		&self.Id,
+		&self.BatteryFunction,
+		&self.Type,
 		&self.BatteryRemaining,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -7007,14 +6886,14 @@ func (self *BatteryStatus) Pack(p *Packet) error {
 func (self *BatteryStatus) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.Id,
-		&self.BatteryFunction,
-		&self.Type,
+		&self.CurrentConsumed,
+		&self.EnergyConsumed,
 		&self.Temperature,
 		&self.Voltages,
 		&self.CurrentBattery,
-		&self.CurrentConsumed,
-		&self.EnergyConsumed,
+		&self.Id,
+		&self.BatteryFunction,
+		&self.Type,
 		&self.BatteryRemaining,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -7027,16 +6906,16 @@ func (self *BatteryStatus) Unpack(p *Packet) error {
 // Version and capability of autopilot software
 type AutopilotVersion struct {
 	Capabilities            uint64   // bitmask of capabilities (see MAV_PROTOCOL_CAPABILITY enum)
+	Uid                     uint64   // UID if provided by hardware
 	FlightSwVersion         uint32   // Firmware version number
 	MiddlewareSwVersion     uint32   // Middleware version number
 	OsSwVersion             uint32   // Operating system version number
 	BoardVersion            uint32   // HW / board version (last 8 bytes should be silicon ID, if any)
+	VendorId                uint16   // ID of the board vendor
+	ProductId               uint16   // ID of the product
 	FlightCustomVersion     [8]uint8 // Custom version field, commonly the first 8 bytes of the git hash. This is not an unique identifier, but should allow to identify the commit using the main version number even for very large code bases.
 	MiddlewareCustomVersion [8]uint8 // Custom version field, commonly the first 8 bytes of the git hash. This is not an unique identifier, but should allow to identify the commit using the main version number even for very large code bases.
 	OsCustomVersion         [8]uint8 // Custom version field, commonly the first 8 bytes of the git hash. This is not an unique identifier, but should allow to identify the commit using the main version number even for very large code bases.
-	VendorId                uint16   // ID of the board vendor
-	ProductId               uint16   // ID of the product
-	Uid                     uint64   // UID if provided by hardware
 }
 
 func (self *AutopilotVersion) MsgID() uint8 {
@@ -7051,16 +6930,16 @@ func (self *AutopilotVersion) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.Capabilities,
+		&self.Uid,
 		&self.FlightSwVersion,
 		&self.MiddlewareSwVersion,
 		&self.OsSwVersion,
 		&self.BoardVersion,
+		&self.VendorId,
+		&self.ProductId,
 		&self.FlightCustomVersion,
 		&self.MiddlewareCustomVersion,
 		&self.OsCustomVersion,
-		&self.VendorId,
-		&self.ProductId,
-		&self.Uid,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7076,16 +6955,16 @@ func (self *AutopilotVersion) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.Capabilities,
+		&self.Uid,
 		&self.FlightSwVersion,
 		&self.MiddlewareSwVersion,
 		&self.OsSwVersion,
 		&self.BoardVersion,
+		&self.VendorId,
+		&self.ProductId,
 		&self.FlightCustomVersion,
 		&self.MiddlewareCustomVersion,
 		&self.OsCustomVersion,
-		&self.VendorId,
-		&self.ProductId,
-		&self.Uid,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7096,11 +6975,11 @@ func (self *AutopilotVersion) Unpack(p *Packet) error {
 
 // The location of a landing area captured from a downward facing camera
 type LandingTarget struct {
-	TargetNum uint8   // The ID of the target if multiple targets are present
-	Frame     uint8   // MAV_FRAME enum specifying the whether the following feilds are earth-frame, body-frame, etc.
 	AngleX    float32 // X-axis angular offset (in radians) of the target from the center of the image
 	AngleY    float32 // Y-axis angular offset (in radians) of the target from the center of the image
 	Distance  float32 // Distance to the target from the vehicle in meters
+	TargetNum uint8   // The ID of the target if multiple targets are present
+	Frame     uint8   // MAV_FRAME enum specifying the whether the following feilds are earth-frame, body-frame, etc.
 }
 
 func (self *LandingTarget) MsgID() uint8 {
@@ -7114,11 +6993,11 @@ func (self *LandingTarget) MsgName() string {
 func (self *LandingTarget) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.TargetNum,
-		&self.Frame,
 		&self.AngleX,
 		&self.AngleY,
 		&self.Distance,
+		&self.TargetNum,
+		&self.Frame,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7133,11 +7012,11 @@ func (self *LandingTarget) Pack(p *Packet) error {
 func (self *LandingTarget) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.TargetNum,
-		&self.Frame,
 		&self.AngleX,
 		&self.AngleY,
 		&self.Distance,
+		&self.TargetNum,
+		&self.Frame,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7148,10 +7027,10 @@ func (self *LandingTarget) Unpack(p *Packet) error {
 
 // Message implementing parts of the V2 payload specs in V1 frames for transitional support.
 type V2Extension struct {
+	MessageType     uint16     // A code that identifies the software component that understands this message (analogous to usb device classes or mime type strings).  If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/extension-message-ids.xml.  Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.
 	TargetNetwork   uint8      // Network ID (0 for broadcast)
 	TargetSystem    uint8      // System ID (0 for broadcast)
 	TargetComponent uint8      // Component ID (0 for broadcast)
-	MessageType     uint16     // A code that identifies the software component that understands this message (analogous to usb device classes or mime type strings).  If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/extension-message-ids.xml.  Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.
 	Payload         [249]uint8 // Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.
 }
 
@@ -7166,10 +7045,10 @@ func (self *V2Extension) MsgName() string {
 func (self *V2Extension) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.MessageType,
 		&self.TargetNetwork,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.MessageType,
 		&self.Payload,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
@@ -7185,10 +7064,10 @@ func (self *V2Extension) Pack(p *Packet) error {
 func (self *V2Extension) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.MessageType,
 		&self.TargetNetwork,
 		&self.TargetSystem,
 		&self.TargetComponent,
-		&self.MessageType,
 		&self.Payload,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
@@ -7249,11 +7128,11 @@ func (self *MemoryVect) Unpack(p *Packet) error {
 
 //
 type DebugVect struct {
-	Name     [10]byte // Name
 	TimeUsec uint64   // Timestamp
 	X        float32  // x
 	Y        float32  // y
 	Z        float32  // z
+	Name     [10]byte // Name
 }
 
 func (self *DebugVect) MsgID() uint8 {
@@ -7267,11 +7146,11 @@ func (self *DebugVect) MsgName() string {
 func (self *DebugVect) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
-		&self.Name,
 		&self.TimeUsec,
 		&self.X,
 		&self.Y,
 		&self.Z,
+		&self.Name,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7286,11 +7165,11 @@ func (self *DebugVect) Pack(p *Packet) error {
 func (self *DebugVect) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
-		&self.Name,
 		&self.TimeUsec,
 		&self.X,
 		&self.Y,
 		&self.Z,
+		&self.Name,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7302,8 +7181,8 @@ func (self *DebugVect) Unpack(p *Packet) error {
 // Send a key-value pair as float. The use of this message is discouraged for normal packets, but a quite efficient way for testing new messages and getting experimental debug output.
 type NamedValueFloat struct {
 	TimeBootMs uint32   // Timestamp (milliseconds since system boot)
-	Name       [10]byte // Name of the debug variable
 	Value      float32  // Floating point value
+	Name       [10]byte // Name of the debug variable
 }
 
 func (self *NamedValueFloat) MsgID() uint8 {
@@ -7318,8 +7197,8 @@ func (self *NamedValueFloat) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Name,
 		&self.Value,
+		&self.Name,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7335,8 +7214,8 @@ func (self *NamedValueFloat) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Name,
 		&self.Value,
+		&self.Name,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7348,8 +7227,8 @@ func (self *NamedValueFloat) Unpack(p *Packet) error {
 // Send a key-value pair as integer. The use of this message is discouraged for normal packets, but a quite efficient way for testing new messages and getting experimental debug output.
 type NamedValueInt struct {
 	TimeBootMs uint32   // Timestamp (milliseconds since system boot)
-	Name       [10]byte // Name of the debug variable
 	Value      int32    // Signed integer value
+	Name       [10]byte // Name of the debug variable
 }
 
 func (self *NamedValueInt) MsgID() uint8 {
@@ -7364,8 +7243,8 @@ func (self *NamedValueInt) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Name,
 		&self.Value,
+		&self.Name,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7381,8 +7260,8 @@ func (self *NamedValueInt) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Name,
 		&self.Value,
+		&self.Name,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7437,8 +7316,8 @@ func (self *Statustext) Unpack(p *Packet) error {
 // Send a debug value. The index is used to discriminate between values. These values show up in the plot of QGroundControl as DEBUG N.
 type Debug struct {
 	TimeBootMs uint32  // Timestamp (milliseconds since system boot)
-	Ind        uint8   // index of debug variable
 	Value      float32 // DEBUG value
+	Ind        uint8   // index of debug variable
 }
 
 func (self *Debug) MsgID() uint8 {
@@ -7453,8 +7332,8 @@ func (self *Debug) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Ind,
 		&self.Value,
+		&self.Ind,
 	} {
 		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7470,12 +7349,255 @@ func (self *Debug) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
 		&self.TimeBootMs,
-		&self.Ind,
 		&self.Value,
+		&self.Ind,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+// Message IDs
+const (
+	MSG_ID_HEARTBEAT                               = 0
+	MSG_ID_SYS_STATUS                              = 1
+	MSG_ID_SYSTEM_TIME                             = 2
+	MSG_ID_PING                                    = 4
+	MSG_ID_CHANGE_OPERATOR_CONTROL                 = 5
+	MSG_ID_CHANGE_OPERATOR_CONTROL_ACK             = 6
+	MSG_ID_AUTH_KEY                                = 7
+	MSG_ID_SET_MODE                                = 11
+	MSG_ID_PARAM_REQUEST_READ                      = 20
+	MSG_ID_PARAM_REQUEST_LIST                      = 21
+	MSG_ID_PARAM_VALUE                             = 22
+	MSG_ID_PARAM_SET                               = 23
+	MSG_ID_GPS_RAW_INT                             = 24
+	MSG_ID_GPS_STATUS                              = 25
+	MSG_ID_SCALED_IMU                              = 26
+	MSG_ID_RAW_IMU                                 = 27
+	MSG_ID_RAW_PRESSURE                            = 28
+	MSG_ID_SCALED_PRESSURE                         = 29
+	MSG_ID_ATTITUDE                                = 30
+	MSG_ID_ATTITUDE_QUATERNION                     = 31
+	MSG_ID_LOCAL_POSITION_NED                      = 32
+	MSG_ID_GLOBAL_POSITION_INT                     = 33
+	MSG_ID_RC_CHANNELS_SCALED                      = 34
+	MSG_ID_RC_CHANNELS_RAW                         = 35
+	MSG_ID_SERVO_OUTPUT_RAW                        = 36
+	MSG_ID_MISSION_REQUEST_PARTIAL_LIST            = 37
+	MSG_ID_MISSION_WRITE_PARTIAL_LIST              = 38
+	MSG_ID_MISSION_ITEM                            = 39
+	MSG_ID_MISSION_REQUEST                         = 40
+	MSG_ID_MISSION_SET_CURRENT                     = 41
+	MSG_ID_MISSION_CURRENT                         = 42
+	MSG_ID_MISSION_REQUEST_LIST                    = 43
+	MSG_ID_MISSION_COUNT                           = 44
+	MSG_ID_MISSION_CLEAR_ALL                       = 45
+	MSG_ID_MISSION_ITEM_REACHED                    = 46
+	MSG_ID_MISSION_ACK                             = 47
+	MSG_ID_SET_GPS_GLOBAL_ORIGIN                   = 48
+	MSG_ID_GPS_GLOBAL_ORIGIN                       = 49
+	MSG_ID_PARAM_MAP_RC                            = 50
+	MSG_ID_SAFETY_SET_ALLOWED_AREA                 = 54
+	MSG_ID_SAFETY_ALLOWED_AREA                     = 55
+	MSG_ID_ATTITUDE_QUATERNION_COV                 = 61
+	MSG_ID_NAV_CONTROLLER_OUTPUT                   = 62
+	MSG_ID_GLOBAL_POSITION_INT_COV                 = 63
+	MSG_ID_LOCAL_POSITION_NED_COV                  = 64
+	MSG_ID_RC_CHANNELS                             = 65
+	MSG_ID_REQUEST_DATA_STREAM                     = 66
+	MSG_ID_DATA_STREAM                             = 67
+	MSG_ID_MANUAL_CONTROL                          = 69
+	MSG_ID_RC_CHANNELS_OVERRIDE                    = 70
+	MSG_ID_MISSION_ITEM_INT                        = 73
+	MSG_ID_VFR_HUD                                 = 74
+	MSG_ID_COMMAND_INT                             = 75
+	MSG_ID_COMMAND_LONG                            = 76
+	MSG_ID_COMMAND_ACK                             = 77
+	MSG_ID_MANUAL_SETPOINT                         = 81
+	MSG_ID_SET_ATTITUDE_TARGET                     = 82
+	MSG_ID_ATTITUDE_TARGET                         = 83
+	MSG_ID_SET_POSITION_TARGET_LOCAL_NED           = 84
+	MSG_ID_POSITION_TARGET_LOCAL_NED               = 85
+	MSG_ID_SET_POSITION_TARGET_GLOBAL_INT          = 86
+	MSG_ID_POSITION_TARGET_GLOBAL_INT              = 87
+	MSG_ID_LOCAL_POSITION_NED_SYSTEM_GLOBAL_OFFSET = 89
+	MSG_ID_HIL_STATE                               = 90
+	MSG_ID_HIL_CONTROLS                            = 91
+	MSG_ID_HIL_RC_INPUTS_RAW                       = 92
+	MSG_ID_OPTICAL_FLOW                            = 100
+	MSG_ID_GLOBAL_VISION_POSITION_ESTIMATE         = 101
+	MSG_ID_VISION_POSITION_ESTIMATE                = 102
+	MSG_ID_VISION_SPEED_ESTIMATE                   = 103
+	MSG_ID_VICON_POSITION_ESTIMATE                 = 104
+	MSG_ID_HIGHRES_IMU                             = 105
+	MSG_ID_OPTICAL_FLOW_RAD                        = 106
+	MSG_ID_HIL_SENSOR                              = 107
+	MSG_ID_SIM_STATE                               = 108
+	MSG_ID_RADIO_STATUS                            = 109
+	MSG_ID_FILE_TRANSFER_PROTOCOL                  = 110
+	MSG_ID_TIMESYNC                                = 111
+	MSG_ID_CAMERA_TRIGGER                          = 112
+	MSG_ID_HIL_GPS                                 = 113
+	MSG_ID_HIL_OPTICAL_FLOW                        = 114
+	MSG_ID_HIL_STATE_QUATERNION                    = 115
+	MSG_ID_SCALED_IMU2                             = 116
+	MSG_ID_LOG_REQUEST_LIST                        = 117
+	MSG_ID_LOG_ENTRY                               = 118
+	MSG_ID_LOG_REQUEST_DATA                        = 119
+	MSG_ID_LOG_DATA                                = 120
+	MSG_ID_LOG_ERASE                               = 121
+	MSG_ID_LOG_REQUEST_END                         = 122
+	MSG_ID_GPS_INJECT_DATA                         = 123
+	MSG_ID_GPS2_RAW                                = 124
+	MSG_ID_POWER_STATUS                            = 125
+	MSG_ID_SERIAL_CONTROL                          = 126
+	MSG_ID_GPS_RTK                                 = 127
+	MSG_ID_GPS2_RTK                                = 128
+	MSG_ID_SCALED_IMU3                             = 129
+	MSG_ID_DATA_TRANSMISSION_HANDSHAKE             = 130
+	MSG_ID_ENCAPSULATED_DATA                       = 131
+	MSG_ID_DISTANCE_SENSOR                         = 132
+	MSG_ID_TERRAIN_REQUEST                         = 133
+	MSG_ID_TERRAIN_DATA                            = 134
+	MSG_ID_TERRAIN_CHECK                           = 135
+	MSG_ID_TERRAIN_REPORT                          = 136
+	MSG_ID_SCALED_PRESSURE2                        = 137
+	MSG_ID_ATT_POS_MOCAP                           = 138
+	MSG_ID_SET_ACTUATOR_CONTROL_TARGET             = 139
+	MSG_ID_ACTUATOR_CONTROL_TARGET                 = 140
+	MSG_ID_BATTERY_STATUS                          = 147
+	MSG_ID_AUTOPILOT_VERSION                       = 148
+	MSG_ID_LANDING_TARGET                          = 149
+	MSG_ID_V2_EXTENSION                            = 248
+	MSG_ID_MEMORY_VECT                             = 249
+	MSG_ID_DEBUG_VECT                              = 250
+	MSG_ID_NAMED_VALUE_FLOAT                       = 251
+	MSG_ID_NAMED_VALUE_INT                         = 252
+	MSG_ID_STATUSTEXT                              = 253
+	MSG_ID_DEBUG                                   = 254
+)
+
+// CRC Extra, indexed by msg id
+// http://www.mavlink.org/mavlink/crc_extra_calculation
+var crcExtras = map[uint8]uint8{
+	0:   50,  // MSG_ID_HEARTBEAT
+	1:   124, // MSG_ID_SYS_STATUS
+	2:   137, // MSG_ID_SYSTEM_TIME
+	4:   237, // MSG_ID_PING
+	5:   5,   // MSG_ID_CHANGE_OPERATOR_CONTROL
+	6:   104, // MSG_ID_CHANGE_OPERATOR_CONTROL_ACK
+	7:   152, // MSG_ID_AUTH_KEY
+	11:  89,  // MSG_ID_SET_MODE
+	20:  63,  // MSG_ID_PARAM_REQUEST_READ
+	21:  159, // MSG_ID_PARAM_REQUEST_LIST
+	22:  132, // MSG_ID_PARAM_VALUE
+	23:  101, // MSG_ID_PARAM_SET
+	24:  24,  // MSG_ID_GPS_RAW_INT
+	25:  193, // MSG_ID_GPS_STATUS
+	26:  170, // MSG_ID_SCALED_IMU
+	27:  144, // MSG_ID_RAW_IMU
+	28:  67,  // MSG_ID_RAW_PRESSURE
+	29:  115, // MSG_ID_SCALED_PRESSURE
+	30:  39,  // MSG_ID_ATTITUDE
+	31:  246, // MSG_ID_ATTITUDE_QUATERNION
+	32:  185, // MSG_ID_LOCAL_POSITION_NED
+	33:  104, // MSG_ID_GLOBAL_POSITION_INT
+	34:  237, // MSG_ID_RC_CHANNELS_SCALED
+	35:  244, // MSG_ID_RC_CHANNELS_RAW
+	36:  222, // MSG_ID_SERVO_OUTPUT_RAW
+	37:  212, // MSG_ID_MISSION_REQUEST_PARTIAL_LIST
+	38:  9,   // MSG_ID_MISSION_WRITE_PARTIAL_LIST
+	39:  254, // MSG_ID_MISSION_ITEM
+	40:  230, // MSG_ID_MISSION_REQUEST
+	41:  28,  // MSG_ID_MISSION_SET_CURRENT
+	42:  28,  // MSG_ID_MISSION_CURRENT
+	43:  132, // MSG_ID_MISSION_REQUEST_LIST
+	44:  221, // MSG_ID_MISSION_COUNT
+	45:  232, // MSG_ID_MISSION_CLEAR_ALL
+	46:  11,  // MSG_ID_MISSION_ITEM_REACHED
+	47:  153, // MSG_ID_MISSION_ACK
+	48:  41,  // MSG_ID_SET_GPS_GLOBAL_ORIGIN
+	49:  39,  // MSG_ID_GPS_GLOBAL_ORIGIN
+	50:  121, // MSG_ID_PARAM_MAP_RC
+	54:  15,  // MSG_ID_SAFETY_SET_ALLOWED_AREA
+	55:  3,   // MSG_ID_SAFETY_ALLOWED_AREA
+	61:  82,  // MSG_ID_ATTITUDE_QUATERNION_COV
+	62:  183, // MSG_ID_NAV_CONTROLLER_OUTPUT
+	63:  169, // MSG_ID_GLOBAL_POSITION_INT_COV
+	64:  60,  // MSG_ID_LOCAL_POSITION_NED_COV
+	65:  118, // MSG_ID_RC_CHANNELS
+	66:  148, // MSG_ID_REQUEST_DATA_STREAM
+	67:  21,  // MSG_ID_DATA_STREAM
+	69:  243, // MSG_ID_MANUAL_CONTROL
+	70:  124, // MSG_ID_RC_CHANNELS_OVERRIDE
+	73:  38,  // MSG_ID_MISSION_ITEM_INT
+	74:  20,  // MSG_ID_VFR_HUD
+	75:  158, // MSG_ID_COMMAND_INT
+	76:  152, // MSG_ID_COMMAND_LONG
+	77:  143, // MSG_ID_COMMAND_ACK
+	81:  106, // MSG_ID_MANUAL_SETPOINT
+	82:  166, // MSG_ID_SET_ATTITUDE_TARGET
+	83:  156, // MSG_ID_ATTITUDE_TARGET
+	84:  143, // MSG_ID_SET_POSITION_TARGET_LOCAL_NED
+	85:  140, // MSG_ID_POSITION_TARGET_LOCAL_NED
+	86:  5,   // MSG_ID_SET_POSITION_TARGET_GLOBAL_INT
+	87:  150, // MSG_ID_POSITION_TARGET_GLOBAL_INT
+	89:  231, // MSG_ID_LOCAL_POSITION_NED_SYSTEM_GLOBAL_OFFSET
+	90:  183, // MSG_ID_HIL_STATE
+	91:  63,  // MSG_ID_HIL_CONTROLS
+	92:  54,  // MSG_ID_HIL_RC_INPUTS_RAW
+	100: 175, // MSG_ID_OPTICAL_FLOW
+	101: 102, // MSG_ID_GLOBAL_VISION_POSITION_ESTIMATE
+	102: 158, // MSG_ID_VISION_POSITION_ESTIMATE
+	103: 208, // MSG_ID_VISION_SPEED_ESTIMATE
+	104: 56,  // MSG_ID_VICON_POSITION_ESTIMATE
+	105: 93,  // MSG_ID_HIGHRES_IMU
+	106: 138, // MSG_ID_OPTICAL_FLOW_RAD
+	107: 108, // MSG_ID_HIL_SENSOR
+	108: 32,  // MSG_ID_SIM_STATE
+	109: 185, // MSG_ID_RADIO_STATUS
+	110: 145, // MSG_ID_FILE_TRANSFER_PROTOCOL
+	111: 34,  // MSG_ID_TIMESYNC
+	112: 174, // MSG_ID_CAMERA_TRIGGER
+	113: 124, // MSG_ID_HIL_GPS
+	114: 237, // MSG_ID_HIL_OPTICAL_FLOW
+	115: 237, // MSG_ID_HIL_STATE_QUATERNION
+	116: 76,  // MSG_ID_SCALED_IMU2
+	117: 128, // MSG_ID_LOG_REQUEST_LIST
+	118: 56,  // MSG_ID_LOG_ENTRY
+	119: 116, // MSG_ID_LOG_REQUEST_DATA
+	120: 94,  // MSG_ID_LOG_DATA
+	121: 237, // MSG_ID_LOG_ERASE
+	122: 203, // MSG_ID_LOG_REQUEST_END
+	123: 147, // MSG_ID_GPS_INJECT_DATA
+	124: 87,  // MSG_ID_GPS2_RAW
+	125: 203, // MSG_ID_POWER_STATUS
+	126: 20,  // MSG_ID_SERIAL_CONTROL
+	127: 25,  // MSG_ID_GPS_RTK
+	128: 226, // MSG_ID_GPS2_RTK
+	129: 46,  // MSG_ID_SCALED_IMU3
+	130: 29,  // MSG_ID_DATA_TRANSMISSION_HANDSHAKE
+	131: 30,  // MSG_ID_ENCAPSULATED_DATA
+	132: 85,  // MSG_ID_DISTANCE_SENSOR
+	133: 6,   // MSG_ID_TERRAIN_REQUEST
+	134: 5,   // MSG_ID_TERRAIN_DATA
+	135: 203, // MSG_ID_TERRAIN_CHECK
+	136: 1,   // MSG_ID_TERRAIN_REPORT
+	137: 195, // MSG_ID_SCALED_PRESSURE2
+	138: 119, // MSG_ID_ATT_POS_MOCAP
+	139: 9,   // MSG_ID_SET_ACTUATOR_CONTROL_TARGET
+	140: 101, // MSG_ID_ACTUATOR_CONTROL_TARGET
+	147: 1,   // MSG_ID_BATTERY_STATUS
+	148: 224, // MSG_ID_AUTOPILOT_VERSION
+	149: 255, // MSG_ID_LANDING_TARGET
+	248: 248, // MSG_ID_V2_EXTENSION
+	249: 52,  // MSG_ID_MEMORY_VECT
+	250: 245, // MSG_ID_DEBUG_VECT
+	251: 94,  // MSG_ID_NAMED_VALUE_FLOAT
+	252: 99,  // MSG_ID_NAMED_VALUE_INT
+	253: 86,  // MSG_ID_STATUSTEXT
+	254: 46,  // MSG_ID_DEBUG
 }
