@@ -11,11 +11,16 @@ func New() *X25 {
 	return x
 }
 
+func (x *X25) WriteByte(b byte) error {
+	tmp := b ^ byte(x.crc&0xff)
+	tmp ^= (tmp << 4)
+	x.crc = (x.crc >> 8) ^ (uint16(tmp) << 8) ^ (uint16(tmp) << 3) ^ (uint16(tmp) >> 4)
+	return nil
+}
+
 func (x *X25) Write(p []byte) (n int, err error) {
 	for _, b := range p {
-		tmp := b ^ byte(x.crc&0xff)
-		tmp ^= (tmp << 4)
-		x.crc = (x.crc >> 8) ^ (uint16(tmp) << 8) ^ (uint16(tmp) << 3) ^ (uint16(tmp) >> 4)
+		x.WriteByte(b)
 	}
 	return len(p), nil
 }
