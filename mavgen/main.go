@@ -25,7 +25,7 @@ func main() {
 	}
 	defer fin.Close()
 
-	d, err := ParseDialect(fin)
+	d, err := ParseDialect(fin, baseName(*infile))
 	if err != nil {
 		log.Fatal("parse fail: ", err)
 	}

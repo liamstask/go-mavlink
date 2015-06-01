@@ -128,14 +128,16 @@ func SanitizeComments(s string) string {
 
 // read in an xml-based dialect file,
 // and populate a Dialect struct with its contents
-func ParseDialect(in io.Reader) (*Dialect, error) {
+func ParseDialect(in io.Reader, name string) (*Dialect, error) {
 
 	filebytes, err := ioutil.ReadAll(in)
 	if err != nil {
 		return nil, err
 	}
 
-	dialect := &Dialect{}
+	dialect := &Dialect{
+		Name: name,
+	}
 
 	if err := xml.Unmarshal(filebytes, &dialect); err != nil {
 		return nil, err
