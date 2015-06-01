@@ -41,33 +41,44 @@ type Packet struct {
 }
 
 type Decoder struct {
-	// uint8_t msg_received;               ///< Number of received messages
-	// uint8_t buffer_overrun;             ///< Number of buffer overruns
-	// uint8_t parse_error;                ///< Number of parse errors
-	// uint8_t packet_idx;                 ///< Index in current packet
-	// uint16_t packet_rx_success_count;   ///< Received packets
-	// uint16_t packet_rx_drop_count;      ///< Number of packet drops
-	CurrSeqID uint8 // last seq id decoded
+	CurrSeqID uint8      // last seq id decoded
+	Dialects  []*Dialect // dialects that can be decoded
 	br        *bufio.Reader
 }
 
 type Encoder struct {
-	CurrSeqID uint8 // last seq id encoded
+	CurrSeqID uint8      // last seq id encoded
+	Dialects  []*Dialect // dialects that can be encoded
 	bw        *bufio.Writer
 }
 
 func NewDecoder(r io.Reader) *Decoder {
-	if v, ok := r.(*bufio.Reader); ok {
-		return &Decoder{br: v}
+	d := &Decoder{
+		Dialects: []*Dialect{DialectCommon},
 	}
-	return &Decoder{br: bufio.NewReader(r)}
+
+	if v, ok := r.(*bufio.Reader); ok {
+		d.br = v
+	} else {
+		d.br = bufio.NewReader(r)
+	}
+
+	return d
 }
 
 func NewEncoder(w io.Writer) *Encoder {
-	if v, ok := w.(*bufio.Writer); ok {
-		return &Encoder{bw: v}
+
+	e := &Encoder{
+		Dialects: []*Dialect{DialectCommon},
 	}
-	return &Encoder{bw: bufio.NewWriter(w)}
+
+	if v, ok := w.(*bufio.Writer); ok {
+		e.bw = v
+	} else {
+		e.bw = bufio.NewWriter(w)
+	}
+
+	return e
 }
 
 // Decoder reads and parses from its reader
@@ -114,13 +125,11 @@ func (dec *Decoder) Decode() (*Packet, error) {
 	p.Payload = buf[:n-numChecksumBytes]
 	crc.Write(p.Payload)
 
-	// add crcextra to crc
-	// http://www.mavlink.org/mavlink/crc_extra_calculation
-	if crcx, ok := crcExtras[p.MsgID]; ok {
-		crc.WriteByte(crcx)
-	} else {
-		return nil, ErrUnknownMsgID
+	crcx, err := findCrcX(dec.Dialects, p.MsgID)
+	if err != nil {
+		return nil, err
 	}
+	crc.WriteByte(crcx)
 
 	p.Checksum = bytesToU16(buf[n-numChecksumBytes:])
 
@@ -151,28 +160,33 @@ func (enc *Encoder) EncodePacket(p *Packet) error {
 
 	crc := x25.New()
 
+	// header
 	hdr := []byte{startByte, byte(len(p.Payload)), enc.CurrSeqID, p.SysID, p.CompID, p.MsgID}
 	if err := enc.writeAndCheck(hdr); err != nil {
 		return err
 	}
 	crc.Write(hdr[1:]) // don't include start byte
 
+	// payload
 	if err := enc.writeAndCheck(p.Payload); err != nil {
 		return err
 	}
 	crc.Write(p.Payload)
-	if crcx, ok := crcExtras[p.MsgID]; ok {
-		crc.WriteByte(crcx)
-	} else {
-		return ErrUnknownMsgID
-	}
 
+	// crc extra
+	crcx, err := findCrcX(enc.Dialects, p.MsgID)
+	if err != nil {
+		return err
+	}
+	crc.WriteByte(crcx)
+
+	// crc
 	crcBytes := u16ToBytes(crc.Sum16())
 	if err := enc.writeAndCheck(crcBytes); err != nil {
 		return err
 	}
 
-	err := enc.bw.Flush()
+	err = enc.bw.Flush()
 	if err == nil {
 		enc.CurrSeqID++
 	}
