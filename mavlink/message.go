@@ -76,9 +76,6 @@ func NewEncoder(w io.Writer) *Encoder {
 // corresponding type via Message.FromPacket()
 func (dec *Decoder) Decode() (*Packet, error) {
 
-	var p Packet
-	crc := x25.New()
-
 	// discard bytes until our start byte
 	for {
 		c, err := dec.br.ReadByte()
@@ -97,11 +94,14 @@ func (dec *Decoder) Decode() (*Packet, error) {
 	}
 
 	payloadLen := hdr[0]
-	p.SeqID = hdr[1]
-	p.SysID = hdr[2]
-	p.CompID = hdr[3]
-	p.MsgID = hdr[4]
+	p := &Packet{
+		SeqID:  hdr[1],
+		SysID:  hdr[2],
+		CompID: hdr[3],
+		MsgID:  hdr[4],
+	}
 
+	crc := x25.New()
 	crc.Write(hdr)
 
 	// read payload (if there is one) and checksum bytes
@@ -129,7 +129,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 		return nil, ErrCrcFail
 	}
 
-	return &p, nil
+	return p, nil
 }
 
 // helper that accepts a Message, internally converts it to a Packet,
