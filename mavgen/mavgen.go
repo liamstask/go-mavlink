@@ -288,13 +288,15 @@ const ({{range .Messages}}
 	MSG_ID_{{.Name}} = {{.ID}}{{end}}
 )
 
-// CRC Extra, indexed by msg id
-// http://www.mavlink.org/mavlink/crc_extra_calculation
-var crcExtras = map[uint8]uint8{ {{range .Messages}}
-	{{.ID}}: {{.CRCExtra}}, // MSG_ID_{{.Name}}{{end}}
+// Dialect{{.Name | UpperCamelCase}} is the dialect represented by {{.Name}}.xml
+var Dialect{{.Name | UpperCamelCase}} *Dialect = &Dialect{
+	Name: "{{.Name}}",
+	crcExtras: map[uint8]uint8{ {{range .Messages}}
+		{{.ID}}: {{.CRCExtra}}, // MSG_ID_{{.Name}}{{end}}
+	},
 }
 `
-	return template.Must(template.New("msgIds").Parse(msgIdTmpl)).Execute(w, d)
+	return template.Must(template.New("msgIds").Funcs(funcMap).Parse(msgIdTmpl)).Execute(w, d)
 }
 
 // generate class definitions for each msg id.
