@@ -41,10 +41,14 @@ func main() {
 	}
 }
 
+// helper to remove the extension from the base name
+func baseName(s string) string {
+	return strings.TrimSuffix(filepath.Base(s), filepath.Ext(s))
+}
+
 func findOutFile() string {
 	if *outfile == "" {
-		base := strings.TrimSuffix(filepath.Base(*infile), ".xml")
-		*outfile = strings.ToLower(base) + ".go"
+		*outfile = strings.ToLower(baseName(*infile)) + ".go"
 	}
 
 	dir, err := os.Getwd()
