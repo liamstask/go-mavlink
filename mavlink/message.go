@@ -9,6 +9,11 @@ import (
 )
 
 //go:generate mavgen -f definitions/common.xml
+//go:generate mavgen -f definitions/ardupilotmega.xml
+//go:generate mavgen -f definitions/ASLUAV.xml
+//go:generate mavgen -f definitions/matrixpilot.xml
+//go:generate mavgen -f definitions/pixhawk.xml
+//go:generate mavgen -f definitions/ualberta.xml
 
 const (
 	startByte        = 0xfe
