@@ -52,16 +52,3 @@ func (ds *DialectSlice) Remove(d *Dialect) {
 		(*ds)[len(*ds)-1], *ds = nil, append((*ds)[:i], (*ds)[i+1:]...)
 	}
 }
-
-// look up the crcextra for msgid within the given list of Dialects
-func findCrcX(ds []*Dialect, msgid uint8) (uint8, error) {
-
-	// http://www.mavlink.org/mavlink/crc_extra_calculation
-	for _, d := range ds {
-		if crcx, ok := d.crcExtras[msgid]; ok {
-			return crcx, nil
-		}
-	}
-
-	return 0, ErrUnknownMsgID
-}
