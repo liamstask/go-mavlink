@@ -46,20 +46,20 @@ type Packet struct {
 }
 
 type Decoder struct {
-	CurrSeqID uint8      // last seq id decoded
-	Dialects  []*Dialect // dialects that can be decoded
+	CurrSeqID uint8        // last seq id decoded
+	Dialects  DialectSlice // dialects that can be decoded
 	br        *bufio.Reader
 }
 
 type Encoder struct {
-	CurrSeqID uint8      // last seq id encoded
-	Dialects  []*Dialect // dialects that can be encoded
+	CurrSeqID uint8        // last seq id encoded
+	Dialects  DialectSlice // dialects that can be encoded
 	bw        *bufio.Writer
 }
 
 func NewDecoder(r io.Reader) *Decoder {
 	d := &Decoder{
-		Dialects: []*Dialect{DialectCommon},
+		Dialects: DialectSlice{DialectCommon},
 	}
 
 	if v, ok := r.(*bufio.Reader); ok {
@@ -74,7 +74,7 @@ func NewDecoder(r io.Reader) *Decoder {
 func NewEncoder(w io.Writer) *Encoder {
 
 	e := &Encoder{
-		Dialects: []*Dialect{DialectCommon},
+		Dialects: DialectSlice{DialectCommon},
 	}
 
 	if v, ok := w.(*bufio.Writer); ok {
@@ -130,7 +130,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 	p.Payload = buf[:n-numChecksumBytes]
 	crc.Write(p.Payload)
 
-	crcx, err := findCrcX(dec.Dialects, p.MsgID)
+	crcx, err := dec.Dialects.findCrcX(p.MsgID)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +179,7 @@ func (enc *Encoder) EncodePacket(p *Packet) error {
 	crc.Write(p.Payload)
 
 	// crc extra
-	crcx, err := findCrcX(enc.Dialects, p.MsgID)
+	crcx, err := enc.Dialects.findCrcX(p.MsgID)
 	if err != nil {
 		return err
 	}
