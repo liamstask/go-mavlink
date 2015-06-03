@@ -55,3 +55,58 @@ func TestDecode(t *testing.T) {
 		t.Errorf("Decode fail:", err)
 	}
 }
+
+func TestDialects(t *testing.T) {
+
+	var buf bytes.Buffer
+
+	enc := NewEncoder(&buf)
+	dec := NewDecoder(&buf)
+
+	// try to encode an ardupilot msg before we've added that dialect,
+	// ensure it fails as expected
+	mi := &Meminfo{
+		Brkval:  1000,
+		Freemem: 10,
+	}
+
+	err := enc.Encode(0x1, 0x1, mi)
+	if err != ErrUnknownMsgID {
+		t.Errorf("encode expected ErrUnknownMsgID, got %q", err)
+	}
+
+	buf.Reset()
+
+	// add the dialect, and ensure it succeeds
+	enc.Dialects.Add(DialectArdupilotmega)
+	if err = enc.Encode(0x1, 0x1, mi); err != nil {
+		t.Errorf("Encode fail %q", err)
+	}
+
+	_, err = NewDecoder(&buf).Decode()
+	if err != ErrUnknownMsgID {
+		t.Errorf("decode expected ErrUnknownMsgID, got %q", err)
+	}
+
+	dec.Dialects.Add(DialectArdupilotmega)
+
+	// re-encode the msg, and decode it again after adding the required dialect
+	if err = enc.Encode(0x1, 0x1, mi); err != nil {
+		t.Errorf("Encode fail %q", err)
+	}
+
+	pktOut, err := dec.Decode()
+	if err != nil {
+		t.Errorf("Decode fail %q", err)
+	}
+
+	// make sure the output matches our original input for good measure
+	var miOut Meminfo
+	if err := miOut.Unpack(pktOut); err != nil {
+		t.Errorf("Unpack fail %q", err)
+	}
+
+	if miOut.Brkval != mi.Brkval || miOut.Freemem != mi.Freemem {
+		t.Errorf("Round trip fail")
+	}
+}
