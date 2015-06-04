@@ -124,7 +124,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 	buf := make([]byte, payloadLen+numChecksumBytes)
 	n, err := io.ReadFull(dec.br, buf)
 	if err != nil {
-		return nil, err
+		return p, err
 	}
 
 	p.Payload = buf[:n-numChecksumBytes]
@@ -132,7 +132,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 
 	crcx, err := dec.Dialects.findCrcX(p.MsgID)
 	if err != nil {
-		return nil, err
+		return p, err
 	}
 	crc.WriteByte(crcx)
 
@@ -140,7 +140,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 
 	// does the transmitted checksum match our computed checksum?
 	if p.Checksum != crc.Sum16() {
-		return nil, ErrCrcFail
+		return p, ErrCrcFail
 	}
 
 	return p, nil
