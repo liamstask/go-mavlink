@@ -206,8 +206,8 @@ const (
 var DialectUalberta *Dialect = &Dialect{
 	Name: "ualberta",
 	crcExtras: map[uint8]uint8{
-		220: 34,  // MSG_ID_NAV_FILTER_BIAS
-		221: 230, // MSG_ID_RADIO_CALIBRATION
-		222: 15,  // MSG_ID_UALBERTA_SYS_STATUS
+		220: 34, // MSG_ID_NAV_FILTER_BIAS
+		221: 71, // MSG_ID_RADIO_CALIBRATION
+		222: 15, // MSG_ID_UALBERTA_SYS_STATUS
 	},
 }
