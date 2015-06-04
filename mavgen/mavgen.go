@@ -87,9 +87,13 @@ func (m *Message) CRCExtra() uint8 {
 		if cType == "uint8_t_mavlink_version" {
 			cType = "uint8_t"
 		}
+		// type name for crc extra purposes does not include array portion
+		if idx := strings.IndexByte(cType, '['); idx >= 0 {
+			cType = cType[:idx]
+		}
 		fmt.Fprint(hash, cType+" "+f.Name+" ")
 		if f.ArrayLen > 0 {
-			hash.Write([]byte{byte(f.ArrayLen)})
+			hash.WriteByte(byte(f.ArrayLen))
 		}
 	}
 
