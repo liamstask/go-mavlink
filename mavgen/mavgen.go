@@ -66,15 +66,20 @@ var funcMap = template.FuncMap{
 	"UpperCamelCase": UpperCamelCase,
 }
 
-func (m *Message) Size() (size int) {
-	for _, f := range m.Fields {
-		bitSize := f.BitSize
-		if f.ArrayLen > 0 {
-			bitSize *= f.ArrayLen
-		}
-		size += bitSize
+func (f *MessageField) SizeInBytes() int {
+	if f.ArrayLen > 0 {
+		return f.BitSize / 8 * f.ArrayLen
+	} else {
+		return f.BitSize / 8
 	}
-	return size / 8
+}
+
+func (m *Message) Size() int {
+	sz := 0
+	for _, f := range m.Fields {
+		sz += f.SizeInBytes()
+	}
+	return sz
 }
 
 // CRC extra calculation: http://www.mavlink.org/mavlink/crc_extra_calculation
