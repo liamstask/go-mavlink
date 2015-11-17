@@ -208,17 +208,6 @@ func GoTypeInfo(s string) (string, int, int, error) {
 	return name, bitsz, arraylen, nil
 }
 
-// return the corresponding go type for the given c type
-func c2goType(c string) string {
-
-	// array? leave the [N] but convert the primitive type name
-	if idx := strings.IndexByte(c, '['); idx != -1 {
-		return c[idx:] + c2goPrimitive(c[:idx])
-	}
-
-	return c2goPrimitive(c)
-}
-
 // generate a .go source file from the given dialect
 func (d *Dialect) GenerateGo(w io.Writer) error {
 	// templatize to buffer, format it, then write out
