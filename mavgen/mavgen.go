@@ -60,6 +60,7 @@ type MessageField struct {
 	GoType      string
 	BitSize     int
 	ArrayLen    int
+	ByteOffset  int // from beginning of payload
 }
 
 var funcMap = template.FuncMap{
@@ -361,6 +362,13 @@ func (self *{{$name}}) Unpack(p *Packet) error {
 		// ensure fields are sorted according to their size,
 		// http://www.mavlink.org/mavlink/crc_extra_calculation
 		sort.Stable(sort.Reverse(m))
+
+		// once sorted, calculate offsets for use in payload packing/unpacking
+		offset := 0
+		for _, f := range m.Fields {
+			f.ByteOffset = offset
+			offset += f.SizeInBytes()
+		}
 	}
 
 	return template.Must(template.New("classesTmpl").Funcs(funcMap).Parse(classesTmpl)).Execute(w, d)
