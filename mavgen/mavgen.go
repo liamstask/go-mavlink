@@ -132,6 +132,41 @@ func UpperCamelCase(s string) string {
 	return b.String()
 }
 
+// helper to pack a single element into a payload.
+// can be called for a single field, or an element within a field's array.
+func (f *MessageField) payloadPackPrimitive(offset, name string) string {
+	switch f.BitSize {
+	case 8:
+		return fmt.Sprintf("payload[%s] = byte(%s)", offset, name)
+	case 16, 32, 64:
+		return fmt.Sprintf("binary.LittleEndian.PutUint%d(payload[%s:], uint%d(%s))", f.BitSize, offset, f.BitSize, name)
+	}
+	panic("unhandled bitsize")
+}
+
+// produce a string that will pack this message's fields
+// into a byte slice called 'payload'
+func (f *MessageField) PayloadPackSequence() string {
+	name := UpperCamelCase(f.Name)
+
+	if f.ArrayLen > 0 {
+		// optimize to copy() if possible
+		if strings.HasSuffix(f.GoType, "byte") || strings.HasSuffix(f.GoType, "uint8") {
+			return fmt.Sprintf("copy(payload[%d:], self.%s[:])", f.ByteOffset, name)
+		}
+
+		// pack each element in the array
+		s := fmt.Sprintf("for i, v := range self.%s {\n", name)
+		off := fmt.Sprintf("%d + i * %d", f.ByteOffset, f.BitSize/8)
+		s += f.payloadPackPrimitive(off, "v") + "\n"
+		s += fmt.Sprintf("}")
+		return s
+	}
+
+	// pack a single field
+	return f.payloadPackPrimitive(fmt.Sprintf("%d", f.ByteOffset), "self."+name)
+}
+
 func SanitizeComments(s string) string {
 	return strings.Replace(s, "\n", "\n// ", -1)
 }
@@ -320,17 +355,11 @@ func (self *{{$name}}) MsgName() string {
 }
 
 func (self *{{$name}}) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{} { {{range .Fields}}
-		&self.{{.Name | UpperCamelCase}},{{end}}
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, {{ .Size }}){{range .Fields}}
+	{{.PayloadPackSequence}}{{end}}
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
