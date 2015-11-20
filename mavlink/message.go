@@ -109,7 +109,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 		return nil, err
 	}
 
-	payloadLen := hdr[0]
+	payloadLen := int(hdr[0])
 	p := &Packet{
 		SeqID:  hdr[1],
 		SysID:  hdr[2],
@@ -122,12 +122,11 @@ func (dec *Decoder) Decode() (*Packet, error) {
 
 	// read payload (if there is one) and checksum bytes
 	buf := make([]byte, payloadLen+numChecksumBytes)
-	n, err := io.ReadFull(dec.br, buf)
-	if err != nil {
+	if _, err := io.ReadFull(dec.br, buf); err != nil {
 		return p, err
 	}
 
-	p.Payload = buf[:n-numChecksumBytes]
+	p.Payload = buf[:payloadLen]
 	crc.Write(p.Payload)
 
 	crcx, err := dec.Dialects.findCrcX(p.MsgID)
@@ -136,7 +135,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 	}
 	crc.WriteByte(crcx)
 
-	p.Checksum = bytesToU16(buf[n-numChecksumBytes:])
+	p.Checksum = bytesToU16(buf[payloadLen:])
 
 	// does the transmitted checksum match our computed checksum?
 	if p.Checksum != crc.Sum16() {
