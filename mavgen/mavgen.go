@@ -135,12 +135,23 @@ func UpperCamelCase(s string) string {
 // helper to pack a single element into a payload.
 // can be called for a single field, or an element within a field's array.
 func (f *MessageField) payloadPackPrimitive(offset, name string) string {
-	switch f.BitSize {
-	case 8:
+
+	if f.BitSize == 8 {
 		return fmt.Sprintf("payload[%s] = byte(%s)", offset, name)
-	case 16, 32, 64:
-		return fmt.Sprintf("binary.LittleEndian.PutUint%d(payload[%s:], uint%d(%s))", f.BitSize, offset, f.BitSize, name)
 	}
+
+	if f.IsFloat() {
+		switch f.BitSize {
+		case 32, 64:
+			return fmt.Sprintf("binary.LittleEndian.PutUint%d(payload[%s:], math.Float%dbits(%s))", f.BitSize, offset, f.BitSize, name)
+		}
+	} else {
+		switch f.BitSize {
+		case 16, 32, 64:
+			return fmt.Sprintf("binary.LittleEndian.PutUint%d(payload[%s:], uint%d(%s))", f.BitSize, offset, f.BitSize, name)
+		}
+	}
+
 	panic("unhandled bitsize")
 }
 
@@ -165,6 +176,47 @@ func (f *MessageField) PayloadPackSequence() string {
 
 	// pack a single field
 	return f.payloadPackPrimitive(fmt.Sprintf("%d", f.ByteOffset), "self."+name)
+}
+
+func (f *MessageField) payloadUnpackPrimitive(offset string) string {
+
+	if f.BitSize == 8 {
+		return fmt.Sprintf("%s(p.Payload[%s])", goArrayType(f.GoType), offset)
+	}
+
+	if f.IsFloat() {
+		switch f.BitSize {
+		case 32, 64:
+			return fmt.Sprintf("math.Float%dfrombits(binary.LittleEndian.Uint%d(p.Payload[%s:]))", f.BitSize, f.BitSize, offset)
+		}
+	} else {
+		switch f.BitSize {
+		case 16, 32, 64:
+			return fmt.Sprintf("%s(binary.LittleEndian.Uint%d(p.Payload[%s:]))", goArrayType(f.GoType), f.BitSize, offset)
+		}
+	}
+
+	panic("unhandled bitsize")
+}
+
+func (f *MessageField) PayloadUnpackSequence() string {
+	name := UpperCamelCase(f.Name)
+
+	if f.ArrayLen > 0 {
+		// optimize to copy() if possible
+		if strings.HasSuffix(f.GoType, "byte") || strings.HasSuffix(f.GoType, "uint8") {
+			return fmt.Sprintf("copy(self.%s[:], p.Payload[%d:%d])", name, f.ByteOffset, f.ByteOffset+f.ArrayLen)
+		}
+
+		// unpack each element in the array
+		s := fmt.Sprintf("for i := 0; i < len(self.%s); i++ {\n", name)
+		off := fmt.Sprintf("%d + i * %d", f.ByteOffset, f.BitSize/8)
+		s += fmt.Sprintf("self.%s[i] = %s\n", name, f.payloadUnpackPrimitive(off))
+		s += fmt.Sprintf("}")
+		return s
+	}
+
+	return fmt.Sprintf("self.%s = %s", name, f.payloadUnpackPrimitive(fmt.Sprintf("%d", f.ByteOffset)))
 }
 
 func SanitizeComments(s string) string {
@@ -216,6 +268,18 @@ func c2goPrimitive(ctype string) string {
 	}
 }
 
+func goArrayType(s string) string {
+	idx := strings.IndexByte(s, ']')
+	if idx < 0 {
+		return s
+	}
+	return s[idx+1:]
+}
+
+func (f *MessageField) IsFloat() bool {
+	return strings.HasPrefix(goArrayType(f.GoType), "float")
+}
+
 func GoTypeInfo(s string) (string, int, int, error) {
 
 	var name string
@@ -258,8 +322,9 @@ func (d *Dialect) GenerateGo(w io.Writer) error {
 	bb.WriteString("package mavlink\n\n")
 
 	bb.WriteString("import (\n")
-	bb.WriteString("\"bytes\"\n")
 	bb.WriteString("\"encoding/binary\"\n")
+	bb.WriteString("\"fmt\"\n")
+	bb.WriteString("\"math\"\n")
 	bb.WriteString(")\n")
 
 	bb.WriteString("//////////////////////////////////////////////////\n")
@@ -364,14 +429,10 @@ func (self *{{$name}}) Pack(p *Packet) error {
 }
 
 func (self *{{$name}}) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{} { {{range .Fields}}
-		&self.{{.Name | UpperCamelCase}},{{end}}
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	if len(p.Payload) < {{ .Size }} {
+		return fmt.Errorf("payload too small")
+	}{{range .Fields}}
+	{{.PayloadUnpackSequence}}{{end}}
 	return nil
 }
 {{end}}
