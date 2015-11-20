@@ -142,6 +142,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 		return p, ErrCrcFail
 	}
 
+	dec.CurrSeqID = p.SeqID
 	return p, nil
 }
 
