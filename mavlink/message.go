@@ -86,6 +86,16 @@ func NewEncoder(w io.Writer) *Encoder {
 	return e
 }
 
+// helper to create packet w/header populated with received bytes
+func newPacketFromBytes(b []byte) (*Packet, int) {
+	return &Packet{
+		SeqID:  b[1],
+		SysID:  b[2],
+		CompID: b[3],
+		MsgID:  b[4],
+	}, int(b[0])
+}
+
 // Decoder reads and parses from its reader
 // Typically, the caller will check the p.MsgID to see if it's
 // a message they're interested in, and convert it to the
@@ -109,13 +119,7 @@ func (dec *Decoder) Decode() (*Packet, error) {
 		return nil, err
 	}
 
-	payloadLen := int(hdr[0])
-	p := &Packet{
-		SeqID:  hdr[1],
-		SysID:  hdr[2],
-		CompID: hdr[3],
-		MsgID:  hdr[4],
-	}
+	p, payloadLen := newPacketFromBytes(hdr)
 
 	crc := x25.New()
 	crc.Write(hdr)
