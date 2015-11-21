@@ -15,7 +15,7 @@ import (
 // MavAutopilot: Micro air vehicle / autopilot classes. This identifies the individual model.
 const (
 	MAV_AUTOPILOT_GENERIC                                      = 0  // Generic autopilot, full support for everything
-	MAV_AUTOPILOT_PIXHAWK                                      = 1  // PIXHAWK autopilot, http://pixhawk.ethz.ch
+	MAV_AUTOPILOT_RESERVED                                     = 1  // Reserved for future use.
 	MAV_AUTOPILOT_SLUGS                                        = 2  // SLUGS autopilot, http://slugsuav.soe.ucsc.edu
 	MAV_AUTOPILOT_ARDUPILOTMEGA                                = 3  // ArduPilotMega / ArduCopter, http://diydrones.com
 	MAV_AUTOPILOT_OPENPILOT                                    = 4  // OpenPilot, http://openpilot.org
@@ -57,12 +57,22 @@ const (
 	MAV_TYPE_ONBOARD_CONTROLLER = 18 // Onboard companion controller
 	MAV_TYPE_VTOL_DUOROTOR      = 19 // Two-rotor VTOL using control surfaces in vertical operation in addition. Tailsitter.
 	MAV_TYPE_VTOL_QUADROTOR     = 20 // Quad-rotor VTOL using a V-shaped quad config in vertical operation. Tailsitter.
-	MAV_TYPE_VTOL_RESERVED1     = 21 // VTOL reserved 1
+	MAV_TYPE_VTOL_TILTROTOR     = 21 // Tiltrotor VTOL
 	MAV_TYPE_VTOL_RESERVED2     = 22 // VTOL reserved 2
 	MAV_TYPE_VTOL_RESERVED3     = 23 // VTOL reserved 3
 	MAV_TYPE_VTOL_RESERVED4     = 24 // VTOL reserved 4
 	MAV_TYPE_VTOL_RESERVED5     = 25 // VTOL reserved 5
 	MAV_TYPE_GIMBAL             = 26 // Onboard gimbal
+	MAV_TYPE_ADSB               = 27 // Onboard ADSB peripheral
+)
+
+// FirmwareVersionType: These values define the type of firmware release.  These values indicate the first version or release of this type.  For example the first alpha release would be 64, the second would be 65.
+const (
+	FIRMWARE_VERSION_TYPE_DEV      = 0   // development release
+	FIRMWARE_VERSION_TYPE_ALPHA    = 64  // alpha release
+	FIRMWARE_VERSION_TYPE_BETA     = 128 // beta release
+	FIRMWARE_VERSION_TYPE_RC       = 192 // release candidate
+	FIRMWARE_VERSION_TYPE_OFFICIAL = 255 // official stable release
 )
 
 // MavModeFlag: These flags encode the MAV mode.
@@ -153,6 +163,7 @@ const (
 	MAV_COMP_ID_SERVO13        = 152 //
 	MAV_COMP_ID_SERVO14        = 153 //
 	MAV_COMP_ID_GIMBAL         = 154 //
+	MAV_COMP_ID_ADSB           = 155 //
 )
 
 // MavSysStatusSensor: These encode the sensors whose status is sent as part of the SYS_STATUS message.
@@ -242,6 +253,9 @@ const (
 	MAV_CMD_NAV_RETURN_TO_LAUNCH           = 20  // Return to launch location
 	MAV_CMD_NAV_LAND                       = 21  // Land at location
 	MAV_CMD_NAV_TAKEOFF                    = 22  // Takeoff from ground / hand
+	MAV_CMD_NAV_LAND_LOCAL                 = 23  // Land at local position (local frame only)
+	MAV_CMD_NAV_TAKEOFF_LOCAL              = 24  // Takeoff from local position (local frame only)
+	MAV_CMD_NAV_FOLLOW                     = 25  // Vehicle following, i.e. this waypoint represents the position of a moving vehicle
 	MAV_CMD_NAV_CONTINUE_AND_CHANGE_ALT    = 30  // Continue on the current course and climb/descend to specified altitude.  When the altitude is reached continue to the next command (i.e., don't proceed to the next command until the desired altitude is reached.
 	MAV_CMD_NAV_LOITER_TO_ALT              = 31  // Begin loiter at the specified Latitude and Longitude.  If Lat=Lon=0, then loiter at the current position.  Don't consider the navigation command complete (don't leave loiter) until the altitude has been reached.  Additionally, if the Heading Required parameter is non-zero the  aircraft will not leave the loiter until heading toward the next waypoint.
 	MAV_CMD_NAV_ROI                        = 80  // Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras.
@@ -283,24 +297,29 @@ const (
 	MAV_CMD_DO_LAST                        = 240 // NOP - This command is only used to mark the upper limit of the DO commands in the enumeration
 	MAV_CMD_PREFLIGHT_CALIBRATION          = 241 // Trigger calibration. This command will be only accepted if in pre-flight mode.
 	MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS   = 242 // Set sensor offsets. This command will be only accepted if in pre-flight mode.
+	MAV_CMD_PREFLIGHT_UAVCAN               = 243 // Trigger UAVCAN config. This command will be only accepted if in pre-flight mode.
 	MAV_CMD_PREFLIGHT_STORAGE              = 245 // Request storage of different parameter values and logs. This command will be only accepted if in pre-flight mode.
 	MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN      = 246 // Request the reboot or shutdown of system components.
 	MAV_CMD_OVERRIDE_GOTO                  = 252 // Hold / continue the current action
-	MAV_CMD_MISSION_START                  = 51  // start running a mission
-	MAV_CMD_COMPONENT_ARM_DISARM           = 52  // Arms / Disarms a component
-	MAV_CMD_START_RX_PAIR                  = 53  // Starts receiver pairing
-	MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES = 54  // Request autopilot capabilities
-	MAV_CMD_IMAGE_START_CAPTURE            = 55  // Start image capture sequence
-	MAV_CMD_IMAGE_STOP_CAPTURE             = 56  // Stop image capture sequence
-	MAV_CMD_DO_TRIGGER_CONTROL             = 57  // Enable or disable on-board camera triggering system.
-	MAV_CMD_VIDEO_START_CAPTURE            = 58  // Starts video capture
-	MAV_CMD_VIDEO_STOP_CAPTURE             = 59  // Stop the current video capture
-	MAV_CMD_PANORAMA_CREATE                = 60  // Create a panorama at the current position
-	MAV_CMD_PAYLOAD_PREPARE_DEPLOY         = 61  // Deploy payload on a Lat / Lon / Alt position. This includes the navigation to reach the required release position and velocity.
-	MAV_CMD_PAYLOAD_CONTROL_DEPLOY         = 62  // Control the payload deployment.
+	MAV_CMD_MISSION_START                  = 55  // start running a mission
+	MAV_CMD_COMPONENT_ARM_DISARM           = 56  // Arms / Disarms a component
+	MAV_CMD_GET_HOME_POSITION              = 57  // Request the home position from the vehicle.
+	MAV_CMD_START_RX_PAIR                  = 58  // Starts receiver pairing
+	MAV_CMD_GET_MESSAGE_INTERVAL           = 59  // Request the interval between messages for a particular MAVLink message ID
+	MAV_CMD_SET_MESSAGE_INTERVAL           = 60  // Request the interval between messages for a particular MAVLink message ID. This interface replaces REQUEST_DATA_STREAM
+	MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES = 61  // Request autopilot capabilities
+	MAV_CMD_IMAGE_START_CAPTURE            = 62  // Start image capture sequence
+	MAV_CMD_IMAGE_STOP_CAPTURE             = 63  // Stop image capture sequence
+	MAV_CMD_DO_TRIGGER_CONTROL             = 64  // Enable or disable on-board camera triggering system.
+	MAV_CMD_VIDEO_START_CAPTURE            = 65  // Starts video capture
+	MAV_CMD_VIDEO_STOP_CAPTURE             = 66  // Stop the current video capture
+	MAV_CMD_PANORAMA_CREATE                = 67  // Create a panorama at the current position
+	MAV_CMD_DO_VTOL_TRANSITION             = 68  // Request VTOL transition
+	MAV_CMD_PAYLOAD_PREPARE_DEPLOY         = 69  // Deploy payload on a Lat / Lon / Alt position. This includes the navigation to reach the required release position and velocity.
+	MAV_CMD_PAYLOAD_CONTROL_DEPLOY         = 70  // Control the payload deployment.
 )
 
-// MavDataStream: Data stream IDs. A data stream is not a fixed set of messages, but rather a      recommendation to the autopilot software. Individual autopilots may or may not obey      the recommended messages.
+// MavDataStream: THIS INTERFACE IS DEPRECATED AS OF JULY 2015. Please use MESSAGE_INTERVAL instead. A data stream is not a fixed set of messages, but rather a      recommendation to the autopilot software. Individual autopilots may or may not obey      the recommended messages.
 const (
 	MAV_DATA_STREAM_ALL             = 0  // Enable all data streams
 	MAV_DATA_STREAM_RAW_SENSORS     = 1  // Enable IMU_RAW, GPS_RAW, GPS_STATUS packets.
@@ -401,10 +420,11 @@ const (
 
 // SerialControlDev: SERIAL_CONTROL device types
 const (
-	SERIAL_CONTROL_DEV_TELEM1 = 0 // First telemetry port
-	SERIAL_CONTROL_DEV_TELEM2 = 1 // Second telemetry port
-	SERIAL_CONTROL_DEV_GPS1   = 2 // First GPS port
-	SERIAL_CONTROL_DEV_GPS2   = 3 // Second GPS port
+	SERIAL_CONTROL_DEV_TELEM1 = 0  // First telemetry port
+	SERIAL_CONTROL_DEV_TELEM2 = 1  // Second telemetry port
+	SERIAL_CONTROL_DEV_GPS1   = 2  // First GPS port
+	SERIAL_CONTROL_DEV_GPS2   = 3  // Second GPS port
+	SERIAL_CONTROL_DEV_SHELL  = 10 // system shell
 )
 
 // SerialControlFlag: SERIAL_CONTROL flags (bitmask)
@@ -479,6 +499,8 @@ const (
 	MAV_PROTOCOL_CAPABILITY_SET_POSITION_TARGET_GLOBAL_INT = 8   // Autopilot supports commanding position and velocity targets in global scaled integers.
 	MAV_PROTOCOL_CAPABILITY_TERRAIN                        = 9   // Autopilot supports terrain protocol / data handling.
 	MAV_PROTOCOL_CAPABILITY_SET_ACTUATOR_TARGET            = 10  // Autopilot supports direct actuator control.
+	MAV_PROTOCOL_CAPABILITY_FLIGHT_TERMINATION             = 11  // Autopilot supports the flight termination command.
+	MAV_PROTOCOL_CAPABILITY_COMPASS_CALIBRATION            = 12  // Autopilot supports onboard compass calibration.
 )
 
 // MavEstimatorType: Enumeration of estimator types
@@ -506,6 +528,64 @@ const (
 	MAV_BATTERY_FUNCTION_PROPULSION = 2 // Battery for the propulsion system
 	MAV_BATTERY_FUNCTION_AVIONICS   = 3 // Avionics battery
 	MAV_BATTERY_TYPE_PAYLOAD        = 4 // Payload battery
+)
+
+// MavVtolState: Enumeration of VTOL states
+const (
+	MAV_VTOL_STATE_UNDEFINED        = 0 // MAV is not configured as VTOL
+	MAV_VTOL_STATE_TRANSITION_TO_FW = 1 // VTOL is in transition from multicopter to fixed-wing
+	MAV_VTOL_STATE_TRANSITION_TO_MC = 2 // VTOL is in transition from fixed-wing to multicopter
+	MAV_VTOL_STATE_MC               = 3 // VTOL is in multicopter state
+	MAV_VTOL_STATE_FW               = 4 // VTOL is in fixed-wing state
+)
+
+// MavLandedState: Enumeration of landed detector states
+const (
+	MAV_LANDED_STATE_UNDEFINED = 0 // MAV landed state is unknown
+	MAV_LANDED_STATE_ON_GROUND = 1 // MAV is landed (on ground)
+	MAV_LANDED_STATE_IN_AIR    = 2 // MAV is in air
+)
+
+// AdsbAltitudeType: Enumeration of the ADSB altimeter types
+const (
+	ADSB_ALTITUDE_TYPE_PRESSURE_QNH = 0 // Altitude reported from a Baro source using QNH reference
+	ADSB_ALTITUDE_TYPE_GEOMETRIC    = 1 // Altitude reported from a GNSS source
+)
+
+// AdsbEmitterType: ADSB classification for the type of vehicle emitting the transponder signal
+const (
+	ADSB_EMITTER_TYPE_NO_INFO           = 0  //
+	ADSB_EMITTER_TYPE_LIGHT             = 1  //
+	ADSB_EMITTER_TYPE_SMALL             = 2  //
+	ADSB_EMITTER_TYPE_LARGE             = 3  //
+	ADSB_EMITTER_TYPE_HIGH_VORTEX_LARGE = 4  //
+	ADSB_EMITTER_TYPE_HEAVY             = 5  //
+	ADSB_EMITTER_TYPE_HIGHLY_MANUV      = 6  //
+	ADSB_EMITTER_TYPE_ROTOCRAFT         = 7  //
+	ADSB_EMITTER_TYPE_UNASSIGNED        = 8  //
+	ADSB_EMITTER_TYPE_GLIDER            = 9  //
+	ADSB_EMITTER_TYPE_LIGHTER_AIR       = 10 //
+	ADSB_EMITTER_TYPE_PARACHUTE         = 11 //
+	ADSB_EMITTER_TYPE_ULTRA_LIGHT       = 12 //
+	ADSB_EMITTER_TYPE_UNASSIGNED2       = 13 //
+	ADSB_EMITTER_TYPE_UAV               = 14 //
+	ADSB_EMITTER_TYPE_SPACE             = 15 //
+	ADSB_EMITTER_TYPE_UNASSGINED3       = 16 //
+	ADSB_EMITTER_TYPE_EMERGENCY_SURFACE = 17 //
+	ADSB_EMITTER_TYPE_SERVICE_SURFACE   = 18 //
+	ADSB_EMITTER_TYPE_POINT_OBSTACLE    = 19 //
+)
+
+// AdsbDataValidFlags: These flags indicate data validity of each data source. Set = data valid
+const (
+	ADSB_DATA_VALID_FLAGS_VALID_COORDS   = 1   //
+	ADSB_DATA_VALID_FLAGS_VALID_ALTITUDE = 2   //
+	ADSB_DATA_VALID_FLAGS_VALID_HEADING  = 4   //
+	ADSB_DATA_VALID_FLAGS_VALID_VELOCITY = 8   //
+	ADSB_DATA_VALID_FLAGS_VALID_CALLSIGN = 16  //
+	ADSB_DATA_VALID_FLAGS_RFU_1          = 32  //
+	ADSB_DATA_VALID_FLAGS_RFU_2          = 64  //
+	ADSB_DATA_VALID_FLAGS_RFU_3          = 128 //
 )
 
 // The heartbeat message shows that a system is present and responding. The type of the MAV and Autopilot hardware allow the receiving system to treat further messages from this system appropriate (e.g. by laying out the user interface based on the autopilot).
@@ -3086,9 +3166,9 @@ func (self *RcChannels) Unpack(p *Packet) error {
 	return nil
 }
 
-//
+// THIS INTERFACE IS DEPRECATED. USE SET_MESSAGE_INTERVAL INSTEAD.
 type RequestDataStream struct {
-	ReqMessageRate  uint16 // The requested interval between two messages of this type
+	ReqMessageRate  uint16 // The requested message rate
 	TargetSystem    uint8  // The target requested to send the message stream.
 	TargetComponent uint8  // The target requested to send the message stream.
 	ReqStreamId     uint8  // The ID of the requested data stream
@@ -3138,9 +3218,9 @@ func (self *RequestDataStream) Unpack(p *Packet) error {
 	return nil
 }
 
-//
+// THIS INTERFACE IS DEPRECATED. USE MESSAGE_INTERVAL INSTEAD.
 type DataStream struct {
-	MessageRate uint16 // The requested interval between two messages of this type
+	MessageRate uint16 // The message rate
 	StreamId    uint8  // The ID of the requested data stream
 	OnOff       uint8  // 1 stream is enabled, 0 stream is stopped.
 }
@@ -6839,6 +6919,250 @@ func (self *ActuatorControlTarget) Unpack(p *Packet) error {
 	return nil
 }
 
+// The current system altitude.
+type Altitude struct {
+	AltitudeMonotonic float32 // This altitude measure is initialized on system boot and monotonic (it is never reset, but represents the local altitude change). The only guarantee on this field is that it will never be reset and is consistent within a flight. The recommended value for this field is the uncorrected barometric altitude at boot time. This altitude will also drift and vary between flights.
+	AltitudeAmsl      float32 // This altitude measure is strictly above mean sea level and might be non-monotonic (it might reset on events like GPS lock or when a new QNH value is set). It should be the altitude to which global altitude waypoints are compared to. Note that it is *not* the GPS altitude, however, most GPS modules already output AMSL by default and not the WGS84 altitude.
+	AltitudeLocal     float32 // This is the local altitude in the local coordinate frame. It is not the altitude above home, but in reference to the coordinate origin (0, 0, 0). It is up-positive.
+	AltitudeRelative  float32 // This is the altitude above the home position. It resets on each change of the current home position.
+	AltitudeTerrain   float32 // This is the altitude above terrain. It might be fed by a terrain database or an altimeter. Values smaller than -1000 should be interpreted as unknown.
+	BottomClearance   float32 // This is not the altitude, but the clear space below the system according to the fused clearance estimate. It generally should max out at the maximum range of e.g. the laser altimeter. It is generally a moving target. A negative value indicates no measurement available.
+}
+
+func (self *Altitude) MsgID() uint8 {
+	return 141
+}
+
+func (self *Altitude) MsgName() string {
+	return "Altitude"
+}
+
+func (self *Altitude) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.AltitudeMonotonic,
+		&self.AltitudeAmsl,
+		&self.AltitudeLocal,
+		&self.AltitudeRelative,
+		&self.AltitudeTerrain,
+		&self.BottomClearance,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *Altitude) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.AltitudeMonotonic,
+		&self.AltitudeAmsl,
+		&self.AltitudeLocal,
+		&self.AltitudeRelative,
+		&self.AltitudeTerrain,
+		&self.BottomClearance,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// The autopilot is requesting a resource (file, binary, other type of data)
+type ResourceRequest struct {
+	RequestId    uint8      // Request ID. This ID should be re-used when sending back URI contents
+	UriType      uint8      // The type of requested URI. 0 = a file via URL. 1 = a UAVCAN binary
+	Uri          [120]uint8 // The requested unique resource identifier (URI). It is not necessarily a straight domain name (depends on the URI type enum)
+	TransferType uint8      // The way the autopilot wants to receive the URI. 0 = MAVLink FTP. 1 = binary stream.
+	Storage      [120]uint8 // The storage path the autopilot wants the URI to be stored in. Will only be valid if the transfer_type has a storage associated (e.g. MAVLink FTP).
+}
+
+func (self *ResourceRequest) MsgID() uint8 {
+	return 142
+}
+
+func (self *ResourceRequest) MsgName() string {
+	return "ResourceRequest"
+}
+
+func (self *ResourceRequest) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.RequestId,
+		&self.UriType,
+		&self.Uri,
+		&self.TransferType,
+		&self.Storage,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *ResourceRequest) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.RequestId,
+		&self.UriType,
+		&self.Uri,
+		&self.TransferType,
+		&self.Storage,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Barometer readings for 3rd barometer
+type ScaledPressure3 struct {
+	TimeBootMs  uint32  // Timestamp (milliseconds since system boot)
+	PressAbs    float32 // Absolute pressure (hectopascal)
+	PressDiff   float32 // Differential pressure 1 (hectopascal)
+	Temperature int16   // Temperature measurement (0.01 degrees celsius)
+}
+
+func (self *ScaledPressure3) MsgID() uint8 {
+	return 143
+}
+
+func (self *ScaledPressure3) MsgName() string {
+	return "ScaledPressure3"
+}
+
+func (self *ScaledPressure3) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.TimeBootMs,
+		&self.PressAbs,
+		&self.PressDiff,
+		&self.Temperature,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *ScaledPressure3) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.TimeBootMs,
+		&self.PressAbs,
+		&self.PressDiff,
+		&self.Temperature,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// The smoothed, monotonic system state used to feed the control loops of the system.
+type ControlSystemState struct {
+	TimeUsec    uint64     // Timestamp (micros since boot or Unix epoch)
+	XAcc        float32    // X acceleration in body frame
+	YAcc        float32    // Y acceleration in body frame
+	ZAcc        float32    // Z acceleration in body frame
+	XVel        float32    // X velocity in body frame
+	YVel        float32    // Y velocity in body frame
+	ZVel        float32    // Z velocity in body frame
+	XPos        float32    // X position in local frame
+	YPos        float32    // Y position in local frame
+	ZPos        float32    // Z position in local frame
+	Airspeed    float32    // Airspeed, set to -1 if unknown
+	VelVariance [3]float32 // Variance of body velocity estimate
+	PosVariance [3]float32 // Variance in local position
+	Q           [4]float32 // The attitude, represented as Quaternion
+	RollRate    float32    // Angular rate in roll axis
+	PitchRate   float32    // Angular rate in pitch axis
+	YawRate     float32    // Angular rate in yaw axis
+}
+
+func (self *ControlSystemState) MsgID() uint8 {
+	return 146
+}
+
+func (self *ControlSystemState) MsgName() string {
+	return "ControlSystemState"
+}
+
+func (self *ControlSystemState) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.TimeUsec,
+		&self.XAcc,
+		&self.YAcc,
+		&self.ZAcc,
+		&self.XVel,
+		&self.YVel,
+		&self.ZVel,
+		&self.XPos,
+		&self.YPos,
+		&self.ZPos,
+		&self.Airspeed,
+		&self.VelVariance,
+		&self.PosVariance,
+		&self.Q,
+		&self.RollRate,
+		&self.PitchRate,
+		&self.YawRate,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *ControlSystemState) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.TimeUsec,
+		&self.XAcc,
+		&self.YAcc,
+		&self.ZAcc,
+		&self.XVel,
+		&self.YVel,
+		&self.ZVel,
+		&self.XPos,
+		&self.YPos,
+		&self.ZPos,
+		&self.Airspeed,
+		&self.VelVariance,
+		&self.PosVariance,
+		&self.Q,
+		&self.RollRate,
+		&self.PitchRate,
+		&self.YawRate,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // Battery information
 type BatteryStatus struct {
 	CurrentConsumed  int32      // Consumed charge, in milliampere hours (1 = 1 mAh), -1: autopilot does not provide mAh consumption estimate
@@ -6975,9 +7299,12 @@ func (self *AutopilotVersion) Unpack(p *Packet) error {
 
 // The location of a landing area captured from a downward facing camera
 type LandingTarget struct {
+	TimeUsec  uint64  // Timestamp (micros since boot or Unix epoch)
 	AngleX    float32 // X-axis angular offset (in radians) of the target from the center of the image
 	AngleY    float32 // Y-axis angular offset (in radians) of the target from the center of the image
 	Distance  float32 // Distance to the target from the vehicle in meters
+	SizeX     float32 // Size in radians of target along x-axis
+	SizeY     float32 // Size in radians of target along y-axis
 	TargetNum uint8   // The ID of the target if multiple targets are present
 	Frame     uint8   // MAV_FRAME enum specifying the whether the following feilds are earth-frame, body-frame, etc.
 }
@@ -6993,9 +7320,12 @@ func (self *LandingTarget) MsgName() string {
 func (self *LandingTarget) Pack(p *Packet) error {
 	var buf bytes.Buffer
 	for _, f := range []interface{}{
+		&self.TimeUsec,
 		&self.AngleX,
 		&self.AngleY,
 		&self.Distance,
+		&self.SizeX,
+		&self.SizeY,
 		&self.TargetNum,
 		&self.Frame,
 	} {
@@ -7012,11 +7342,368 @@ func (self *LandingTarget) Pack(p *Packet) error {
 func (self *LandingTarget) Unpack(p *Packet) error {
 	buf := bytes.NewBuffer(p.Payload)
 	for _, f := range []interface{}{
+		&self.TimeUsec,
 		&self.AngleX,
 		&self.AngleY,
 		&self.Distance,
+		&self.SizeX,
+		&self.SizeY,
 		&self.TargetNum,
 		&self.Frame,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Vibration levels and accelerometer clipping
+type Vibration struct {
+	TimeUsec   uint64  // Timestamp (micros since boot or Unix epoch)
+	VibrationX float32 // Vibration levels on X-axis
+	VibrationY float32 // Vibration levels on Y-axis
+	VibrationZ float32 // Vibration levels on Z-axis
+	Clipping0  uint32  // first accelerometer clipping count
+	Clipping1  uint32  // second accelerometer clipping count
+	Clipping2  uint32  // third accelerometer clipping count
+}
+
+func (self *Vibration) MsgID() uint8 {
+	return 241
+}
+
+func (self *Vibration) MsgName() string {
+	return "Vibration"
+}
+
+func (self *Vibration) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.TimeUsec,
+		&self.VibrationX,
+		&self.VibrationY,
+		&self.VibrationZ,
+		&self.Clipping0,
+		&self.Clipping1,
+		&self.Clipping2,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *Vibration) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.TimeUsec,
+		&self.VibrationX,
+		&self.VibrationY,
+		&self.VibrationZ,
+		&self.Clipping0,
+		&self.Clipping1,
+		&self.Clipping2,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// This message can be requested by sending the MAV_CMD_GET_HOME_POSITION command. The position the system will return to and land on. The position is set automatically by the system during the takeoff in case it was not explicitely set by the operator before or after. The position the system will return to and land on. The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector.
+type HomePosition struct {
+	Latitude  int32      // Latitude (WGS84), in degrees * 1E7
+	Longitude int32      // Longitude (WGS84, in degrees * 1E7
+	Altitude  int32      // Altitude (AMSL), in meters * 1000 (positive for up)
+	X         float32    // Local X position of this position in the local coordinate frame
+	Y         float32    // Local Y position of this position in the local coordinate frame
+	Z         float32    // Local Z position of this position in the local coordinate frame
+	Q         [4]float32 // World to surface normal and heading transformation of the takeoff position. Used to indicate the heading and slope of the ground
+	ApproachX float32    // Local X position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+	ApproachY float32    // Local Y position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+	ApproachZ float32    // Local Z position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+}
+
+func (self *HomePosition) MsgID() uint8 {
+	return 242
+}
+
+func (self *HomePosition) MsgName() string {
+	return "HomePosition"
+}
+
+func (self *HomePosition) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.Latitude,
+		&self.Longitude,
+		&self.Altitude,
+		&self.X,
+		&self.Y,
+		&self.Z,
+		&self.Q,
+		&self.ApproachX,
+		&self.ApproachY,
+		&self.ApproachZ,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *HomePosition) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.Latitude,
+		&self.Longitude,
+		&self.Altitude,
+		&self.X,
+		&self.Y,
+		&self.Z,
+		&self.Q,
+		&self.ApproachX,
+		&self.ApproachY,
+		&self.ApproachZ,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// The position the system will return to and land on. The position is set automatically by the system during the takeoff in case it was not explicitely set by the operator before or after. The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector.
+type SetHomePosition struct {
+	Latitude     int32      // Latitude (WGS84), in degrees * 1E7
+	Longitude    int32      // Longitude (WGS84, in degrees * 1E7
+	Altitude     int32      // Altitude (AMSL), in meters * 1000 (positive for up)
+	X            float32    // Local X position of this position in the local coordinate frame
+	Y            float32    // Local Y position of this position in the local coordinate frame
+	Z            float32    // Local Z position of this position in the local coordinate frame
+	Q            [4]float32 // World to surface normal and heading transformation of the takeoff position. Used to indicate the heading and slope of the ground
+	ApproachX    float32    // Local X position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+	ApproachY    float32    // Local Y position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+	ApproachZ    float32    // Local Z position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+	TargetSystem uint8      // System ID.
+}
+
+func (self *SetHomePosition) MsgID() uint8 {
+	return 243
+}
+
+func (self *SetHomePosition) MsgName() string {
+	return "SetHomePosition"
+}
+
+func (self *SetHomePosition) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.Latitude,
+		&self.Longitude,
+		&self.Altitude,
+		&self.X,
+		&self.Y,
+		&self.Z,
+		&self.Q,
+		&self.ApproachX,
+		&self.ApproachY,
+		&self.ApproachZ,
+		&self.TargetSystem,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *SetHomePosition) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.Latitude,
+		&self.Longitude,
+		&self.Altitude,
+		&self.X,
+		&self.Y,
+		&self.Z,
+		&self.Q,
+		&self.ApproachX,
+		&self.ApproachY,
+		&self.ApproachZ,
+		&self.TargetSystem,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// This interface replaces DATA_STREAM
+type MessageInterval struct {
+	IntervalUs int32  // The interval between two messages, in microseconds. A value of -1 indicates this stream is disabled, 0 indicates it is not available, > 0 indicates the interval at which it is sent.
+	MessageId  uint16 // The ID of the requested MAVLink message. v1.0 is limited to 254 messages.
+}
+
+func (self *MessageInterval) MsgID() uint8 {
+	return 244
+}
+
+func (self *MessageInterval) MsgName() string {
+	return "MessageInterval"
+}
+
+func (self *MessageInterval) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.IntervalUs,
+		&self.MessageId,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *MessageInterval) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.IntervalUs,
+		&self.MessageId,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Provides state for additional features
+type ExtendedSysState struct {
+	VtolState   uint8 // The VTOL state if applicable. Is set to MAV_VTOL_STATE_UNDEFINED if UAV is not in VTOL configuration.
+	LandedState uint8 // The landed state. Is set to MAV_LANDED_STATE_UNDEFINED if landed state is unknown.
+}
+
+func (self *ExtendedSysState) MsgID() uint8 {
+	return 245
+}
+
+func (self *ExtendedSysState) MsgName() string {
+	return "ExtendedSysState"
+}
+
+func (self *ExtendedSysState) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.VtolState,
+		&self.LandedState,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *ExtendedSysState) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.VtolState,
+		&self.LandedState,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// The location and information of a ADSB vehicle
+type AdsbVehicle struct {
+	IcaoAddress  uint32  // ICAO Address
+	Lat          float32 // The reported lattitude in degrees
+	Lon          float32 // The reported longitude in degrees
+	Altitude     float32 // Altitude(ASL) in meters
+	HorVelocity  float32 // The horizontal velocity in meters/second
+	VerVelocity  float32 // The vertical velocity in meters/second
+	Heading      uint16  // Course over ground in degrees * 10^2
+	AltitudeType uint8   // Type from ADSB_ALTITUDE_TYPE enum.
+	Callsign     [9]byte // The callsign(squawk)
+	Emittertype  uint8   // Type from ADSB_EMITTER_CATEGORY_TYPE enum
+	Tslc         uint8   // Time since last communication in seconds
+	Validflags   uint8   // Flags to Indicate valid data fields
+}
+
+func (self *AdsbVehicle) MsgID() uint8 {
+	return 246
+}
+
+func (self *AdsbVehicle) MsgName() string {
+	return "AdsbVehicle"
+}
+
+func (self *AdsbVehicle) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.IcaoAddress,
+		&self.Lat,
+		&self.Lon,
+		&self.Altitude,
+		&self.HorVelocity,
+		&self.VerVelocity,
+		&self.Heading,
+		&self.AltitudeType,
+		&self.Callsign,
+		&self.Emittertype,
+		&self.Tslc,
+		&self.Validflags,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *AdsbVehicle) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.IcaoAddress,
+		&self.Lat,
+		&self.Lon,
+		&self.Altitude,
+		&self.HorVelocity,
+		&self.VerVelocity,
+		&self.Heading,
+		&self.AltitudeType,
+		&self.Callsign,
+		&self.Emittertype,
+		&self.Tslc,
+		&self.Validflags,
 	} {
 		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
 			return err
@@ -7468,9 +8155,19 @@ const (
 	MSG_ID_ATT_POS_MOCAP                           = 138
 	MSG_ID_SET_ACTUATOR_CONTROL_TARGET             = 139
 	MSG_ID_ACTUATOR_CONTROL_TARGET                 = 140
+	MSG_ID_ALTITUDE                                = 141
+	MSG_ID_RESOURCE_REQUEST                        = 142
+	MSG_ID_SCALED_PRESSURE3                        = 143
+	MSG_ID_CONTROL_SYSTEM_STATE                    = 146
 	MSG_ID_BATTERY_STATUS                          = 147
 	MSG_ID_AUTOPILOT_VERSION                       = 148
 	MSG_ID_LANDING_TARGET                          = 149
+	MSG_ID_VIBRATION                               = 241
+	MSG_ID_HOME_POSITION                           = 242
+	MSG_ID_SET_HOME_POSITION                       = 243
+	MSG_ID_MESSAGE_INTERVAL                        = 244
+	MSG_ID_EXTENDED_SYS_STATE                      = 245
+	MSG_ID_ADSB_VEHICLE                            = 246
 	MSG_ID_V2_EXTENSION                            = 248
 	MSG_ID_MEMORY_VECT                             = 249
 	MSG_ID_DEBUG_VECT                              = 250
@@ -7591,9 +8288,19 @@ var DialectCommon *Dialect = &Dialect{
 		138: 109, // MSG_ID_ATT_POS_MOCAP
 		139: 168, // MSG_ID_SET_ACTUATOR_CONTROL_TARGET
 		140: 181, // MSG_ID_ACTUATOR_CONTROL_TARGET
+		141: 148, // MSG_ID_ALTITUDE
+		142: 72,  // MSG_ID_RESOURCE_REQUEST
+		143: 131, // MSG_ID_SCALED_PRESSURE3
+		146: 103, // MSG_ID_CONTROL_SYSTEM_STATE
 		147: 154, // MSG_ID_BATTERY_STATUS
 		148: 178, // MSG_ID_AUTOPILOT_VERSION
-		149: 255, // MSG_ID_LANDING_TARGET
+		149: 200, // MSG_ID_LANDING_TARGET
+		241: 90,  // MSG_ID_VIBRATION
+		242: 104, // MSG_ID_HOME_POSITION
+		243: 85,  // MSG_ID_SET_HOME_POSITION
+		244: 95,  // MSG_ID_MESSAGE_INTERVAL
+		245: 130, // MSG_ID_EXTENDED_SYS_STATE
+		246: 92,  // MSG_ID_ADSB_VEHICLE
 		248: 8,   // MSG_ID_V2_EXTENSION
 		249: 204, // MSG_ID_MEMORY_VECT
 		250: 49,  // MSG_ID_DEBUG_VECT

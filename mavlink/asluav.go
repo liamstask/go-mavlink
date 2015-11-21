@@ -12,6 +12,12 @@ import (
 //
 //////////////////////////////////////////////////
 
+// MavCmd:
+const (
+	MAV_CMD_RESET_MPPT      = 0 // Mission command to reset Maximum Power Point Tracker (MPPT)
+	MAV_CMD_PAYLOAD_CONTROL = 1 // Mission command to perform a power cycle on payload
+)
+
 // Voltage and current sensor data
 type SensPower struct {
 	Adc121VspbVolt float32 //  Power board voltage sensor reading in volts
@@ -606,17 +612,159 @@ func (self *SensBatmon) Unpack(p *Packet) error {
 	return nil
 }
 
+// Fixed-wing soaring (i.e. thermal seeking) data
+type FwSoaringData struct {
+	Timestamp            uint64  // Timestamp [ms]
+	Timestampmodechanged uint64  // Timestamp since last mode change[ms]
+	Currentupdraftspeed  float32 // Updraft speed at current/local airplane position [m/s]
+	Xw                   float32 // Thermal core updraft strength [m/s]
+	Xr                   float32 // Thermal radius [m]
+	Xlat                 float32 // Thermal center latitude [deg]
+	Xlon                 float32 // Thermal center longitude [deg]
+	Varw                 float32 // Variance W
+	Varr                 float32 // Variance R
+	Varlat               float32 // Variance Lat
+	Varlon               float32 // Variance Lon
+	Loiterradius         float32 // Suggested loiter radius [m]
+	Controlmode          uint8   // Control Mode [-]
+	Valid                uint8   // Data valid [-]
+}
+
+func (self *FwSoaringData) MsgID() uint8 {
+	return 210
+}
+
+func (self *FwSoaringData) MsgName() string {
+	return "FwSoaringData"
+}
+
+func (self *FwSoaringData) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.Timestamp,
+		&self.Timestampmodechanged,
+		&self.Currentupdraftspeed,
+		&self.Xw,
+		&self.Xr,
+		&self.Xlat,
+		&self.Xlon,
+		&self.Varw,
+		&self.Varr,
+		&self.Varlat,
+		&self.Varlon,
+		&self.Loiterradius,
+		&self.Controlmode,
+		&self.Valid,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *FwSoaringData) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.Timestamp,
+		&self.Timestampmodechanged,
+		&self.Currentupdraftspeed,
+		&self.Xw,
+		&self.Xr,
+		&self.Xlat,
+		&self.Xlon,
+		&self.Varw,
+		&self.Varr,
+		&self.Varlat,
+		&self.Varlon,
+		&self.Loiterradius,
+		&self.Controlmode,
+		&self.Valid,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Monitoring of sensorpod status
+type SensorpodStatus struct {
+	Timestamp           uint64 // Timestamp in linuxtime [ms] (since 1.1.1970)
+	FreeSpace           uint16 // Free space available in recordings directory in [Gb] * 1e2
+	VisensorRate1       uint8  // Rate of ROS topic 1
+	VisensorRate2       uint8  // Rate of ROS topic 2
+	VisensorRate3       uint8  // Rate of ROS topic 3
+	VisensorRate4       uint8  // Rate of ROS topic 4
+	RecordingNodesCount uint8  // Number of recording nodes
+	CpuTemp             uint8  // Temperature of sensorpod CPU in [deg C]
+}
+
+func (self *SensorpodStatus) MsgID() uint8 {
+	return 211
+}
+
+func (self *SensorpodStatus) MsgName() string {
+	return "SensorpodStatus"
+}
+
+func (self *SensorpodStatus) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.Timestamp,
+		&self.FreeSpace,
+		&self.VisensorRate1,
+		&self.VisensorRate2,
+		&self.VisensorRate3,
+		&self.VisensorRate4,
+		&self.RecordingNodesCount,
+		&self.CpuTemp,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *SensorpodStatus) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.Timestamp,
+		&self.FreeSpace,
+		&self.VisensorRate1,
+		&self.VisensorRate2,
+		&self.VisensorRate3,
+		&self.VisensorRate4,
+		&self.RecordingNodesCount,
+		&self.CpuTemp,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // Message IDs
 const (
-	MSG_ID_SENS_POWER    = 201
-	MSG_ID_SENS_MPPT     = 202
-	MSG_ID_ASLCTRL_DATA  = 203
-	MSG_ID_ASLCTRL_DEBUG = 204
-	MSG_ID_ASLUAV_STATUS = 205
-	MSG_ID_EKF_EXT       = 206
-	MSG_ID_ASL_OBCTRL    = 207
-	MSG_ID_SENS_ATMOS    = 208
-	MSG_ID_SENS_BATMON   = 209
+	MSG_ID_SENS_POWER       = 201
+	MSG_ID_SENS_MPPT        = 202
+	MSG_ID_ASLCTRL_DATA     = 203
+	MSG_ID_ASLCTRL_DEBUG    = 204
+	MSG_ID_ASLUAV_STATUS    = 205
+	MSG_ID_EKF_EXT          = 206
+	MSG_ID_ASL_OBCTRL       = 207
+	MSG_ID_SENS_ATMOS       = 208
+	MSG_ID_SENS_BATMON      = 209
+	MSG_ID_FW_SOARING_DATA  = 210
+	MSG_ID_SENSORPOD_STATUS = 211
 )
 
 // DialectAsluav is the dialect represented by ASLUAV.xml
@@ -632,5 +780,7 @@ var DialectAsluav *Dialect = &Dialect{
 		207: 234, // MSG_ID_ASL_OBCTRL
 		208: 175, // MSG_ID_SENS_ATMOS
 		209: 62,  // MSG_ID_SENS_BATMON
+		210: 129, // MSG_ID_FW_SOARING_DATA
+		211: 54,  // MSG_ID_SENSORPOD_STATUS
 	},
 }

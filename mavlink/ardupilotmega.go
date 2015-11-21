@@ -14,11 +14,13 @@ import (
 
 // MavCmd:
 const (
-	MAV_CMD_DO_MOTOR_TEST     = 209 // Mission command to perform motor test
-	MAV_CMD_DO_GRIPPER        = 211 // Mission command to operate EPM gripper
-	MAV_CMD_DO_START_MAG_CAL  = 2   // Initiate a magnetometer calibration
-	MAV_CMD_DO_ACCEPT_MAG_CAL = 3   // Initiate a magnetometer calibration
-	MAV_CMD_DO_CANCEL_MAG_CAL = 4   // Cancel a running magnetometer calibration
+	MAV_CMD_DO_MOTOR_TEST      = 209 // Mission command to perform motor test
+	MAV_CMD_DO_GRIPPER         = 211 // Mission command to operate EPM gripper
+	MAV_CMD_DO_AUTOTUNE_ENABLE = 212 // Enable/disable autotune
+	MAV_CMD_NAV_ALTITUDE_WAIT  = 83  // Mission command to wait for an altitude or downwards vertical speed. This is meant for high altitude balloon launches, allowing the aircraft to be idle until either an altitude is reached or a negative vertical speed is reached (indicating early balloon burst). The wiggle time is how often to wiggle the control surfaces to prevent them seizing up.
+	MAV_CMD_DO_START_MAG_CAL   = 4   // Initiate a magnetometer calibration
+	MAV_CMD_DO_ACCEPT_MAG_CAL  = 5   // Initiate a magnetometer calibration
+	MAV_CMD_DO_CANCEL_MAG_CAL  = 6   // Cancel a running magnetometer calibration
 )
 
 // LimitsState:
@@ -77,10 +79,11 @@ const (
 
 // CameraFeedbackFlags:
 const (
-	VIDEO       = 1 // Shooting video, not stills
-	BADEXPOSURE = 2 // Unable to achieve requested exposure (e.g. shutter speed too low)
-	CLOSEDLOOP  = 3 // Closed loop feedback from camera, we know for sure it has successfully taken a picture
-	OPENLOOP    = 4 // Open loop camera, an image trigger has been requested but we can't know for sure it has successfully taken a picture
+	CAMERA_FEEDBACK_PHOTO       = 0 // Shooting photos, not video
+	CAMERA_FEEDBACK_VIDEO       = 1 // Shooting video, not stills
+	CAMERA_FEEDBACK_BADEXPOSURE = 2 // Unable to achieve requested exposure (e.g. shutter speed too low)
+	CAMERA_FEEDBACK_CLOSEDLOOP  = 3 // Closed loop feedback from camera, we know for sure it has successfully taken a picture
+	CAMERA_FEEDBACK_OPENLOOP    = 4 // Open loop camera, an image trigger has been requested but we can't know for sure it has successfully taken a picture
 )
 
 // MavModeGimbal:
@@ -165,6 +168,8 @@ const (
 	PID_TUNING_ROLL  = 1 //
 	PID_TUNING_PITCH = 2 //
 	PID_TUNING_YAW   = 3 //
+	PID_TUNING_ACCZ  = 4 //
+	PID_TUNING_STEER = 5 //
 )
 
 // Offsets and calibrations values for hardware
@@ -2309,7 +2314,7 @@ func (self *PidTuning) Unpack(p *Packet) error {
 	return nil
 }
 
-// 3 axis gimbal mesuraments
+// 3 axis gimbal measurements
 type GimbalReport struct {
 	DeltaTime       float32 // Time since last update (seconds)
 	DeltaAngleX     float32 // Delta angle X (radians)
@@ -3080,6 +3085,49 @@ func (self *GoproResponse) Unpack(p *Packet) error {
 	return nil
 }
 
+// RPM sensor output
+type Rpm struct {
+	Rpm1 float32 // RPM Sensor1
+	Rpm2 float32 // RPM Sensor2
+}
+
+func (self *Rpm) MsgID() uint8 {
+	return 226
+}
+
+func (self *Rpm) MsgName() string {
+	return "Rpm"
+}
+
+func (self *Rpm) Pack(p *Packet) error {
+	var buf bytes.Buffer
+	for _, f := range []interface{}{
+		&self.Rpm1,
+		&self.Rpm2,
+	} {
+		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+
+	p.MsgID = self.MsgID()
+	p.Payload = buf.Bytes()
+	return nil
+}
+
+func (self *Rpm) Unpack(p *Packet) error {
+	buf := bytes.NewBuffer(p.Payload)
+	for _, f := range []interface{}{
+		&self.Rpm1,
+		&self.Rpm2,
+	} {
+		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // Message IDs
 const (
 	MSG_ID_SENSOR_OFFSETS                        = 150
@@ -3135,6 +3183,7 @@ const (
 	MSG_ID_GOPRO_POWER_OFF                       = 216
 	MSG_ID_GOPRO_COMMAND                         = 217
 	MSG_ID_GOPRO_RESPONSE                        = 218
+	MSG_ID_RPM                                   = 226
 )
 
 // DialectArdupilotmega is the dialect represented by ardupilotmega.xml
@@ -3194,5 +3243,6 @@ var DialectArdupilotmega *Dialect = &Dialect{
 		216: 155, // MSG_ID_GOPRO_POWER_OFF
 		217: 43,  // MSG_ID_GOPRO_COMMAND
 		218: 149, // MSG_ID_GOPRO_RESPONSE
+		226: 207, // MSG_ID_RPM
 	},
 }
