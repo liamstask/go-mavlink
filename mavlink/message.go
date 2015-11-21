@@ -18,6 +18,7 @@ import (
 const (
 	startByte        = 0xfe
 	numChecksumBytes = 2
+	hdrLen           = 6
 )
 
 var (
@@ -140,6 +141,37 @@ func (dec *Decoder) Decode() (*Packet, error) {
 	crc.WriteByte(crcx)
 
 	p.Checksum = bytesToU16(buf[payloadLen:])
+
+	// does the transmitted checksum match our computed checksum?
+	if p.Checksum != crc.Sum16() {
+		return p, ErrCrcFail
+	}
+
+	dec.CurrSeqID = p.SeqID
+	return p, nil
+}
+
+// Decode a packet from a previously received buffer (such as a UDP packet),
+// b must contain a complete message
+func (dec *Decoder) DecodeBytes(b []byte) (*Packet, error) {
+
+	if len(b) < hdrLen || b[0] != startByte {
+		return nil, errors.New("invalid header")
+	}
+
+	p, payloadLen := newPacketFromBytes(b[1:])
+
+	crc := x25.New()
+	p.Payload = b[hdrLen: hdrLen+payloadLen]
+	crc.Write(b[1:hdrLen+payloadLen])
+
+	crcx, err := dec.Dialects.findCrcX(p.MsgID)
+	if err != nil {
+		return p, err
+	}
+	crc.WriteByte(crcx)
+
+	p.Checksum = bytesToU16(b[hdrLen+payloadLen:])
 
 	// does the transmitted checksum match our computed checksum?
 	if p.Checksum != crc.Sum16() {
