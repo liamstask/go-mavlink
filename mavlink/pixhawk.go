@@ -1,8 +1,9 @@
 package mavlink
 
 import (
-	"bytes"
 	"encoding/binary"
+	"fmt"
+	"math"
 )
 
 //////////////////////////////////////////////////
@@ -45,39 +46,29 @@ func (self *SetCamShutter) MsgName() string {
 }
 
 func (self *SetCamShutter) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Gain,
-		&self.Interval,
-		&self.Exposure,
-		&self.CamNo,
-		&self.CamMode,
-		&self.TriggerPin,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 11)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.Gain))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.Interval))
+	binary.LittleEndian.PutUint16(payload[6:], uint16(self.Exposure))
+	payload[8] = byte(self.CamNo)
+	payload[9] = byte(self.CamMode)
+	payload[10] = byte(self.TriggerPin)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *SetCamShutter) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Gain,
-		&self.Interval,
-		&self.Exposure,
-		&self.CamNo,
-		&self.CamMode,
-		&self.TriggerPin,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 11 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Gain = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Interval = uint16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.Exposure = uint16(binary.LittleEndian.Uint16(p.Payload[6:]))
+	self.CamNo = uint8(p.Payload[8])
+	self.CamMode = uint8(p.Payload[9])
+	self.TriggerPin = uint8(p.Payload[10])
 	return nil
 }
 
@@ -106,51 +97,41 @@ func (self *ImageTriggered) MsgName() string {
 }
 
 func (self *ImageTriggered) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Timestamp,
-		&self.Seq,
-		&self.Roll,
-		&self.Pitch,
-		&self.Yaw,
-		&self.LocalZ,
-		&self.Lat,
-		&self.Lon,
-		&self.Alt,
-		&self.GroundX,
-		&self.GroundY,
-		&self.GroundZ,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 52)
+	binary.LittleEndian.PutUint64(payload[0:], uint64(self.Timestamp))
+	binary.LittleEndian.PutUint32(payload[8:], uint32(self.Seq))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.Roll))
+	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.Pitch))
+	binary.LittleEndian.PutUint32(payload[20:], math.Float32bits(self.Yaw))
+	binary.LittleEndian.PutUint32(payload[24:], math.Float32bits(self.LocalZ))
+	binary.LittleEndian.PutUint32(payload[28:], math.Float32bits(self.Lat))
+	binary.LittleEndian.PutUint32(payload[32:], math.Float32bits(self.Lon))
+	binary.LittleEndian.PutUint32(payload[36:], math.Float32bits(self.Alt))
+	binary.LittleEndian.PutUint32(payload[40:], math.Float32bits(self.GroundX))
+	binary.LittleEndian.PutUint32(payload[44:], math.Float32bits(self.GroundY))
+	binary.LittleEndian.PutUint32(payload[48:], math.Float32bits(self.GroundZ))
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *ImageTriggered) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Timestamp,
-		&self.Seq,
-		&self.Roll,
-		&self.Pitch,
-		&self.Yaw,
-		&self.LocalZ,
-		&self.Lat,
-		&self.Lon,
-		&self.Alt,
-		&self.GroundX,
-		&self.GroundY,
-		&self.GroundZ,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 52 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Timestamp = uint64(binary.LittleEndian.Uint64(p.Payload[0:]))
+	self.Seq = uint32(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.Roll = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.Pitch = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
+	self.Yaw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[20:]))
+	self.LocalZ = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[24:]))
+	self.Lat = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[28:]))
+	self.Lon = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[32:]))
+	self.Alt = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[36:]))
+	self.GroundX = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[40:]))
+	self.GroundY = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[44:]))
+	self.GroundZ = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[48:]))
 	return nil
 }
 
@@ -168,29 +149,19 @@ func (self *ImageTriggerControl) MsgName() string {
 }
 
 func (self *ImageTriggerControl) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Enable,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 1)
+	payload[0] = byte(self.Enable)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *ImageTriggerControl) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Enable,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 1 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Enable = uint8(p.Payload[0])
 	return nil
 }
 
@@ -230,73 +201,63 @@ func (self *ImageAvailable) MsgName() string {
 }
 
 func (self *ImageAvailable) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.CamId,
-		&self.Timestamp,
-		&self.ValidUntil,
-		&self.ImgSeq,
-		&self.ImgBufIndex,
-		&self.Key,
-		&self.Exposure,
-		&self.Gain,
-		&self.Roll,
-		&self.Pitch,
-		&self.Yaw,
-		&self.LocalZ,
-		&self.Lat,
-		&self.Lon,
-		&self.Alt,
-		&self.GroundX,
-		&self.GroundY,
-		&self.GroundZ,
-		&self.Width,
-		&self.Height,
-		&self.Depth,
-		&self.CamNo,
-		&self.Channels,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 92)
+	binary.LittleEndian.PutUint64(payload[0:], uint64(self.CamId))
+	binary.LittleEndian.PutUint64(payload[8:], uint64(self.Timestamp))
+	binary.LittleEndian.PutUint64(payload[16:], uint64(self.ValidUntil))
+	binary.LittleEndian.PutUint32(payload[24:], uint32(self.ImgSeq))
+	binary.LittleEndian.PutUint32(payload[28:], uint32(self.ImgBufIndex))
+	binary.LittleEndian.PutUint32(payload[32:], uint32(self.Key))
+	binary.LittleEndian.PutUint32(payload[36:], uint32(self.Exposure))
+	binary.LittleEndian.PutUint32(payload[40:], math.Float32bits(self.Gain))
+	binary.LittleEndian.PutUint32(payload[44:], math.Float32bits(self.Roll))
+	binary.LittleEndian.PutUint32(payload[48:], math.Float32bits(self.Pitch))
+	binary.LittleEndian.PutUint32(payload[52:], math.Float32bits(self.Yaw))
+	binary.LittleEndian.PutUint32(payload[56:], math.Float32bits(self.LocalZ))
+	binary.LittleEndian.PutUint32(payload[60:], math.Float32bits(self.Lat))
+	binary.LittleEndian.PutUint32(payload[64:], math.Float32bits(self.Lon))
+	binary.LittleEndian.PutUint32(payload[68:], math.Float32bits(self.Alt))
+	binary.LittleEndian.PutUint32(payload[72:], math.Float32bits(self.GroundX))
+	binary.LittleEndian.PutUint32(payload[76:], math.Float32bits(self.GroundY))
+	binary.LittleEndian.PutUint32(payload[80:], math.Float32bits(self.GroundZ))
+	binary.LittleEndian.PutUint16(payload[84:], uint16(self.Width))
+	binary.LittleEndian.PutUint16(payload[86:], uint16(self.Height))
+	binary.LittleEndian.PutUint16(payload[88:], uint16(self.Depth))
+	payload[90] = byte(self.CamNo)
+	payload[91] = byte(self.Channels)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *ImageAvailable) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.CamId,
-		&self.Timestamp,
-		&self.ValidUntil,
-		&self.ImgSeq,
-		&self.ImgBufIndex,
-		&self.Key,
-		&self.Exposure,
-		&self.Gain,
-		&self.Roll,
-		&self.Pitch,
-		&self.Yaw,
-		&self.LocalZ,
-		&self.Lat,
-		&self.Lon,
-		&self.Alt,
-		&self.GroundX,
-		&self.GroundY,
-		&self.GroundZ,
-		&self.Width,
-		&self.Height,
-		&self.Depth,
-		&self.CamNo,
-		&self.Channels,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 92 {
+		return fmt.Errorf("payload too small")
 	}
+	self.CamId = uint64(binary.LittleEndian.Uint64(p.Payload[0:]))
+	self.Timestamp = uint64(binary.LittleEndian.Uint64(p.Payload[8:]))
+	self.ValidUntil = uint64(binary.LittleEndian.Uint64(p.Payload[16:]))
+	self.ImgSeq = uint32(binary.LittleEndian.Uint32(p.Payload[24:]))
+	self.ImgBufIndex = uint32(binary.LittleEndian.Uint32(p.Payload[28:]))
+	self.Key = uint32(binary.LittleEndian.Uint32(p.Payload[32:]))
+	self.Exposure = uint32(binary.LittleEndian.Uint32(p.Payload[36:]))
+	self.Gain = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[40:]))
+	self.Roll = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[44:]))
+	self.Pitch = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[48:]))
+	self.Yaw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[52:]))
+	self.LocalZ = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[56:]))
+	self.Lat = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[60:]))
+	self.Lon = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[64:]))
+	self.Alt = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[68:]))
+	self.GroundX = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[72:]))
+	self.GroundY = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[76:]))
+	self.GroundZ = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[80:]))
+	self.Width = uint16(binary.LittleEndian.Uint16(p.Payload[84:]))
+	self.Height = uint16(binary.LittleEndian.Uint16(p.Payload[86:]))
+	self.Depth = uint16(binary.LittleEndian.Uint16(p.Payload[88:]))
+	self.CamNo = uint8(p.Payload[90])
+	self.Channels = uint8(p.Payload[91])
 	return nil
 }
 
@@ -319,39 +280,29 @@ func (self *SetPositionControlOffset) MsgName() string {
 }
 
 func (self *SetPositionControlOffset) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Yaw,
-		&self.TargetSystem,
-		&self.TargetComponent,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 18)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.X))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.Y))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.Z))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.Yaw))
+	payload[16] = byte(self.TargetSystem)
+	payload[17] = byte(self.TargetComponent)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *SetPositionControlOffset) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Yaw,
-		&self.TargetSystem,
-		&self.TargetComponent,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 18 {
+		return fmt.Errorf("payload too small")
 	}
+	self.X = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Y = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.Z = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.Yaw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.TargetSystem = uint8(p.Payload[16])
+	self.TargetComponent = uint8(p.Payload[17])
 	return nil
 }
 
@@ -373,37 +324,27 @@ func (self *PositionControlSetpoint) MsgName() string {
 }
 
 func (self *PositionControlSetpoint) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Yaw,
-		&self.Id,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 18)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.X))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.Y))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.Z))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.Yaw))
+	binary.LittleEndian.PutUint16(payload[16:], uint16(self.Id))
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *PositionControlSetpoint) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Yaw,
-		&self.Id,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 18 {
+		return fmt.Errorf("payload too small")
 	}
+	self.X = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Y = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.Z = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.Yaw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.Id = uint16(binary.LittleEndian.Uint16(p.Payload[16:]))
 	return nil
 }
 
@@ -427,41 +368,31 @@ func (self *Marker) MsgName() string {
 }
 
 func (self *Marker) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Roll,
-		&self.Pitch,
-		&self.Yaw,
-		&self.Id,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 26)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.X))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.Y))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.Z))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.Roll))
+	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.Pitch))
+	binary.LittleEndian.PutUint32(payload[20:], math.Float32bits(self.Yaw))
+	binary.LittleEndian.PutUint16(payload[24:], uint16(self.Id))
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *Marker) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Roll,
-		&self.Pitch,
-		&self.Yaw,
-		&self.Id,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 26 {
+		return fmt.Errorf("payload too small")
 	}
+	self.X = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Y = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.Z = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.Roll = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.Pitch = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
+	self.Yaw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[20:]))
+	self.Id = uint16(binary.LittleEndian.Uint16(p.Payload[24:]))
 	return nil
 }
 
@@ -485,41 +416,31 @@ func (self *RawAux) MsgName() string {
 }
 
 func (self *RawAux) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Baro,
-		&self.Adc1,
-		&self.Adc2,
-		&self.Adc3,
-		&self.Adc4,
-		&self.Vbat,
-		&self.Temp,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 16)
+	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Baro))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.Adc1))
+	binary.LittleEndian.PutUint16(payload[6:], uint16(self.Adc2))
+	binary.LittleEndian.PutUint16(payload[8:], uint16(self.Adc3))
+	binary.LittleEndian.PutUint16(payload[10:], uint16(self.Adc4))
+	binary.LittleEndian.PutUint16(payload[12:], uint16(self.Vbat))
+	binary.LittleEndian.PutUint16(payload[14:], uint16(self.Temp))
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *RawAux) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Baro,
-		&self.Adc1,
-		&self.Adc2,
-		&self.Adc3,
-		&self.Adc4,
-		&self.Vbat,
-		&self.Temp,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 16 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Baro = int32(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Adc1 = uint16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.Adc2 = uint16(binary.LittleEndian.Uint16(p.Payload[6:]))
+	self.Adc3 = uint16(binary.LittleEndian.Uint16(p.Payload[8:]))
+	self.Adc4 = uint16(binary.LittleEndian.Uint16(p.Payload[10:]))
+	self.Vbat = uint16(binary.LittleEndian.Uint16(p.Payload[12:]))
+	self.Temp = int16(binary.LittleEndian.Uint16(p.Payload[14:]))
 	return nil
 }
 
@@ -538,31 +459,21 @@ func (self *WatchdogHeartbeat) MsgName() string {
 }
 
 func (self *WatchdogHeartbeat) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.WatchdogId,
-		&self.ProcessCount,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 4)
+	binary.LittleEndian.PutUint16(payload[0:], uint16(self.WatchdogId))
+	binary.LittleEndian.PutUint16(payload[2:], uint16(self.ProcessCount))
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *WatchdogHeartbeat) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.WatchdogId,
-		&self.ProcessCount,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 4 {
+		return fmt.Errorf("payload too small")
 	}
+	self.WatchdogId = uint16(binary.LittleEndian.Uint16(p.Payload[0:]))
+	self.ProcessCount = uint16(binary.LittleEndian.Uint16(p.Payload[2:]))
 	return nil
 }
 
@@ -584,37 +495,27 @@ func (self *WatchdogProcessInfo) MsgName() string {
 }
 
 func (self *WatchdogProcessInfo) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Timeout,
-		&self.WatchdogId,
-		&self.ProcessId,
-		&self.Name,
-		&self.Arguments,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 255)
+	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Timeout))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.WatchdogId))
+	binary.LittleEndian.PutUint16(payload[6:], uint16(self.ProcessId))
+	copy(payload[8:], self.Name[:])
+	copy(payload[108:], self.Arguments[:])
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *WatchdogProcessInfo) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Timeout,
-		&self.WatchdogId,
-		&self.ProcessId,
-		&self.Name,
-		&self.Arguments,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 255 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Timeout = int32(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.WatchdogId = uint16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.ProcessId = uint16(binary.LittleEndian.Uint16(p.Payload[6:]))
+	copy(self.Name[:], p.Payload[8:108])
+	copy(self.Arguments[:], p.Payload[108:255])
 	return nil
 }
 
@@ -637,39 +538,29 @@ func (self *WatchdogProcessStatus) MsgName() string {
 }
 
 func (self *WatchdogProcessStatus) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Pid,
-		&self.WatchdogId,
-		&self.ProcessId,
-		&self.Crashes,
-		&self.State,
-		&self.Muted,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 12)
+	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Pid))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.WatchdogId))
+	binary.LittleEndian.PutUint16(payload[6:], uint16(self.ProcessId))
+	binary.LittleEndian.PutUint16(payload[8:], uint16(self.Crashes))
+	payload[10] = byte(self.State)
+	payload[11] = byte(self.Muted)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *WatchdogProcessStatus) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Pid,
-		&self.WatchdogId,
-		&self.ProcessId,
-		&self.Crashes,
-		&self.State,
-		&self.Muted,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 12 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Pid = int32(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.WatchdogId = uint16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.ProcessId = uint16(binary.LittleEndian.Uint16(p.Payload[6:]))
+	self.Crashes = uint16(binary.LittleEndian.Uint16(p.Payload[8:]))
+	self.State = uint8(p.Payload[10])
+	self.Muted = uint8(p.Payload[11])
 	return nil
 }
 
@@ -690,35 +581,25 @@ func (self *WatchdogCommand) MsgName() string {
 }
 
 func (self *WatchdogCommand) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.WatchdogId,
-		&self.ProcessId,
-		&self.TargetSystemId,
-		&self.CommandId,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 6)
+	binary.LittleEndian.PutUint16(payload[0:], uint16(self.WatchdogId))
+	binary.LittleEndian.PutUint16(payload[2:], uint16(self.ProcessId))
+	payload[4] = byte(self.TargetSystemId)
+	payload[5] = byte(self.CommandId)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *WatchdogCommand) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.WatchdogId,
-		&self.ProcessId,
-		&self.TargetSystemId,
-		&self.CommandId,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 6 {
+		return fmt.Errorf("payload too small")
 	}
+	self.WatchdogId = uint16(binary.LittleEndian.Uint16(p.Payload[0:]))
+	self.ProcessId = uint16(binary.LittleEndian.Uint16(p.Payload[2:]))
+	self.TargetSystemId = uint8(p.Payload[4])
+	self.CommandId = uint8(p.Payload[5])
 	return nil
 }
 
@@ -739,35 +620,25 @@ func (self *PatternDetected) MsgName() string {
 }
 
 func (self *PatternDetected) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Confidence,
-		&self.Type,
-		&self.File,
-		&self.Detected,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 106)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.Confidence))
+	payload[4] = byte(self.Type)
+	copy(payload[5:], self.File[:])
+	payload[105] = byte(self.Detected)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *PatternDetected) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Confidence,
-		&self.Type,
-		&self.File,
-		&self.Detected,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 106 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Confidence = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Type = uint8(p.Payload[4])
+	copy(self.File[:], p.Payload[5:105])
+	self.Detected = uint8(p.Payload[105])
 	return nil
 }
 
@@ -795,43 +666,33 @@ func (self *PointOfInterest) MsgName() string {
 }
 
 func (self *PointOfInterest) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Timeout,
-		&self.Type,
-		&self.Color,
-		&self.CoordinateSystem,
-		&self.Name,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 43)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.X))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.Y))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.Z))
+	binary.LittleEndian.PutUint16(payload[12:], uint16(self.Timeout))
+	payload[14] = byte(self.Type)
+	payload[15] = byte(self.Color)
+	payload[16] = byte(self.CoordinateSystem)
+	copy(payload[17:], self.Name[:])
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *PointOfInterest) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Timeout,
-		&self.Type,
-		&self.Color,
-		&self.CoordinateSystem,
-		&self.Name,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 43 {
+		return fmt.Errorf("payload too small")
 	}
+	self.X = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Y = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.Z = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.Timeout = uint16(binary.LittleEndian.Uint16(p.Payload[12:]))
+	self.Type = uint8(p.Payload[14])
+	self.Color = uint8(p.Payload[15])
+	self.CoordinateSystem = uint8(p.Payload[16])
+	copy(self.Name[:], p.Payload[17:43])
 	return nil
 }
 
@@ -862,49 +723,39 @@ func (self *PointOfInterestConnection) MsgName() string {
 }
 
 func (self *PointOfInterestConnection) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Xp1,
-		&self.Yp1,
-		&self.Zp1,
-		&self.Xp2,
-		&self.Yp2,
-		&self.Zp2,
-		&self.Timeout,
-		&self.Type,
-		&self.Color,
-		&self.CoordinateSystem,
-		&self.Name,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 55)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.Xp1))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.Yp1))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.Zp1))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.Xp2))
+	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.Yp2))
+	binary.LittleEndian.PutUint32(payload[20:], math.Float32bits(self.Zp2))
+	binary.LittleEndian.PutUint16(payload[24:], uint16(self.Timeout))
+	payload[26] = byte(self.Type)
+	payload[27] = byte(self.Color)
+	payload[28] = byte(self.CoordinateSystem)
+	copy(payload[29:], self.Name[:])
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *PointOfInterestConnection) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Xp1,
-		&self.Yp1,
-		&self.Zp1,
-		&self.Xp2,
-		&self.Yp2,
-		&self.Zp2,
-		&self.Timeout,
-		&self.Type,
-		&self.Color,
-		&self.CoordinateSystem,
-		&self.Name,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 55 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Xp1 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Yp1 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.Zp1 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.Xp2 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.Yp2 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
+	self.Zp2 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[20:]))
+	self.Timeout = uint16(binary.LittleEndian.Uint16(p.Payload[24:]))
+	self.Type = uint8(p.Payload[26])
+	self.Color = uint8(p.Payload[27])
+	self.CoordinateSystem = uint8(p.Payload[28])
+	copy(self.Name[:], p.Payload[29:55])
 	return nil
 }
 
@@ -929,43 +780,33 @@ func (self *BriefFeature) MsgName() string {
 }
 
 func (self *BriefFeature) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Response,
-		&self.Size,
-		&self.Orientation,
-		&self.OrientationAssignment,
-		&self.Descriptor,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 53)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.X))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.Y))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.Z))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.Response))
+	binary.LittleEndian.PutUint16(payload[16:], uint16(self.Size))
+	binary.LittleEndian.PutUint16(payload[18:], uint16(self.Orientation))
+	payload[20] = byte(self.OrientationAssignment)
+	copy(payload[21:], self.Descriptor[:])
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *BriefFeature) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.X,
-		&self.Y,
-		&self.Z,
-		&self.Response,
-		&self.Size,
-		&self.Orientation,
-		&self.OrientationAssignment,
-		&self.Descriptor,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 53 {
+		return fmt.Errorf("payload too small")
 	}
+	self.X = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Y = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.Z = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.Response = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.Size = uint16(binary.LittleEndian.Uint16(p.Payload[16:]))
+	self.Orientation = uint16(binary.LittleEndian.Uint16(p.Payload[18:]))
+	self.OrientationAssignment = uint8(p.Payload[20])
+	copy(self.Descriptor[:], p.Payload[21:53])
 	return nil
 }
 
@@ -991,45 +832,35 @@ func (self *AttitudeControl) MsgName() string {
 }
 
 func (self *AttitudeControl) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Roll,
-		&self.Pitch,
-		&self.Yaw,
-		&self.Thrust,
-		&self.Target,
-		&self.RollManual,
-		&self.PitchManual,
-		&self.YawManual,
-		&self.ThrustManual,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 21)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.Roll))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.Pitch))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.Yaw))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.Thrust))
+	payload[16] = byte(self.Target)
+	payload[17] = byte(self.RollManual)
+	payload[18] = byte(self.PitchManual)
+	payload[19] = byte(self.YawManual)
+	payload[20] = byte(self.ThrustManual)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *AttitudeControl) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Roll,
-		&self.Pitch,
-		&self.Yaw,
-		&self.Thrust,
-		&self.Target,
-		&self.RollManual,
-		&self.PitchManual,
-		&self.YawManual,
-		&self.ThrustManual,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 21 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Roll = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Pitch = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.Yaw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.Thrust = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.Target = uint8(p.Payload[16])
+	self.RollManual = uint8(p.Payload[17])
+	self.PitchManual = uint8(p.Payload[18])
+	self.YawManual = uint8(p.Payload[19])
+	self.ThrustManual = uint8(p.Payload[20])
 	return nil
 }
 
@@ -1058,51 +889,41 @@ func (self *DetectionStats) MsgName() string {
 }
 
 func (self *DetectionStats) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Detections,
-		&self.ClusterIters,
-		&self.BestScore,
-		&self.BestLat,
-		&self.BestLon,
-		&self.BestAlt,
-		&self.BestDetectionId,
-		&self.BestClusterId,
-		&self.BestClusterIterId,
-		&self.ImagesDone,
-		&self.ImagesTodo,
-		&self.Fps,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 48)
+	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Detections))
+	binary.LittleEndian.PutUint32(payload[4:], uint32(self.ClusterIters))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.BestScore))
+	binary.LittleEndian.PutUint32(payload[12:], uint32(self.BestLat))
+	binary.LittleEndian.PutUint32(payload[16:], uint32(self.BestLon))
+	binary.LittleEndian.PutUint32(payload[20:], uint32(self.BestAlt))
+	binary.LittleEndian.PutUint32(payload[24:], uint32(self.BestDetectionId))
+	binary.LittleEndian.PutUint32(payload[28:], uint32(self.BestClusterId))
+	binary.LittleEndian.PutUint32(payload[32:], uint32(self.BestClusterIterId))
+	binary.LittleEndian.PutUint32(payload[36:], uint32(self.ImagesDone))
+	binary.LittleEndian.PutUint32(payload[40:], uint32(self.ImagesTodo))
+	binary.LittleEndian.PutUint32(payload[44:], math.Float32bits(self.Fps))
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *DetectionStats) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Detections,
-		&self.ClusterIters,
-		&self.BestScore,
-		&self.BestLat,
-		&self.BestLon,
-		&self.BestAlt,
-		&self.BestDetectionId,
-		&self.BestClusterId,
-		&self.BestClusterIterId,
-		&self.ImagesDone,
-		&self.ImagesTodo,
-		&self.Fps,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 48 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Detections = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.ClusterIters = uint32(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.BestScore = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.BestLat = int32(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.BestLon = int32(binary.LittleEndian.Uint32(p.Payload[16:]))
+	self.BestAlt = int32(binary.LittleEndian.Uint32(p.Payload[20:]))
+	self.BestDetectionId = uint32(binary.LittleEndian.Uint32(p.Payload[24:]))
+	self.BestClusterId = uint32(binary.LittleEndian.Uint32(p.Payload[28:]))
+	self.BestClusterIterId = uint32(binary.LittleEndian.Uint32(p.Payload[32:]))
+	self.ImagesDone = uint32(binary.LittleEndian.Uint32(p.Payload[36:]))
+	self.ImagesTodo = uint32(binary.LittleEndian.Uint32(p.Payload[40:]))
+	self.Fps = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[44:]))
 	return nil
 }
 
@@ -1133,55 +954,45 @@ func (self *OnboardHealth) MsgName() string {
 }
 
 func (self *OnboardHealth) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{}{
-		&self.Uptime,
-		&self.RamTotal,
-		&self.SwapTotal,
-		&self.DiskTotal,
-		&self.Temp,
-		&self.Voltage,
-		&self.NetworkLoadIn,
-		&self.NetworkLoadOut,
-		&self.CpuFreq,
-		&self.CpuLoad,
-		&self.RamUsage,
-		&self.SwapUsage,
-		&self.DiskHealth,
-		&self.DiskUsage,
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, 39)
+	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Uptime))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.RamTotal))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.SwapTotal))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.DiskTotal))
+	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.Temp))
+	binary.LittleEndian.PutUint32(payload[20:], math.Float32bits(self.Voltage))
+	binary.LittleEndian.PutUint32(payload[24:], math.Float32bits(self.NetworkLoadIn))
+	binary.LittleEndian.PutUint32(payload[28:], math.Float32bits(self.NetworkLoadOut))
+	binary.LittleEndian.PutUint16(payload[32:], uint16(self.CpuFreq))
+	payload[34] = byte(self.CpuLoad)
+	payload[35] = byte(self.RamUsage)
+	payload[36] = byte(self.SwapUsage)
+	payload[37] = byte(self.DiskHealth)
+	payload[38] = byte(self.DiskUsage)
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *OnboardHealth) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{}{
-		&self.Uptime,
-		&self.RamTotal,
-		&self.SwapTotal,
-		&self.DiskTotal,
-		&self.Temp,
-		&self.Voltage,
-		&self.NetworkLoadIn,
-		&self.NetworkLoadOut,
-		&self.CpuFreq,
-		&self.CpuLoad,
-		&self.RamUsage,
-		&self.SwapUsage,
-		&self.DiskHealth,
-		&self.DiskUsage,
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
+	if len(p.Payload) < 39 {
+		return fmt.Errorf("payload too small")
 	}
+	self.Uptime = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.RamTotal = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.SwapTotal = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.DiskTotal = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.Temp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
+	self.Voltage = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[20:]))
+	self.NetworkLoadIn = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[24:]))
+	self.NetworkLoadOut = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[28:]))
+	self.CpuFreq = uint16(binary.LittleEndian.Uint16(p.Payload[32:]))
+	self.CpuLoad = uint8(p.Payload[34])
+	self.RamUsage = uint8(p.Payload[35])
+	self.SwapUsage = uint8(p.Payload[36])
+	self.DiskHealth = int8(p.Payload[37])
+	self.DiskUsage = uint8(p.Payload[38])
 	return nil
 }
 
