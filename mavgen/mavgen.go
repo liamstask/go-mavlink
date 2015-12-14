@@ -60,21 +60,27 @@ type MessageField struct {
 	GoType      string
 	BitSize     int
 	ArrayLen    int
+	ByteOffset  int // from beginning of payload
 }
 
 var funcMap = template.FuncMap{
 	"UpperCamelCase": UpperCamelCase,
 }
 
-func (m *Message) Size() (size int) {
-	for _, f := range m.Fields {
-		bitSize := f.BitSize
-		if f.ArrayLen > 0 {
-			bitSize *= f.ArrayLen
-		}
-		size += bitSize
+func (f *MessageField) SizeInBytes() int {
+	if f.ArrayLen > 0 {
+		return f.BitSize / 8 * f.ArrayLen
+	} else {
+		return f.BitSize / 8
 	}
-	return size / 8
+}
+
+func (m *Message) Size() int {
+	sz := 0
+	for _, f := range m.Fields {
+		sz += f.SizeInBytes()
+	}
+	return sz
 }
 
 // CRC extra calculation: http://www.mavlink.org/mavlink/crc_extra_calculation
@@ -126,6 +132,93 @@ func UpperCamelCase(s string) string {
 	return b.String()
 }
 
+// helper to pack a single element into a payload.
+// can be called for a single field, or an element within a field's array.
+func (f *MessageField) payloadPackPrimitive(offset, name string) string {
+
+	if f.BitSize == 8 {
+		return fmt.Sprintf("payload[%s] = byte(%s)", offset, name)
+	}
+
+	if f.IsFloat() {
+		switch f.BitSize {
+		case 32, 64:
+			return fmt.Sprintf("binary.LittleEndian.PutUint%d(payload[%s:], math.Float%dbits(%s))", f.BitSize, offset, f.BitSize, name)
+		}
+	} else {
+		switch f.BitSize {
+		case 16, 32, 64:
+			return fmt.Sprintf("binary.LittleEndian.PutUint%d(payload[%s:], uint%d(%s))", f.BitSize, offset, f.BitSize, name)
+		}
+	}
+
+	panic("unhandled bitsize")
+}
+
+// produce a string that will pack this message's fields
+// into a byte slice called 'payload'
+func (f *MessageField) PayloadPackSequence() string {
+	name := UpperCamelCase(f.Name)
+
+	if f.ArrayLen > 0 {
+		// optimize to copy() if possible
+		if strings.HasSuffix(f.GoType, "byte") || strings.HasSuffix(f.GoType, "uint8") {
+			return fmt.Sprintf("copy(payload[%d:], self.%s[:])", f.ByteOffset, name)
+		}
+
+		// pack each element in the array
+		s := fmt.Sprintf("for i, v := range self.%s {\n", name)
+		off := fmt.Sprintf("%d + i * %d", f.ByteOffset, f.BitSize/8)
+		s += f.payloadPackPrimitive(off, "v") + "\n"
+		s += fmt.Sprintf("}")
+		return s
+	}
+
+	// pack a single field
+	return f.payloadPackPrimitive(fmt.Sprintf("%d", f.ByteOffset), "self."+name)
+}
+
+func (f *MessageField) payloadUnpackPrimitive(offset string) string {
+
+	if f.BitSize == 8 {
+		return fmt.Sprintf("%s(p.Payload[%s])", goArrayType(f.GoType), offset)
+	}
+
+	if f.IsFloat() {
+		switch f.BitSize {
+		case 32, 64:
+			return fmt.Sprintf("math.Float%dfrombits(binary.LittleEndian.Uint%d(p.Payload[%s:]))", f.BitSize, f.BitSize, offset)
+		}
+	} else {
+		switch f.BitSize {
+		case 16, 32, 64:
+			return fmt.Sprintf("%s(binary.LittleEndian.Uint%d(p.Payload[%s:]))", goArrayType(f.GoType), f.BitSize, offset)
+		}
+	}
+
+	panic("unhandled bitsize")
+}
+
+func (f *MessageField) PayloadUnpackSequence() string {
+	name := UpperCamelCase(f.Name)
+
+	if f.ArrayLen > 0 {
+		// optimize to copy() if possible
+		if strings.HasSuffix(f.GoType, "byte") || strings.HasSuffix(f.GoType, "uint8") {
+			return fmt.Sprintf("copy(self.%s[:], p.Payload[%d:%d])", name, f.ByteOffset, f.ByteOffset+f.ArrayLen)
+		}
+
+		// unpack each element in the array
+		s := fmt.Sprintf("for i := 0; i < len(self.%s); i++ {\n", name)
+		off := fmt.Sprintf("%d + i * %d", f.ByteOffset, f.BitSize/8)
+		s += fmt.Sprintf("self.%s[i] = %s\n", name, f.payloadUnpackPrimitive(off))
+		s += fmt.Sprintf("}")
+		return s
+	}
+
+	return fmt.Sprintf("self.%s = %s", name, f.payloadUnpackPrimitive(fmt.Sprintf("%d", f.ByteOffset)))
+}
+
 func SanitizeComments(s string) string {
 	return strings.Replace(s, "\n", "\n// ", -1)
 }
@@ -175,6 +268,18 @@ func c2goPrimitive(ctype string) string {
 	}
 }
 
+func goArrayType(s string) string {
+	idx := strings.IndexByte(s, ']')
+	if idx < 0 {
+		return s
+	}
+	return s[idx+1:]
+}
+
+func (f *MessageField) IsFloat() bool {
+	return strings.HasPrefix(goArrayType(f.GoType), "float")
+}
+
 func GoTypeInfo(s string) (string, int, int, error) {
 
 	var name string
@@ -208,17 +313,6 @@ func GoTypeInfo(s string) (string, int, int, error) {
 	return name, bitsz, arraylen, nil
 }
 
-// return the corresponding go type for the given c type
-func c2goType(c string) string {
-
-	// array? leave the [N] but convert the primitive type name
-	if idx := strings.IndexByte(c, '['); idx != -1 {
-		return c[idx:] + c2goPrimitive(c[:idx])
-	}
-
-	return c2goPrimitive(c)
-}
-
 // generate a .go source file from the given dialect
 func (d *Dialect) GenerateGo(w io.Writer) error {
 	// templatize to buffer, format it, then write out
@@ -228,8 +322,9 @@ func (d *Dialect) GenerateGo(w io.Writer) error {
 	bb.WriteString("package mavlink\n\n")
 
 	bb.WriteString("import (\n")
-	bb.WriteString("\"bytes\"\n")
 	bb.WriteString("\"encoding/binary\"\n")
+	bb.WriteString("\"fmt\"\n")
+	bb.WriteString("\"math\"\n")
 	bb.WriteString(")\n")
 
 	bb.WriteString("//////////////////////////////////////////////////\n")
@@ -325,29 +420,19 @@ func (self *{{$name}}) MsgName() string {
 }
 
 func (self *{{$name}}) Pack(p *Packet) error {
-	var buf bytes.Buffer
-	for _, f := range []interface{} { {{range .Fields}}
-		&self.{{.Name | UpperCamelCase}},{{end}}
-	} {
-		if err := binary.Write(&buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	payload := make([]byte, {{ .Size }}){{range .Fields}}
+	{{.PayloadPackSequence}}{{end}}
 
 	p.MsgID = self.MsgID()
-	p.Payload = buf.Bytes()
+	p.Payload = payload
 	return nil
 }
 
 func (self *{{$name}}) Unpack(p *Packet) error {
-	buf := bytes.NewBuffer(p.Payload)
-	for _, f := range []interface{} { {{range .Fields}}
-		&self.{{.Name | UpperCamelCase}},{{end}}
-	} {
-		if err := binary.Read(buf, binary.LittleEndian, f); err != nil {
-			return err
-		}
-	}
+	if len(p.Payload) < {{ .Size }} {
+		return fmt.Errorf("payload too small")
+	}{{range .Fields}}
+	{{.PayloadUnpackSequence}}{{end}}
 	return nil
 }
 {{end}}
@@ -367,6 +452,13 @@ func (self *{{$name}}) Unpack(p *Packet) error {
 		// ensure fields are sorted according to their size,
 		// http://www.mavlink.org/mavlink/crc_extra_calculation
 		sort.Stable(sort.Reverse(m))
+
+		// once sorted, calculate offsets for use in payload packing/unpacking
+		offset := 0
+		for _, f := range m.Fields {
+			f.ByteOffset = offset
+			offset += f.SizeInBytes()
+		}
 	}
 
 	return template.Must(template.New("classesTmpl").Funcs(funcMap).Parse(classesTmpl)).Execute(w, d)
