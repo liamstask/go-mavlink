@@ -162,8 +162,8 @@ func (dec *Decoder) DecodeBytes(b []byte) (*Packet, error) {
 	p, payloadLen := newPacketFromBytes(b[1:])
 
 	crc := x25.New()
-	p.Payload = b[hdrLen: hdrLen+payloadLen]
-	crc.Write(b[1:hdrLen+payloadLen])
+	p.Payload = b[hdrLen : hdrLen+payloadLen]
+	crc.Write(b[1 : hdrLen+payloadLen])
 
 	crcx, err := dec.Dialects.findCrcX(p.MsgID)
 	if err != nil {
