@@ -6583,11 +6583,11 @@ func (self *AdsbVehicle) Unpack(p *Packet) error {
 
 // Message implementing parts of the V2 payload specs in V1 frames for transitional support.
 type V2Extension struct {
-	MessageType     uint16     // A code that identifies the software component that understands this message (analogous to usb device classes or mime type strings).  If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/extension-message-ids.xml.  Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.
-	TargetNetwork   uint8      // Network ID (0 for broadcast)
-	TargetSystem    uint8      // System ID (0 for broadcast)
-	TargetComponent uint8      // Component ID (0 for broadcast)
-	Payload         [249]uint8 // Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.
+	MessageType     uint16  // A code that identifies the software component that understands this message (analogous to usb device classes or mime type strings).  If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/extension-message-ids.xml.  Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.
+	TargetNetwork   uint8   // Network ID (0 for broadcast)
+	TargetSystem    uint8   // System ID (0 for broadcast)
+	TargetComponent uint8   // Component ID (0 for broadcast)
+	Payload         []uint8 // Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.
 }
 
 func (self *V2Extension) MsgID() uint8 {
@@ -6599,7 +6599,7 @@ func (self *V2Extension) MsgName() string {
 }
 
 func (self *V2Extension) Pack(p *Packet) error {
-	payload := make([]byte, 254)
+	payload := make([]byte, len(self.Payload)+5)
 	binary.LittleEndian.PutUint16(payload[0:], uint16(self.MessageType))
 	payload[2] = byte(self.TargetNetwork)
 	payload[3] = byte(self.TargetSystem)
@@ -6612,14 +6612,13 @@ func (self *V2Extension) Pack(p *Packet) error {
 }
 
 func (self *V2Extension) Unpack(p *Packet) error {
-	if len(p.Payload) < 254 {
-		return fmt.Errorf("payload too small")
-	}
 	self.MessageType = uint16(binary.LittleEndian.Uint16(p.Payload[0:]))
 	self.TargetNetwork = uint8(p.Payload[2])
 	self.TargetSystem = uint8(p.Payload[3])
 	self.TargetComponent = uint8(p.Payload[4])
-	copy(self.Payload[:], p.Payload[5:254])
+	self.Payload = make([]byte, len(p.Payload)-5)
+	copy(self.Payload[:], p.Payload[5:len(p.Payload)])
+
 	return nil
 }
 
