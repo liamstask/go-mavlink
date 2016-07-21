@@ -13,7 +13,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/liamstask/go-mavlink/x25"
+	"github.com/botlink/go-mavlink/x25"
 )
 
 type Dialect struct {
