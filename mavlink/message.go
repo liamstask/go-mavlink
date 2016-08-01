@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/liamstask/go-mavlink/x25"
+	"github.com/botlink/go-mavlink/x25"
 )
 
 //go:generate mavgen -f definitions/common.xml
