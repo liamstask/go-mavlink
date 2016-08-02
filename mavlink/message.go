@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"io"
+	"sync"
 
 	"github.com/botlink/go-mavlink/x25"
 )
@@ -53,6 +54,7 @@ type Decoder struct {
 }
 
 type Encoder struct {
+	sync.Mutex
 	CurrSeqID uint8        // last seq id encoded
 	Dialects  DialectSlice // dialects that can be encoded
 	bw        *bufio.Writer
