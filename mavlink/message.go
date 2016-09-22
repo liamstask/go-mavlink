@@ -48,6 +48,7 @@ type Packet struct {
 }
 
 type Decoder struct {
+	sync.Mutex
 	CurrSeqID uint8        // last seq id decoded
 	Dialects  DialectSlice // dialects that can be decoded
 	br        *bufio.Reader
