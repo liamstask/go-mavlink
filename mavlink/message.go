@@ -32,6 +32,8 @@ var (
 type Message interface {
 	Pack(*Packet) error
 	Unpack(*Packet) error
+	MsgID() uint8
+	MsgName() string
 }
 
 // wire type for encoding/decoding mavlink messages.

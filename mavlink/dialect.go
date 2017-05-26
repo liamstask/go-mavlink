@@ -7,8 +7,17 @@ package mavlink
 //
 // The 'DialectCommon' dialect is added to all Encoders/Decoders by default.
 type Dialect struct {
-	Name      string
-	crcExtras map[uint8]uint8
+	Name                      string
+	crcExtras                 map[uint8]uint8
+	messageConstructorByMsgId map[uint8]func(*Packet) Message
+}
+
+func (d *Dialect) GetMessage(pkt *Packet) (msg Message, ok bool) {
+	constructor, ok := d.messageConstructorByMsgId[pkt.MsgID]
+	if !ok {
+		return nil, false
+	}
+	return constructor(pkt), true
 }
 
 // Alias for a slice of Dialect pointers

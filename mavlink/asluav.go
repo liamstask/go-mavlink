@@ -137,7 +137,7 @@ type AslctrlData struct {
 	Uelev           float32 //
 	Uthrot          float32 //
 	Uthrot2         float32 //
-	Az              float32 //
+	Nz              float32 //
 	Airspeedref     float32 // Airspeed reference [m/s]
 	Yawangle        float32 // Yaw angle [deg]
 	Yawangleref     float32 // Yaw angle reference[deg]
@@ -174,7 +174,7 @@ func (self *AslctrlData) Pack(p *Packet) error {
 	binary.LittleEndian.PutUint32(payload[36:], math.Float32bits(self.Uelev))
 	binary.LittleEndian.PutUint32(payload[40:], math.Float32bits(self.Uthrot))
 	binary.LittleEndian.PutUint32(payload[44:], math.Float32bits(self.Uthrot2))
-	binary.LittleEndian.PutUint32(payload[48:], math.Float32bits(self.Az))
+	binary.LittleEndian.PutUint32(payload[48:], math.Float32bits(self.Nz))
 	binary.LittleEndian.PutUint32(payload[52:], math.Float32bits(self.Airspeedref))
 	binary.LittleEndian.PutUint32(payload[56:], math.Float32bits(self.Yawangle))
 	binary.LittleEndian.PutUint32(payload[60:], math.Float32bits(self.Yawangleref))
@@ -209,7 +209,7 @@ func (self *AslctrlData) Unpack(p *Packet) error {
 	self.Uelev = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[36:]))
 	self.Uthrot = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[40:]))
 	self.Uthrot2 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[44:]))
-	self.Az = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[48:]))
+	self.Nz = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[48:]))
 	self.Airspeedref = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[52:]))
 	self.Yawangle = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[56:]))
 	self.Yawangleref = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[60:]))
@@ -527,7 +527,6 @@ func (self *SensBatmon) Unpack(p *Packet) error {
 type FwSoaringData struct {
 	Timestamp            uint64  // Timestamp [ms]
 	Timestampmodechanged uint64  // Timestamp since last mode change[ms]
-	Currentupdraftspeed  float32 // Updraft speed at current/local airplane position [m/s]
 	Xw                   float32 // Thermal core updraft strength [m/s]
 	Xr                   float32 // Thermal radius [m]
 	Xlat                 float32 // Thermal center latitude [deg]
@@ -537,6 +536,18 @@ type FwSoaringData struct {
 	Varlat               float32 // Variance Lat
 	Varlon               float32 // Variance Lon
 	Loiterradius         float32 // Suggested loiter radius [m]
+	Loiterdirection      float32 // Suggested loiter direction
+	Disttosoarpoint      float32 // Distance to soar point [m]
+	Vsinkexp             float32 // Expected sink rate at current airspeed, roll and throttle [m/s]
+	Z1Localupdraftspeed  float32 // Measurement / updraft speed at current/local airplane position [m/s]
+	Z2Deltaroll          float32 // Measurement / roll angle tracking error [deg]
+	Z1Exp                float32 // Expected measurement 1
+	Z2Exp                float32 // Expected measurement 2
+	Thermalgsnorth       float32 // Thermal drift (from estimator prediction step only) [m/s]
+	Thermalgseast        float32 // Thermal drift (from estimator prediction step only) [m/s]
+	TseDot               float32 //  Total specific energy change (filtered) [m/s]
+	Debugvar1            float32 //  Debug variable 1
+	Debugvar2            float32 //  Debug variable 2
 	Controlmode          uint8   // Control Mode [-]
 	Valid                uint8   // Data valid [-]
 }
@@ -550,21 +561,32 @@ func (self *FwSoaringData) MsgName() string {
 }
 
 func (self *FwSoaringData) Pack(p *Packet) error {
-	payload := make([]byte, 58)
+	payload := make([]byte, 102)
 	binary.LittleEndian.PutUint64(payload[0:], uint64(self.Timestamp))
 	binary.LittleEndian.PutUint64(payload[8:], uint64(self.Timestampmodechanged))
-	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.Currentupdraftspeed))
-	binary.LittleEndian.PutUint32(payload[20:], math.Float32bits(self.Xw))
-	binary.LittleEndian.PutUint32(payload[24:], math.Float32bits(self.Xr))
-	binary.LittleEndian.PutUint32(payload[28:], math.Float32bits(self.Xlat))
-	binary.LittleEndian.PutUint32(payload[32:], math.Float32bits(self.Xlon))
-	binary.LittleEndian.PutUint32(payload[36:], math.Float32bits(self.Varw))
-	binary.LittleEndian.PutUint32(payload[40:], math.Float32bits(self.Varr))
-	binary.LittleEndian.PutUint32(payload[44:], math.Float32bits(self.Varlat))
-	binary.LittleEndian.PutUint32(payload[48:], math.Float32bits(self.Varlon))
-	binary.LittleEndian.PutUint32(payload[52:], math.Float32bits(self.Loiterradius))
-	payload[56] = byte(self.Controlmode)
-	payload[57] = byte(self.Valid)
+	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.Xw))
+	binary.LittleEndian.PutUint32(payload[20:], math.Float32bits(self.Xr))
+	binary.LittleEndian.PutUint32(payload[24:], math.Float32bits(self.Xlat))
+	binary.LittleEndian.PutUint32(payload[28:], math.Float32bits(self.Xlon))
+	binary.LittleEndian.PutUint32(payload[32:], math.Float32bits(self.Varw))
+	binary.LittleEndian.PutUint32(payload[36:], math.Float32bits(self.Varr))
+	binary.LittleEndian.PutUint32(payload[40:], math.Float32bits(self.Varlat))
+	binary.LittleEndian.PutUint32(payload[44:], math.Float32bits(self.Varlon))
+	binary.LittleEndian.PutUint32(payload[48:], math.Float32bits(self.Loiterradius))
+	binary.LittleEndian.PutUint32(payload[52:], math.Float32bits(self.Loiterdirection))
+	binary.LittleEndian.PutUint32(payload[56:], math.Float32bits(self.Disttosoarpoint))
+	binary.LittleEndian.PutUint32(payload[60:], math.Float32bits(self.Vsinkexp))
+	binary.LittleEndian.PutUint32(payload[64:], math.Float32bits(self.Z1Localupdraftspeed))
+	binary.LittleEndian.PutUint32(payload[68:], math.Float32bits(self.Z2Deltaroll))
+	binary.LittleEndian.PutUint32(payload[72:], math.Float32bits(self.Z1Exp))
+	binary.LittleEndian.PutUint32(payload[76:], math.Float32bits(self.Z2Exp))
+	binary.LittleEndian.PutUint32(payload[80:], math.Float32bits(self.Thermalgsnorth))
+	binary.LittleEndian.PutUint32(payload[84:], math.Float32bits(self.Thermalgseast))
+	binary.LittleEndian.PutUint32(payload[88:], math.Float32bits(self.TseDot))
+	binary.LittleEndian.PutUint32(payload[92:], math.Float32bits(self.Debugvar1))
+	binary.LittleEndian.PutUint32(payload[96:], math.Float32bits(self.Debugvar2))
+	payload[100] = byte(self.Controlmode)
+	payload[101] = byte(self.Valid)
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
@@ -572,23 +594,34 @@ func (self *FwSoaringData) Pack(p *Packet) error {
 }
 
 func (self *FwSoaringData) Unpack(p *Packet) error {
-	if len(p.Payload) < 58 {
+	if len(p.Payload) < 102 {
 		return fmt.Errorf("payload too small")
 	}
 	self.Timestamp = uint64(binary.LittleEndian.Uint64(p.Payload[0:]))
 	self.Timestampmodechanged = uint64(binary.LittleEndian.Uint64(p.Payload[8:]))
-	self.Currentupdraftspeed = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
-	self.Xw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[20:]))
-	self.Xr = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[24:]))
-	self.Xlat = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[28:]))
-	self.Xlon = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[32:]))
-	self.Varw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[36:]))
-	self.Varr = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[40:]))
-	self.Varlat = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[44:]))
-	self.Varlon = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[48:]))
-	self.Loiterradius = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[52:]))
-	self.Controlmode = uint8(p.Payload[56])
-	self.Valid = uint8(p.Payload[57])
+	self.Xw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
+	self.Xr = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[20:]))
+	self.Xlat = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[24:]))
+	self.Xlon = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[28:]))
+	self.Varw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[32:]))
+	self.Varr = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[36:]))
+	self.Varlat = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[40:]))
+	self.Varlon = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[44:]))
+	self.Loiterradius = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[48:]))
+	self.Loiterdirection = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[52:]))
+	self.Disttosoarpoint = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[56:]))
+	self.Vsinkexp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[60:]))
+	self.Z1Localupdraftspeed = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[64:]))
+	self.Z2Deltaroll = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[68:]))
+	self.Z1Exp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[72:]))
+	self.Z2Exp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[76:]))
+	self.Thermalgsnorth = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[80:]))
+	self.Thermalgseast = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[84:]))
+	self.TseDot = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[88:]))
+	self.Debugvar1 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[92:]))
+	self.Debugvar2 = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[96:]))
+	self.Controlmode = uint8(p.Payload[100])
+	self.Valid = uint8(p.Payload[101])
 	return nil
 }
 
@@ -643,6 +676,69 @@ func (self *SensorpodStatus) Unpack(p *Packet) error {
 	return nil
 }
 
+// Monitoring of power board status
+type SensPowerBoard struct {
+	Timestamp        uint64  // Timestamp
+	PwrBrdSystemVolt float32 // Power board system voltage
+	PwrBrdServoVolt  float32 // Power board servo voltage
+	PwrBrdMotLAmp    float32 // Power board left motor current sensor
+	PwrBrdMotRAmp    float32 // Power board right motor current sensor
+	PwrBrdServo1Amp  float32 // Power board servo1 current sensor
+	PwrBrdServo2Amp  float32 // Power board servo1 current sensor
+	PwrBrdServo3Amp  float32 // Power board servo1 current sensor
+	PwrBrdServo4Amp  float32 // Power board servo1 current sensor
+	PwrBrdAuxAmp     float32 // Power board aux current sensor
+	PwrBrdStatus     uint8   // Power board status register
+	PwrBrdLedStatus  uint8   // Power board leds status
+}
+
+func (self *SensPowerBoard) MsgID() uint8 {
+	return 212
+}
+
+func (self *SensPowerBoard) MsgName() string {
+	return "SensPowerBoard"
+}
+
+func (self *SensPowerBoard) Pack(p *Packet) error {
+	payload := make([]byte, 46)
+	binary.LittleEndian.PutUint64(payload[0:], uint64(self.Timestamp))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.PwrBrdSystemVolt))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.PwrBrdServoVolt))
+	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.PwrBrdMotLAmp))
+	binary.LittleEndian.PutUint32(payload[20:], math.Float32bits(self.PwrBrdMotRAmp))
+	binary.LittleEndian.PutUint32(payload[24:], math.Float32bits(self.PwrBrdServo1Amp))
+	binary.LittleEndian.PutUint32(payload[28:], math.Float32bits(self.PwrBrdServo2Amp))
+	binary.LittleEndian.PutUint32(payload[32:], math.Float32bits(self.PwrBrdServo3Amp))
+	binary.LittleEndian.PutUint32(payload[36:], math.Float32bits(self.PwrBrdServo4Amp))
+	binary.LittleEndian.PutUint32(payload[40:], math.Float32bits(self.PwrBrdAuxAmp))
+	payload[44] = byte(self.PwrBrdStatus)
+	payload[45] = byte(self.PwrBrdLedStatus)
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *SensPowerBoard) Unpack(p *Packet) error {
+	if len(p.Payload) < 46 {
+		return fmt.Errorf("payload too small")
+	}
+	self.Timestamp = uint64(binary.LittleEndian.Uint64(p.Payload[0:]))
+	self.PwrBrdSystemVolt = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.PwrBrdServoVolt = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.PwrBrdMotLAmp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
+	self.PwrBrdMotRAmp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[20:]))
+	self.PwrBrdServo1Amp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[24:]))
+	self.PwrBrdServo2Amp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[28:]))
+	self.PwrBrdServo3Amp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[32:]))
+	self.PwrBrdServo4Amp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[36:]))
+	self.PwrBrdAuxAmp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[40:]))
+	self.PwrBrdStatus = uint8(p.Payload[44])
+	self.PwrBrdLedStatus = uint8(p.Payload[45])
+	return nil
+}
+
 // Message IDs
 const (
 	MSG_ID_SENS_POWER       = 201
@@ -656,6 +752,7 @@ const (
 	MSG_ID_SENS_BATMON      = 209
 	MSG_ID_FW_SOARING_DATA  = 210
 	MSG_ID_SENSORPOD_STATUS = 211
+	MSG_ID_SENS_POWER_BOARD = 212
 )
 
 // DialectAsluav is the dialect represented by ASLUAV.xml
@@ -664,14 +761,15 @@ var DialectAsluav *Dialect = &Dialect{
 	crcExtras: map[uint8]uint8{
 		201: 218, // MSG_ID_SENS_POWER
 		202: 231, // MSG_ID_SENS_MPPT
-		203: 0,   // MSG_ID_ASLCTRL_DATA
+		203: 172, // MSG_ID_ASLCTRL_DATA
 		204: 251, // MSG_ID_ASLCTRL_DEBUG
 		205: 97,  // MSG_ID_ASLUAV_STATUS
 		206: 64,  // MSG_ID_EKF_EXT
 		207: 234, // MSG_ID_ASL_OBCTRL
 		208: 175, // MSG_ID_SENS_ATMOS
 		209: 62,  // MSG_ID_SENS_BATMON
-		210: 129, // MSG_ID_FW_SOARING_DATA
+		210: 20,  // MSG_ID_FW_SOARING_DATA
 		211: 54,  // MSG_ID_SENSORPOD_STATUS
+		212: 242, // MSG_ID_SENS_POWER_BOARD
 	},
 }
