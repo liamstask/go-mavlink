@@ -6,7 +6,7 @@ Forked from: https://github.com/liamstask/go-mavlink with updates to V2_EXTENSIO
 
 ## installation
 
-* grab the files: `go get github.com/botlink/go-mavlink`
+* grab the files: `go get github.com/cnord/go-mavlink`
 * generate classes from mavlink xml definitions: `go generate`
 
 xml definitions can be updated from https://github.com/mavlink/mavlink

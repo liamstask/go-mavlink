@@ -6,7 +6,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/botlink/go-mavlink/x25"
+	"github.com/cnord/go-mavlink/x25"
 )
 
 //go:generate mavgen -f definitions/common.xml
