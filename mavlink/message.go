@@ -4,15 +4,15 @@ import (
 	"bufio"
 	"errors"
 	"io"
+	"sync"
 
-	"github.com/liamstask/go-mavlink/x25"
+	"github.com/cnord/go-mavlink/x25"
 )
 
 //go:generate mavgen -f definitions/common.xml
 //go:generate mavgen -f definitions/ardupilotmega.xml
 //go:generate mavgen -f definitions/ASLUAV.xml
 //go:generate mavgen -f definitions/matrixpilot.xml
-//go:generate mavgen -f definitions/pixhawk.xml
 //go:generate mavgen -f definitions/ualberta.xml
 
 const (
@@ -32,6 +32,8 @@ var (
 type Message interface {
 	Pack(*Packet) error
 	Unpack(*Packet) error
+	MsgID() uint8
+	MsgName() string
 }
 
 // wire type for encoding/decoding mavlink messages.
@@ -47,12 +49,15 @@ type Packet struct {
 }
 
 type Decoder struct {
+	sync.Mutex
 	CurrSeqID uint8        // last seq id decoded
 	Dialects  DialectSlice // dialects that can be decoded
 	br        *bufio.Reader
+	buffer    []byte // stores bytes we've read from br
 }
 
 type Encoder struct {
+	sync.Mutex
 	CurrSeqID uint8        // last seq id encoded
 	Dialects  DialectSlice // dialects that can be encoded
 	bw        *bufio.Writer
@@ -102,53 +107,91 @@ func newPacketFromBytes(b []byte) (*Packet, int) {
 // a message they're interested in, and convert it to the
 // corresponding type via Message.FromPacket()
 func (dec *Decoder) Decode() (*Packet, error) {
-
-	// discard bytes until our start byte
 	for {
-		c, err := dec.br.ReadByte()
+		startFoundInBuffer := false
+		// discard bytes in buffer before start byte
+		for i, b := range dec.buffer {
+			if b == startByte {
+				dec.buffer = dec.buffer[i:]
+				startFoundInBuffer = true
+				break
+			}
+		}
+
+		// if start not found, read until we see start byte
+		if !startFoundInBuffer {
+			for {
+				c, err := dec.br.ReadByte()
+				if err != nil {
+					return nil, err
+				}
+				if c == startByte {
+					dec.buffer = append(dec.buffer, c)
+					break
+				}
+			}
+		}
+
+		if len(dec.buffer) < 2 {
+			// read length byte
+			bytesRead := make([]byte, 1)
+			n, err := io.ReadAtLeast(dec.br, bytesRead, 1)
+			if err != nil {
+				return nil, err
+			}
+
+			dec.buffer = append(dec.buffer, bytesRead[:n]...)
+		}
+
+		// buffer[1] is LENGTH and we've already read len(buffer) bytes
+		payloadLen := int(dec.buffer[1])
+		packetLen := hdrLen + payloadLen + numChecksumBytes
+		bytesNeeded := packetLen - len(dec.buffer)
+		if bytesNeeded > 0 {
+			bytesRead := make([]byte, bytesNeeded)
+			n, err := io.ReadAtLeast(dec.br, bytesRead, bytesNeeded)
+			if err != nil {
+				return nil, err
+			}
+			dec.buffer = append(dec.buffer, bytesRead[:n]...)
+		}
+
+		// hdr contains LENGTH, SEQ, SYSID, COMPID, MSGID
+		// (hdrLen - 1) because we don't include the start byte
+		hdr := make([]byte, hdrLen-1)
+		// don't include start byte
+		hdr = dec.buffer[1:hdrLen]
+
+		p, payloadLen := newPacketFromBytes(hdr)
+
+		crc := x25.New()
+		crc.Write(hdr)
+
+		payloadStart := hdrLen
+		p.Payload = dec.buffer[payloadStart : payloadStart+payloadLen]
+		crc.Write(p.Payload)
+
+		crcx, err := dec.Dialects.findCrcX(p.MsgID)
 		if err != nil {
-			return nil, err
+			dec.buffer = dec.buffer[1:]
+			// return error here to allow caller to decide if stream is
+			// corrupted or if we're getting the wrong dialect
+			return p, err
 		}
-		if c == startByte {
-			break
+		crc.WriteByte(crcx)
+
+		p.Checksum = bytesToU16(dec.buffer[payloadStart+payloadLen : payloadStart+payloadLen+numChecksumBytes])
+
+		// does the transmitted checksum match our computed checksum?
+		if p.Checksum != crc.Sum16() {
+			// strip off start byte
+			dec.buffer = dec.buffer[1:]
+		} else {
+			dec.CurrSeqID = p.SeqID
+			dec.buffer = dec.buffer[packetLen:]
+			return p, nil
 		}
 	}
-
-	// hdr contains LENGTH, SEQ, SYSID, COMPID, MSGID
-	hdr := make([]byte, 5)
-	if _, err := io.ReadFull(dec.br, hdr); err != nil {
-		return nil, err
-	}
-
-	p, payloadLen := newPacketFromBytes(hdr)
-
-	crc := x25.New()
-	crc.Write(hdr)
-
-	// read payload (if there is one) and checksum bytes
-	buf := make([]byte, payloadLen+numChecksumBytes)
-	if _, err := io.ReadFull(dec.br, buf); err != nil {
-		return p, err
-	}
-
-	p.Payload = buf[:payloadLen]
-	crc.Write(p.Payload)
-
-	crcx, err := dec.Dialects.findCrcX(p.MsgID)
-	if err != nil {
-		return p, err
-	}
-	crc.WriteByte(crcx)
-
-	p.Checksum = bytesToU16(buf[payloadLen:])
-
-	// does the transmitted checksum match our computed checksum?
-	if p.Checksum != crc.Sum16() {
-		return p, ErrCrcFail
-	}
-
-	dec.CurrSeqID = p.SeqID
-	return p, nil
 }
 
 // Decode a packet from a previously received buffer (such as a UDP packet),
@@ -162,8 +205,8 @@ func (dec *Decoder) DecodeBytes(b []byte) (*Packet, error) {
 	p, payloadLen := newPacketFromBytes(b[1:])
 
 	crc := x25.New()
-	p.Payload = b[hdrLen: hdrLen+payloadLen]
-	crc.Write(b[1:hdrLen+payloadLen])
+	p.Payload = b[hdrLen : hdrLen+payloadLen]
+	crc.Write(b[1 : hdrLen+payloadLen])
 
 	crcx, err := dec.Dialects.findCrcX(p.MsgID)
 	if err != nil {

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/liamstask/go-mavlink/x25"
+	"github.com/cnord/go-mavlink/x25"
 )
 
 type Dialect struct {
@@ -46,7 +46,10 @@ type EnumEntryParam struct {
 }
 
 type Message struct {
-	ID          uint8           `xml:"id,attr"`
+	// use uint32 instead of uint8 so that we can filter
+	// msgids from mavlink v2, which are 24 bits wide.
+	// see filtering in ParseDialect()
+	ID          uint32          `xml:"id,attr"`
 	Name        string          `xml:"name,attr"`
 	Description string          `xml:"description"`
 	Fields      []*MessageField `xml:"field"`
@@ -239,6 +242,18 @@ func ParseDialect(in io.Reader, name string) (*Dialect, error) {
 	if err := xml.Unmarshal(filebytes, &dialect); err != nil {
 		return nil, err
 	}
+
+	// filter out messages with MSG_ID > 256. these are from
+	// mavlink v2 and do not fit in uint8
+	filteredMessages := make([]*Message, len(dialect.Messages))
+	n := 0
+	for _, msg := range dialect.Messages {
+		if msg.ID <= 0xff {
+			filteredMessages[n] = msg
+			n += 1
+		}
+	}
+	dialect.Messages = filteredMessages[:n]
 
 	if dialect.Include != "" {
 		// generate(protocol.IncludeName())

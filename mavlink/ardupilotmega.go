@@ -13,38 +13,58 @@ import (
 //
 //////////////////////////////////////////////////
 
+// AccelcalVehiclePos:
+const (
+	ACCELCAL_VEHICLE_POS_LEVEL    = 1 //
+	ACCELCAL_VEHICLE_POS_LEFT     = 2 //
+	ACCELCAL_VEHICLE_POS_RIGHT    = 3 //
+	ACCELCAL_VEHICLE_POS_NOSEDOWN = 4 //
+	ACCELCAL_VEHICLE_POS_NOSEUP   = 5 //
+	ACCELCAL_VEHICLE_POS_BACK     = 6 //
+)
+
 // MavCmd:
 const (
-	MAV_CMD_DO_MOTOR_TEST      = 209 // Mission command to perform motor test
-	MAV_CMD_DO_GRIPPER         = 211 // Mission command to operate EPM gripper
-	MAV_CMD_DO_AUTOTUNE_ENABLE = 212 // Enable/disable autotune
-	MAV_CMD_NAV_ALTITUDE_WAIT  = 83  // Mission command to wait for an altitude or downwards vertical speed. This is meant for high altitude balloon launches, allowing the aircraft to be idle until either an altitude is reached or a negative vertical speed is reached (indicating early balloon burst). The wiggle time is how often to wiggle the control surfaces to prevent them seizing up.
-	MAV_CMD_DO_START_MAG_CAL   = 4   // Initiate a magnetometer calibration
-	MAV_CMD_DO_ACCEPT_MAG_CAL  = 5   // Initiate a magnetometer calibration
-	MAV_CMD_DO_CANCEL_MAG_CAL  = 6   // Cancel a running magnetometer calibration
+	MAV_CMD_DO_GRIPPER                      = 211 // Mission command to operate EPM gripper
+	MAV_CMD_DO_AUTOTUNE_ENABLE              = 212 // Enable/disable autotune
+	MAV_CMD_NAV_ALTITUDE_WAIT               = 83  // Mission command to wait for an altitude or downwards vertical speed. This is meant for high altitude balloon launches, allowing the aircraft to be idle until either an altitude is reached or a negative vertical speed is reached (indicating early balloon burst). The wiggle time is how often to wiggle the control surfaces to prevent them seizing up.
+	MAV_CMD_POWER_OFF_INITIATED             = 3   // A system wide power-off event has been initiated.
+	MAV_CMD_SOLO_BTN_FLY_CLICK              = 4   // FLY button has been clicked.
+	MAV_CMD_SOLO_BTN_FLY_HOLD               = 5   // FLY button has been held for 1.5 seconds.
+	MAV_CMD_SOLO_BTN_PAUSE_CLICK            = 6   // PAUSE button has been clicked.
+	MAV_CMD_DO_START_MAG_CAL                = 7   // Initiate a magnetometer calibration
+	MAV_CMD_DO_ACCEPT_MAG_CAL               = 8   // Initiate a magnetometer calibration
+	MAV_CMD_DO_CANCEL_MAG_CAL               = 9   // Cancel a running magnetometer calibration
+	MAV_CMD_ACCELCAL_VEHICLE_POS            = 10  // Used when doing accelerometer calibration. When sent to the GCS tells it what position to put the vehicle in. When sent to the vehicle says what position the vehicle is in.
+	MAV_CMD_DO_SEND_BANNER                  = 11  // Reply with the version banner
+	MAV_CMD_GIMBAL_RESET                    = 12  // Causes the gimbal to reset and boot as if it was just powered on
+	MAV_CMD_SET_FACTORY_TEST_MODE           = 13  // Command autopilot to get into factory test/diagnostic mode
+	MAV_CMD_GIMBAL_AXIS_CALIBRATION_STATUS  = 14  // Reports progress and success or failure of gimbal axis calibration procedure
+	MAV_CMD_GIMBAL_REQUEST_AXIS_CALIBRATION = 15  // Starts commutation calibration on the gimbal
+	MAV_CMD_GIMBAL_FULL_RESET               = 16  // Erases gimbal application and parameters
 )
 
 // LimitsState:
 const (
-	LIMITS_INIT       = 0 //  pre-initialization
-	LIMITS_DISABLED   = 1 //  disabled
-	LIMITS_ENABLED    = 2 //  checking limits
-	LIMITS_TRIGGERED  = 3 //  a limit has been breached
-	LIMITS_RECOVERING = 4 //  taking action eg. RTL
-	LIMITS_RECOVERED  = 5 //  we're no longer in breach of a limit
+	LIMITS_INIT       = 0 // pre-initialization
+	LIMITS_DISABLED   = 1 // disabled
+	LIMITS_ENABLED    = 2 // checking limits
+	LIMITS_TRIGGERED  = 3 // a limit has been breached
+	LIMITS_RECOVERING = 4 // taking action eg. RTL
+	LIMITS_RECOVERED  = 5 // we're no longer in breach of a limit
 )
 
 // LimitModule:
 const (
-	LIMIT_GPSLOCK  = 1 //  pre-initialization
-	LIMIT_GEOFENCE = 2 //  disabled
-	LIMIT_ALTITUDE = 4 //  checking limits
+	LIMIT_GPSLOCK  = 1 // pre-initialization
+	LIMIT_GEOFENCE = 2 // disabled
+	LIMIT_ALTITUDE = 4 // checking limits
 )
 
 // RallyFlags: Flags in RALLY_POINT message
 const (
 	FAVORABLE_WIND   = 1 // Flag set when requiring favorable winds for landing.
-	LAND_IMMEDIATELY = 2 // Flag set when plane is to immediately descend to break altitude and land without GCS intervention.  Flag not set when plane is to loiter at Rally point until commanded to land.
+	LAND_IMMEDIATELY = 2 // Flag set when plane is to immediately descend to break altitude and land without GCS intervention. Flag not set when plane is to loiter at Rally point until commanded to land.
 )
 
 // ParachuteAction:
@@ -52,13 +72,6 @@ const (
 	PARACHUTE_DISABLE = 0 // Disable parachute release
 	PARACHUTE_ENABLE  = 1 // Enable parachute release
 	PARACHUTE_RELEASE = 2 // Release parachute
-)
-
-// MotorTestThrottleType:
-const (
-	MOTOR_TEST_THROTTLE_PERCENT = 0 // throttle as a percentage from 0 ~ 100
-	MOTOR_TEST_THROTTLE_PWM     = 1 // throttle as an absolute PWM value (normally in range of 1000~2000)
-	MOTOR_TEST_THROTTLE_PILOT   = 2 // throttle pass-through from pilot's transmitter
 )
 
 // GripperActions: Gripper actions.
@@ -95,7 +108,7 @@ const (
 	MAV_MODE_GIMBAL_CALIBRATING_YAW   = 3 // Gimbal is currently running calibration on the yaw axis
 	MAV_MODE_GIMBAL_INITIALIZED       = 4 // Gimbal has finished calibrating and initializing, but is relaxed pending reception of first rate command from copter
 	MAV_MODE_GIMBAL_ACTIVE            = 5 // Gimbal is actively stabilizing
-	MAV_MODE_GIMBAL_RATE_CMD_TIMEOUT  = 6 // Gimbal is relaxed because it missed more than 10 expected rate command messages in a row.  Gimbal will move back to active mode when it receives a new rate command
+	MAV_MODE_GIMBAL_RATE_CMD_TIMEOUT  = 6 // Gimbal is relaxed because it missed more than 10 expected rate command messages in a row. Gimbal will move back to active mode when it receives a new rate command
 )
 
 // GimbalAxis:
@@ -112,25 +125,204 @@ const (
 	GIMBAL_AXIS_CALIBRATION_STATUS_FAILED      = 2 // Axis calibration failed
 )
 
-// FactoryTest:
+// GimbalAxisCalibrationRequired:
 const (
-	FACTORY_TEST_AXIS_RANGE_LIMITS = 0 // Tests to make sure each axis can move to its mechanical limits
+	GIMBAL_AXIS_CALIBRATION_REQUIRED_UNKNOWN = 0 // Whether or not this axis requires calibration is unknown at this time
+	GIMBAL_AXIS_CALIBRATION_REQUIRED_TRUE    = 1 // This axis requires calibration
+	GIMBAL_AXIS_CALIBRATION_REQUIRED_FALSE   = 2 // This axis does not require calibration
 )
 
-// GoproCmdResult:
+// GoproHeartbeatStatus:
 const (
-	GOPRO_CMD_RESULT_UNKNOWN                        = 0  // The result of the command is unknown
-	GOPRO_CMD_RESULT_SUCCESSFUL                     = 1  // The command was successfully sent, and a response was successfully received
-	GOPRO_CMD_RESULT_SEND_CMD_START_TIMEOUT         = 2  // Timed out waiting for the GoPro to acknowledge our request to send a command
-	GOPRO_CMD_RESULT_SEND_CMD_COMPLETE_TIMEOUT      = 3  // Timed out waiting for the GoPro to read the command
-	GOPRO_CMD_RESULT_GET_RESPONSE_START_TIMEOUT     = 4  // Timed out waiting for the GoPro to begin transmitting a response to the command
-	GOPRO_CMD_RESULT_GET_RESPONSE_COMPLETE_TIMEOUT  = 5  // Timed out waiting for the GoPro to finish transmitting a response to the command
-	GOPRO_CMD_RESULT_GET_CMD_COMPLETE_TIMEOUT       = 6  // Timed out waiting for the GoPro to finish transmitting its own command
-	GOPRO_CMD_RESULT_SEND_RESPONSE_START_TIMEOUT    = 7  // Timed out waiting for the GoPro to start reading a response to its own command
-	GOPRO_CMD_RESULT_SEND_RESPONSE_COMPLETE_TIMEOUT = 8  // Timed out waiting for the GoPro to finish reading a response to its own command
-	GOPRO_CMD_RESULT_PREEMPTED                      = 9  // Command to the GoPro was preempted by the GoPro sending its own command
-	GOPRO_CMD_RECEIVED_DATA_OVERFLOW                = 10 // More data than expected received in response to the command
-	GOPRO_CMD_RECEIVED_DATA_UNDERFLOW               = 11 // Less data than expected received in response to the command
+	GOPRO_HEARTBEAT_STATUS_DISCONNECTED = 0 // No GoPro connected
+	GOPRO_HEARTBEAT_STATUS_INCOMPATIBLE = 1 // The detected GoPro is not HeroBus compatible
+	GOPRO_HEARTBEAT_STATUS_CONNECTED    = 2 // A HeroBus compatible GoPro is connected
+	GOPRO_HEARTBEAT_STATUS_ERROR        = 3 // An unrecoverable error was encountered with the connected GoPro, it may require a power cycle
+)
+
+// GoproHeartbeatFlags:
+const (
+	GOPRO_FLAG_RECORDING = 1 // GoPro is currently recording
+)
+
+// GoproRequestStatus:
+const (
+	GOPRO_REQUEST_SUCCESS = 0 // The write message with ID indicated succeeded
+	GOPRO_REQUEST_FAILED  = 1 // The write message with ID indicated failed
+)
+
+// GoproCommand:
+const (
+	GOPRO_COMMAND_POWER                 = 0  // (Get/Set)
+	GOPRO_COMMAND_CAPTURE_MODE          = 1  // (Get/Set)
+	GOPRO_COMMAND_SHUTTER               = 2  // (___/Set)
+	GOPRO_COMMAND_BATTERY               = 3  // (Get/___)
+	GOPRO_COMMAND_MODEL                 = 4  // (Get/___)
+	GOPRO_COMMAND_VIDEO_SETTINGS        = 5  // (Get/Set)
+	GOPRO_COMMAND_LOW_LIGHT             = 6  // (Get/Set)
+	GOPRO_COMMAND_PHOTO_RESOLUTION      = 7  // (Get/Set)
+	GOPRO_COMMAND_PHOTO_BURST_RATE      = 8  // (Get/Set)
+	GOPRO_COMMAND_PROTUNE               = 9  // (Get/Set)
+	GOPRO_COMMAND_PROTUNE_WHITE_BALANCE = 10 // (Get/Set) Hero 3+ Only
+	GOPRO_COMMAND_PROTUNE_COLOUR        = 11 // (Get/Set) Hero 3+ Only
+	GOPRO_COMMAND_PROTUNE_GAIN          = 12 // (Get/Set) Hero 3+ Only
+	GOPRO_COMMAND_PROTUNE_SHARPNESS     = 13 // (Get/Set) Hero 3+ Only
+	GOPRO_COMMAND_PROTUNE_EXPOSURE      = 14 // (Get/Set) Hero 3+ Only
+	GOPRO_COMMAND_TIME                  = 15 // (Get/Set)
+	GOPRO_COMMAND_CHARGING              = 16 // (Get/Set)
+)
+
+// GoproCaptureMode:
+const (
+	GOPRO_CAPTURE_MODE_VIDEO      = 0   // Video mode
+	GOPRO_CAPTURE_MODE_PHOTO      = 1   // Photo mode
+	GOPRO_CAPTURE_MODE_BURST      = 2   // Burst mode, hero 3+ only
+	GOPRO_CAPTURE_MODE_TIME_LAPSE = 3   // Time lapse mode, hero 3+ only
+	GOPRO_CAPTURE_MODE_MULTI_SHOT = 4   // Multi shot mode, hero 4 only
+	GOPRO_CAPTURE_MODE_PLAYBACK   = 5   // Playback mode, hero 4 only, silver only except when LCD or HDMI is connected to black
+	GOPRO_CAPTURE_MODE_SETUP      = 6   // Playback mode, hero 4 only
+	GOPRO_CAPTURE_MODE_UNKNOWN    = 255 // Mode not yet known
+)
+
+// GoproResolution:
+const (
+	GOPRO_RESOLUTION_480p            = 0  // 848 x 480 (480p)
+	GOPRO_RESOLUTION_720p            = 1  // 1280 x 720 (720p)
+	GOPRO_RESOLUTION_960p            = 2  // 1280 x 960 (960p)
+	GOPRO_RESOLUTION_1080p           = 3  // 1920 x 1080 (1080p)
+	GOPRO_RESOLUTION_1440p           = 4  // 1920 x 1440 (1440p)
+	GOPRO_RESOLUTION_2_7k_17_9       = 5  // 2704 x 1440 (2.7k-17:9)
+	GOPRO_RESOLUTION_2_7k_16_9       = 6  // 2704 x 1524 (2.7k-16:9)
+	GOPRO_RESOLUTION_2_7k_4_3        = 7  // 2704 x 2028 (2.7k-4:3)
+	GOPRO_RESOLUTION_4k_16_9         = 8  // 3840 x 2160 (4k-16:9)
+	GOPRO_RESOLUTION_4k_17_9         = 9  // 4096 x 2160 (4k-17:9)
+	GOPRO_RESOLUTION_720p_SUPERVIEW  = 10 // 1280 x 720 (720p-SuperView)
+	GOPRO_RESOLUTION_1080p_SUPERVIEW = 11 // 1920 x 1080 (1080p-SuperView)
+	GOPRO_RESOLUTION_2_7k_SUPERVIEW  = 12 // 2704 x 1520 (2.7k-SuperView)
+	GOPRO_RESOLUTION_4k_SUPERVIEW    = 13 // 3840 x 2160 (4k-SuperView)
+)
+
+// GoproFrameRate:
+const (
+	GOPRO_FRAME_RATE_12   = 0  // 12 FPS
+	GOPRO_FRAME_RATE_15   = 1  // 15 FPS
+	GOPRO_FRAME_RATE_24   = 2  // 24 FPS
+	GOPRO_FRAME_RATE_25   = 3  // 25 FPS
+	GOPRO_FRAME_RATE_30   = 4  // 30 FPS
+	GOPRO_FRAME_RATE_48   = 5  // 48 FPS
+	GOPRO_FRAME_RATE_50   = 6  // 50 FPS
+	GOPRO_FRAME_RATE_60   = 7  // 60 FPS
+	GOPRO_FRAME_RATE_80   = 8  // 80 FPS
+	GOPRO_FRAME_RATE_90   = 9  // 90 FPS
+	GOPRO_FRAME_RATE_100  = 10 // 100 FPS
+	GOPRO_FRAME_RATE_120  = 11 // 120 FPS
+	GOPRO_FRAME_RATE_240  = 12 // 240 FPS
+	GOPRO_FRAME_RATE_12_5 = 13 // 12.5 FPS
+)
+
+// GoproFieldOfView:
+const (
+	GOPRO_FIELD_OF_VIEW_WIDE   = 0 // 0x00: Wide
+	GOPRO_FIELD_OF_VIEW_MEDIUM = 1 // 0x01: Medium
+	GOPRO_FIELD_OF_VIEW_NARROW = 2 // 0x02: Narrow
+)
+
+// GoproVideoSettingsFlags:
+const (
+	GOPRO_VIDEO_SETTINGS_TV_MODE = 1 // 0=NTSC, 1=PAL
+)
+
+// GoproPhotoResolution:
+const (
+	GOPRO_PHOTO_RESOLUTION_5MP_MEDIUM = 0 // 5MP Medium
+	GOPRO_PHOTO_RESOLUTION_7MP_MEDIUM = 1 // 7MP Medium
+	GOPRO_PHOTO_RESOLUTION_7MP_WIDE   = 2 // 7MP Wide
+	GOPRO_PHOTO_RESOLUTION_10MP_WIDE  = 3 // 10MP Wide
+	GOPRO_PHOTO_RESOLUTION_12MP_WIDE  = 4 // 12MP Wide
+)
+
+// GoproProtuneWhiteBalance:
+const (
+	GOPRO_PROTUNE_WHITE_BALANCE_AUTO  = 0 // Auto
+	GOPRO_PROTUNE_WHITE_BALANCE_3000K = 1 // 3000K
+	GOPRO_PROTUNE_WHITE_BALANCE_5500K = 2 // 5500K
+	GOPRO_PROTUNE_WHITE_BALANCE_6500K = 3 // 6500K
+	GOPRO_PROTUNE_WHITE_BALANCE_RAW   = 4 // Camera Raw
+)
+
+// GoproProtuneColour:
+const (
+	GOPRO_PROTUNE_COLOUR_STANDARD = 0 // Auto
+	GOPRO_PROTUNE_COLOUR_NEUTRAL  = 1 // Neutral
+)
+
+// GoproProtuneGain:
+const (
+	GOPRO_PROTUNE_GAIN_400  = 0 // ISO 400
+	GOPRO_PROTUNE_GAIN_800  = 1 // ISO 800 (Only Hero 4)
+	GOPRO_PROTUNE_GAIN_1600 = 2 // ISO 1600
+	GOPRO_PROTUNE_GAIN_3200 = 3 // ISO 3200 (Only Hero 4)
+	GOPRO_PROTUNE_GAIN_6400 = 4 // ISO 6400
+)
+
+// GoproProtuneSharpness:
+const (
+	GOPRO_PROTUNE_SHARPNESS_LOW    = 0 // Low Sharpness
+	GOPRO_PROTUNE_SHARPNESS_MEDIUM = 1 // Medium Sharpness
+	GOPRO_PROTUNE_SHARPNESS_HIGH   = 2 // High Sharpness
+)
+
+// GoproProtuneExposure:
+const (
+	GOPRO_PROTUNE_EXPOSURE_NEG_5_0 = 0  // -5.0 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_NEG_4_5 = 1  // -4.5 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_NEG_4_0 = 2  // -4.0 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_NEG_3_5 = 3  // -3.5 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_NEG_3_0 = 4  // -3.0 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_NEG_2_5 = 5  // -2.5 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_NEG_2_0 = 6  // -2.0 EV
+	GOPRO_PROTUNE_EXPOSURE_NEG_1_5 = 7  // -1.5 EV
+	GOPRO_PROTUNE_EXPOSURE_NEG_1_0 = 8  // -1.0 EV
+	GOPRO_PROTUNE_EXPOSURE_NEG_0_5 = 9  // -0.5 EV
+	GOPRO_PROTUNE_EXPOSURE_ZERO    = 10 // 0.0 EV
+	GOPRO_PROTUNE_EXPOSURE_POS_0_5 = 11 // +0.5 EV
+	GOPRO_PROTUNE_EXPOSURE_POS_1_0 = 12 // +1.0 EV
+	GOPRO_PROTUNE_EXPOSURE_POS_1_5 = 13 // +1.5 EV
+	GOPRO_PROTUNE_EXPOSURE_POS_2_0 = 14 // +2.0 EV
+	GOPRO_PROTUNE_EXPOSURE_POS_2_5 = 15 // +2.5 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_POS_3_0 = 16 // +3.0 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_POS_3_5 = 17 // +3.5 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_POS_4_0 = 18 // +4.0 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_POS_4_5 = 19 // +4.5 EV (Hero 3+ Only)
+	GOPRO_PROTUNE_EXPOSURE_POS_5_0 = 20 // +5.0 EV (Hero 3+ Only)
+)
+
+// GoproCharging:
+const (
+	GOPRO_CHARGING_DISABLED = 0 // Charging disabled
+	GOPRO_CHARGING_ENABLED  = 1 // Charging enabled
+)
+
+// GoproModel:
+const (
+	GOPRO_MODEL_UNKNOWN            = 0 // Unknown gopro model
+	GOPRO_MODEL_HERO_3_PLUS_SILVER = 1 // Hero 3+ Silver (HeroBus not supported by GoPro)
+	GOPRO_MODEL_HERO_3_PLUS_BLACK  = 2 // Hero 3+ Black
+	GOPRO_MODEL_HERO_4_SILVER      = 3 // Hero 4 Silver
+	GOPRO_MODEL_HERO_4_BLACK       = 4 // Hero 4 Black
+)
+
+// GoproBurstRate:
+const (
+	GOPRO_BURST_RATE_3_IN_1_SECOND  = 0 // 3 Shots / 1 Second
+	GOPRO_BURST_RATE_5_IN_1_SECOND  = 1 // 5 Shots / 1 Second
+	GOPRO_BURST_RATE_10_IN_1_SECOND = 2 // 10 Shots / 1 Second
+	GOPRO_BURST_RATE_10_IN_2_SECOND = 3 // 10 Shots / 2 Second
+	GOPRO_BURST_RATE_10_IN_3_SECOND = 4 // 10 Shots / 3 Second (Hero 4 Only)
+	GOPRO_BURST_RATE_30_IN_1_SECOND = 5 // 30 Shots / 1 Second
+	GOPRO_BURST_RATE_30_IN_2_SECOND = 6 // 30 Shots / 2 Second
+	GOPRO_BURST_RATE_30_IN_3_SECOND = 7 // 30 Shots / 3 Second
+	GOPRO_BURST_RATE_30_IN_6_SECOND = 8 // 30 Shots / 6 Second
 )
 
 // LedControlPattern:
@@ -154,6 +346,16 @@ const (
 	EKF_PRED_POS_HORIZ_ABS = 9   // set if EKF's predicted horizontal position (absolute) estimate is good
 )
 
+// PidTuningAxis:
+const (
+	PID_TUNING_ROLL    = 1 //
+	PID_TUNING_PITCH   = 2 //
+	PID_TUNING_YAW     = 3 //
+	PID_TUNING_ACCZ    = 4 //
+	PID_TUNING_STEER   = 5 //
+	PID_TUNING_LANDING = 6 //
+)
+
 // MagCalStatus:
 const (
 	MAG_CAL_NOT_STARTED      = 0 //
@@ -164,17 +366,25 @@ const (
 	MAG_CAL_FAILED           = 5 //
 )
 
-// PidTuningAxis:
+// MavRemoteLogDataBlockCommands: Special ACK block numbers control activation of dataflash log streaming
 const (
-	PID_TUNING_ROLL  = 1 //
-	PID_TUNING_PITCH = 2 //
-	PID_TUNING_YAW   = 3 //
-	PID_TUNING_ACCZ  = 4 //
-	PID_TUNING_STEER = 5 //
+	MAV_REMOTE_LOG_DATA_BLOCK_STOP  = 0 // UAV to stop sending DataFlash blocks
+	MAV_REMOTE_LOG_DATA_BLOCK_START = 1 // UAV to start sending DataFlash blocks
 )
 
-// Offsets and calibrations values for hardware
-//         sensors. This makes it easier to debug the calibration process.
+// MavRemoteLogDataBlockStatuses: Possible remote log data block statuses
+const (
+	MAV_REMOTE_LOG_DATA_BLOCK_NACK = 0 // This block has NOT been received
+	MAV_REMOTE_LOG_DATA_BLOCK_ACK  = 1 // This block has been received
+)
+
+// DeviceOpBustype: Bus types for device operations
+const (
+	DEVICE_OP_BUSTYPE_I2C = 0 // I2C Device operation
+	DEVICE_OP_BUSTYPE_SPI = 1 // SPI Device operation
+)
+
+// Offsets and calibrations values for hardware sensors. This makes it easier to debug the calibration process.
 type SensorOffsets struct {
 	MagDeclination float32 // magnetic declination (radians)
 	RawPress       int32   // raw pressure from barometer
@@ -281,8 +491,9 @@ func (self *SetMagOffsets) Unpack(p *Packet) error {
 
 // state of APM memory
 type Meminfo struct {
-	Brkval  uint16 // heap top
-	Freemem uint16 // free memory
+	Freemem32 uint32 // free memory (32 bit)
+	Brkval    uint16 // heap top
+	Freemem   uint16 // free memory
 }
 
 func (self *Meminfo) MsgID() uint8 {
@@ -294,9 +505,10 @@ func (self *Meminfo) MsgName() string {
 }
 
 func (self *Meminfo) Pack(p *Packet) error {
-	payload := make([]byte, 4)
-	binary.LittleEndian.PutUint16(payload[0:], uint16(self.Brkval))
-	binary.LittleEndian.PutUint16(payload[2:], uint16(self.Freemem))
+	payload := make([]byte, 8)
+	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Freemem32))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.Brkval))
+	binary.LittleEndian.PutUint16(payload[6:], uint16(self.Freemem))
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
@@ -304,11 +516,12 @@ func (self *Meminfo) Pack(p *Packet) error {
 }
 
 func (self *Meminfo) Unpack(p *Packet) error {
-	if len(p.Payload) < 4 {
+	if len(p.Payload) < 8 {
 		return fmt.Errorf("payload too small")
 	}
-	self.Brkval = uint16(binary.LittleEndian.Uint16(p.Payload[0:]))
-	self.Freemem = uint16(binary.LittleEndian.Uint16(p.Payload[2:]))
+	self.Freemem32 = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.Brkval = uint16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.Freemem = uint16(binary.LittleEndian.Uint16(p.Payload[6:]))
 	return nil
 }
 
@@ -606,8 +819,7 @@ func (self *MountStatus) Unpack(p *Packet) error {
 	return nil
 }
 
-// A fence point. Used to set a point when from
-// 	      GCS -> MAV. Also used to return a point from MAV -> GCS
+// A fence point. Used to set a point when from GCS -> MAV. Also used to return a point from MAV -> GCS
 type FencePoint struct {
 	Lat             float32 // Latitude of point
 	Lng             float32 // Longitude of point
@@ -688,8 +900,7 @@ func (self *FenceFetchPoint) Unpack(p *Packet) error {
 	return nil
 }
 
-// Status of geo-fencing. Sent in extended
-// 	    status stream when fencing enabled
+// Status of geo-fencing. Sent in extended status stream when fencing enabled
 type FenceStatus struct {
 	BreachTime   uint32 // time of last breach in milliseconds since boot
 	BreachCount  uint16 // number of fence breaches
@@ -917,8 +1128,7 @@ func (self *Radio) Unpack(p *Packet) error {
 	return nil
 }
 
-// Status of AP_Limits. Sent in extended
-// 	    status stream when AP_Limits is enabled
+// Status of AP_Limits. Sent in extended status stream when AP_Limits is enabled
 type LimitsStatus struct {
 	LastTrigger   uint32 // time of last breach in milliseconds since boot
 	LastAction    uint32 // time of last recovery action in milliseconds since boot
@@ -1343,7 +1553,7 @@ func (self *RallyFetchPoint) Unpack(p *Packet) error {
 
 // Status of compassmot calibration
 type CompassmotStatus struct {
-	Current       float32 // current (amps)
+	Current       float32 // current (Ampere)
 	Compensationx float32 // Motor Compensation X
 	Compensationy float32 // Motor Compensation Y
 	Compensationz float32 // Motor Compensation Z
@@ -1674,6 +1884,84 @@ func (self *AutopilotVersionRequest) Unpack(p *Packet) error {
 	return nil
 }
 
+// Send a block of log data to remote location
+type RemoteLogDataBlock struct {
+	Seqno           uint32     // log data block sequence number
+	TargetSystem    uint8      // System ID
+	TargetComponent uint8      // Component ID
+	Data            [200]uint8 // log data block
+}
+
+func (self *RemoteLogDataBlock) MsgID() uint8 {
+	return 184
+}
+
+func (self *RemoteLogDataBlock) MsgName() string {
+	return "RemoteLogDataBlock"
+}
+
+func (self *RemoteLogDataBlock) Pack(p *Packet) error {
+	payload := make([]byte, 206)
+	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Seqno))
+	payload[4] = byte(self.TargetSystem)
+	payload[5] = byte(self.TargetComponent)
+	copy(payload[6:], self.Data[:])
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *RemoteLogDataBlock) Unpack(p *Packet) error {
+	if len(p.Payload) < 206 {
+		return fmt.Errorf("payload too small")
+	}
+	self.Seqno = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.TargetSystem = uint8(p.Payload[4])
+	self.TargetComponent = uint8(p.Payload[5])
+	copy(self.Data[:], p.Payload[6:206])
+	return nil
+}
+
+// Send Status of each log block that autopilot board might have sent
+type RemoteLogBlockStatus struct {
+	Seqno           uint32 // log data block sequence number
+	TargetSystem    uint8  // System ID
+	TargetComponent uint8  // Component ID
+	Status          uint8  // log data block status
+}
+
+func (self *RemoteLogBlockStatus) MsgID() uint8 {
+	return 185
+}
+
+func (self *RemoteLogBlockStatus) MsgName() string {
+	return "RemoteLogBlockStatus"
+}
+
+func (self *RemoteLogBlockStatus) Pack(p *Packet) error {
+	payload := make([]byte, 7)
+	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Seqno))
+	payload[4] = byte(self.TargetSystem)
+	payload[5] = byte(self.TargetComponent)
+	payload[6] = byte(self.Status)
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *RemoteLogBlockStatus) Unpack(p *Packet) error {
+	if len(p.Payload) < 7 {
+		return fmt.Errorf("payload too small")
+	}
+	self.Seqno = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.TargetSystem = uint8(p.Payload[4])
+	self.TargetComponent = uint8(p.Payload[5])
+	self.Status = uint8(p.Payload[6])
+	return nil
+}
+
 // Control vehicle LEDs
 type LedControl struct {
 	TargetSystem    uint8     // System ID
@@ -1935,7 +2223,7 @@ func (self *PidTuning) Unpack(p *Packet) error {
 	return nil
 }
 
-// 3 axis gimbal measurements
+// 3 axis gimbal mesuraments
 type GimbalReport struct {
 	DeltaTime       float32 // Time since last update (seconds)
 	DeltaAngleX     float32 // Delta angle X (radians)
@@ -1944,9 +2232,9 @@ type GimbalReport struct {
 	DeltaVelocityX  float32 // Delta velocity X (m/s)
 	DeltaVelocityY  float32 // Delta velocity Y (m/s)
 	DeltaVelocityZ  float32 // Delta velocity Z (m/s)
-	JointRoll       float32 //  Joint ROLL (radians)
-	JointEl         float32 //  Joint EL (radians)
-	JointAz         float32 //  Joint AZ (radians)
+	JointRoll       float32 // Joint ROLL (radians)
+	JointEl         float32 // Joint EL (radians)
+	JointAz         float32 // Joint AZ (radians)
 	TargetSystem    uint8   // System ID
 	TargetComponent uint8   // Component ID
 }
@@ -2040,519 +2328,225 @@ func (self *GimbalControl) Unpack(p *Packet) error {
 	return nil
 }
 
-//
-//             Causes the gimbal to reset and boot as if it was just powered on
-//
-type GimbalReset struct {
+// 100 Hz gimbal torque command telemetry
+type GimbalTorqueCmdReport struct {
+	RlTorqueCmd     int16 // Roll Torque Command
+	ElTorqueCmd     int16 // Elevation Torque Command
+	AzTorqueCmd     int16 // Azimuth Torque Command
 	TargetSystem    uint8 // System ID
 	TargetComponent uint8 // Component ID
 }
 
-func (self *GimbalReset) MsgID() uint8 {
-	return 202
+func (self *GimbalTorqueCmdReport) MsgID() uint8 {
+	return 214
 }
 
-func (self *GimbalReset) MsgName() string {
-	return "GimbalReset"
+func (self *GimbalTorqueCmdReport) MsgName() string {
+	return "GimbalTorqueCmdReport"
 }
 
-func (self *GimbalReset) Pack(p *Packet) error {
-	payload := make([]byte, 2)
-	payload[0] = byte(self.TargetSystem)
-	payload[1] = byte(self.TargetComponent)
+func (self *GimbalTorqueCmdReport) Pack(p *Packet) error {
+	payload := make([]byte, 8)
+	binary.LittleEndian.PutUint16(payload[0:], uint16(self.RlTorqueCmd))
+	binary.LittleEndian.PutUint16(payload[2:], uint16(self.ElTorqueCmd))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.AzTorqueCmd))
+	payload[6] = byte(self.TargetSystem)
+	payload[7] = byte(self.TargetComponent)
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
 	return nil
 }
 
-func (self *GimbalReset) Unpack(p *Packet) error {
-	if len(p.Payload) < 2 {
+func (self *GimbalTorqueCmdReport) Unpack(p *Packet) error {
+	if len(p.Payload) < 8 {
 		return fmt.Errorf("payload too small")
 	}
-	self.TargetSystem = uint8(p.Payload[0])
-	self.TargetComponent = uint8(p.Payload[1])
+	self.RlTorqueCmd = int16(binary.LittleEndian.Uint16(p.Payload[0:]))
+	self.ElTorqueCmd = int16(binary.LittleEndian.Uint16(p.Payload[2:]))
+	self.AzTorqueCmd = int16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.TargetSystem = uint8(p.Payload[6])
+	self.TargetComponent = uint8(p.Payload[7])
 	return nil
 }
 
-//
-//             Reports progress and success or failure of gimbal axis calibration procedure
-//
-type GimbalAxisCalibrationProgress struct {
-	CalibrationAxis     uint8 // Which gimbal axis we're reporting calibration progress for
-	CalibrationProgress uint8 // The current calibration progress for this axis, 0x64=100%
-	CalibrationStatus   uint8 // The status of the running calibration
+// Heartbeat from a HeroBus attached GoPro
+type GoproHeartbeat struct {
+	Status      uint8 // Status
+	CaptureMode uint8 // Current capture mode
+	Flags       uint8 // additional status bits
 }
 
-func (self *GimbalAxisCalibrationProgress) MsgID() uint8 {
-	return 203
-}
-
-func (self *GimbalAxisCalibrationProgress) MsgName() string {
-	return "GimbalAxisCalibrationProgress"
-}
-
-func (self *GimbalAxisCalibrationProgress) Pack(p *Packet) error {
-	payload := make([]byte, 3)
-	payload[0] = byte(self.CalibrationAxis)
-	payload[1] = byte(self.CalibrationProgress)
-	payload[2] = byte(self.CalibrationStatus)
-
-	p.MsgID = self.MsgID()
-	p.Payload = payload
-	return nil
-}
-
-func (self *GimbalAxisCalibrationProgress) Unpack(p *Packet) error {
-	if len(p.Payload) < 3 {
-		return fmt.Errorf("payload too small")
-	}
-	self.CalibrationAxis = uint8(p.Payload[0])
-	self.CalibrationProgress = uint8(p.Payload[1])
-	self.CalibrationStatus = uint8(p.Payload[2])
-	return nil
-}
-
-//
-//             Instructs the gimbal to set its current position as its new home position.  Will primarily be used for factory calibration
-//
-type GimbalSetHomeOffsets struct {
-	TargetSystem    uint8 // System ID
-	TargetComponent uint8 // Component ID
-}
-
-func (self *GimbalSetHomeOffsets) MsgID() uint8 {
-	return 204
-}
-
-func (self *GimbalSetHomeOffsets) MsgName() string {
-	return "GimbalSetHomeOffsets"
-}
-
-func (self *GimbalSetHomeOffsets) Pack(p *Packet) error {
-	payload := make([]byte, 2)
-	payload[0] = byte(self.TargetSystem)
-	payload[1] = byte(self.TargetComponent)
-
-	p.MsgID = self.MsgID()
-	p.Payload = payload
-	return nil
-}
-
-func (self *GimbalSetHomeOffsets) Unpack(p *Packet) error {
-	if len(p.Payload) < 2 {
-		return fmt.Errorf("payload too small")
-	}
-	self.TargetSystem = uint8(p.Payload[0])
-	self.TargetComponent = uint8(p.Payload[1])
-	return nil
-}
-
-//
-//             Sent by the gimbal after it receives a SET_HOME_OFFSETS message to indicate the result of the home offset calibration
-//
-type GimbalHomeOffsetCalibrationResult struct {
-	CalibrationResult uint8 // The result of the home offset calibration
-}
-
-func (self *GimbalHomeOffsetCalibrationResult) MsgID() uint8 {
-	return 205
-}
-
-func (self *GimbalHomeOffsetCalibrationResult) MsgName() string {
-	return "GimbalHomeOffsetCalibrationResult"
-}
-
-func (self *GimbalHomeOffsetCalibrationResult) Pack(p *Packet) error {
-	payload := make([]byte, 1)
-	payload[0] = byte(self.CalibrationResult)
-
-	p.MsgID = self.MsgID()
-	p.Payload = payload
-	return nil
-}
-
-func (self *GimbalHomeOffsetCalibrationResult) Unpack(p *Packet) error {
-	if len(p.Payload) < 1 {
-		return fmt.Errorf("payload too small")
-	}
-	self.CalibrationResult = uint8(p.Payload[0])
-	return nil
-}
-
-//
-//             Set factory configuration parameters (such as assembly date and time, and serial number).  This is only intended to be used
-//             during manufacture, not by end users, so it is protected by a simple checksum of sorts (this won't stop anybody determined,
-//             it's mostly just to keep the average user from trying to modify these values.  This will need to be revisited if that isn't
-//             adequate.
-//
-type GimbalSetFactoryParameters struct {
-	Magic1          uint32 // Magic number 1 for validation
-	Magic2          uint32 // Magic number 2 for validation
-	Magic3          uint32 // Magic number 3 for validation
-	SerialNumberPt1 uint32 // Unit Serial Number Part 1 (part code, design, language/country)
-	SerialNumberPt2 uint32 // Unit Serial Number Part 2 (option, year, month)
-	SerialNumberPt3 uint32 // Unit Serial Number Part 3 (incrementing serial number per month)
-	AssemblyYear    uint16 // Assembly Date Year
-	TargetSystem    uint8  // System ID
-	TargetComponent uint8  // Component ID
-	AssemblyMonth   uint8  // Assembly Date Month
-	AssemblyDay     uint8  // Assembly Date Day
-	AssemblyHour    uint8  // Assembly Time Hour
-	AssemblyMinute  uint8  // Assembly Time Minute
-	AssemblySecond  uint8  // Assembly Time Second
-}
-
-func (self *GimbalSetFactoryParameters) MsgID() uint8 {
-	return 206
-}
-
-func (self *GimbalSetFactoryParameters) MsgName() string {
-	return "GimbalSetFactoryParameters"
-}
-
-func (self *GimbalSetFactoryParameters) Pack(p *Packet) error {
-	payload := make([]byte, 33)
-	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Magic1))
-	binary.LittleEndian.PutUint32(payload[4:], uint32(self.Magic2))
-	binary.LittleEndian.PutUint32(payload[8:], uint32(self.Magic3))
-	binary.LittleEndian.PutUint32(payload[12:], uint32(self.SerialNumberPt1))
-	binary.LittleEndian.PutUint32(payload[16:], uint32(self.SerialNumberPt2))
-	binary.LittleEndian.PutUint32(payload[20:], uint32(self.SerialNumberPt3))
-	binary.LittleEndian.PutUint16(payload[24:], uint16(self.AssemblyYear))
-	payload[26] = byte(self.TargetSystem)
-	payload[27] = byte(self.TargetComponent)
-	payload[28] = byte(self.AssemblyMonth)
-	payload[29] = byte(self.AssemblyDay)
-	payload[30] = byte(self.AssemblyHour)
-	payload[31] = byte(self.AssemblyMinute)
-	payload[32] = byte(self.AssemblySecond)
-
-	p.MsgID = self.MsgID()
-	p.Payload = payload
-	return nil
-}
-
-func (self *GimbalSetFactoryParameters) Unpack(p *Packet) error {
-	if len(p.Payload) < 33 {
-		return fmt.Errorf("payload too small")
-	}
-	self.Magic1 = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
-	self.Magic2 = uint32(binary.LittleEndian.Uint32(p.Payload[4:]))
-	self.Magic3 = uint32(binary.LittleEndian.Uint32(p.Payload[8:]))
-	self.SerialNumberPt1 = uint32(binary.LittleEndian.Uint32(p.Payload[12:]))
-	self.SerialNumberPt2 = uint32(binary.LittleEndian.Uint32(p.Payload[16:]))
-	self.SerialNumberPt3 = uint32(binary.LittleEndian.Uint32(p.Payload[20:]))
-	self.AssemblyYear = uint16(binary.LittleEndian.Uint16(p.Payload[24:]))
-	self.TargetSystem = uint8(p.Payload[26])
-	self.TargetComponent = uint8(p.Payload[27])
-	self.AssemblyMonth = uint8(p.Payload[28])
-	self.AssemblyDay = uint8(p.Payload[29])
-	self.AssemblyHour = uint8(p.Payload[30])
-	self.AssemblyMinute = uint8(p.Payload[31])
-	self.AssemblySecond = uint8(p.Payload[32])
-	return nil
-}
-
-//
-//             Sent by the gimbal after the factory parameters are successfully loaded, to inform the factory software that the load is complete
-//
-type GimbalFactoryParametersLoaded struct {
-	Dummy uint8 // Dummy field because mavgen doesn't allow messages with no fields
-}
-
-func (self *GimbalFactoryParametersLoaded) MsgID() uint8 {
-	return 207
-}
-
-func (self *GimbalFactoryParametersLoaded) MsgName() string {
-	return "GimbalFactoryParametersLoaded"
-}
-
-func (self *GimbalFactoryParametersLoaded) Pack(p *Packet) error {
-	payload := make([]byte, 1)
-	payload[0] = byte(self.Dummy)
-
-	p.MsgID = self.MsgID()
-	p.Payload = payload
-	return nil
-}
-
-func (self *GimbalFactoryParametersLoaded) Unpack(p *Packet) error {
-	if len(p.Payload) < 1 {
-		return fmt.Errorf("payload too small")
-	}
-	self.Dummy = uint8(p.Payload[0])
-	return nil
-}
-
-//
-//             Commands the gimbal to erase its firmware image and flash configuration, leaving only the bootloader.  The gimbal will then reboot into the bootloader,
-//             ready for the load of a new application firmware image.  Erasing the flash configuration will cause the gimbal to re-perform axis calibration when a
-//             new firmware image is loaded, and will cause all tuning parameters to return to their factory defaults.  WARNING: sending this command will render a
-//             gimbal inoperable until a new firmware image is loaded onto it.  For this reason, a particular "knock" value must be sent for the command to take effect.
-//             Use this command at your own risk
-//
-type GimbalEraseFirmwareAndConfig struct {
-	Knock           uint32 // Knock value to confirm this is a valid request
-	TargetSystem    uint8  // System ID
-	TargetComponent uint8  // Component ID
-}
-
-func (self *GimbalEraseFirmwareAndConfig) MsgID() uint8 {
-	return 208
-}
-
-func (self *GimbalEraseFirmwareAndConfig) MsgName() string {
-	return "GimbalEraseFirmwareAndConfig"
-}
-
-func (self *GimbalEraseFirmwareAndConfig) Pack(p *Packet) error {
-	payload := make([]byte, 6)
-	binary.LittleEndian.PutUint32(payload[0:], uint32(self.Knock))
-	payload[4] = byte(self.TargetSystem)
-	payload[5] = byte(self.TargetComponent)
-
-	p.MsgID = self.MsgID()
-	p.Payload = payload
-	return nil
-}
-
-func (self *GimbalEraseFirmwareAndConfig) Unpack(p *Packet) error {
-	if len(p.Payload) < 6 {
-		return fmt.Errorf("payload too small")
-	}
-	self.Knock = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
-	self.TargetSystem = uint8(p.Payload[4])
-	self.TargetComponent = uint8(p.Payload[5])
-	return nil
-}
-
-//
-//             Command the gimbal to perform a series of factory tests.  Should not be needed by end users
-//
-type GimbalPerformFactoryTests struct {
-	TargetSystem    uint8 // System ID
-	TargetComponent uint8 // Component ID
-}
-
-func (self *GimbalPerformFactoryTests) MsgID() uint8 {
-	return 209
-}
-
-func (self *GimbalPerformFactoryTests) MsgName() string {
-	return "GimbalPerformFactoryTests"
-}
-
-func (self *GimbalPerformFactoryTests) Pack(p *Packet) error {
-	payload := make([]byte, 2)
-	payload[0] = byte(self.TargetSystem)
-	payload[1] = byte(self.TargetComponent)
-
-	p.MsgID = self.MsgID()
-	p.Payload = payload
-	return nil
-}
-
-func (self *GimbalPerformFactoryTests) Unpack(p *Packet) error {
-	if len(p.Payload) < 2 {
-		return fmt.Errorf("payload too small")
-	}
-	self.TargetSystem = uint8(p.Payload[0])
-	self.TargetComponent = uint8(p.Payload[1])
-	return nil
-}
-
-//
-//             Reports the current status of a section of a running factory test
-//
-type GimbalReportFactoryTestsProgress struct {
-	Test                uint8 // Which factory test is currently running
-	TestSection         uint8 // Which section of the test is currently running.  The meaning of this is test-dependent
-	TestSectionProgress uint8 // The progress of the current test section, 0x64=100%
-	TestStatus          uint8 // The status of the currently executing test section.  The meaning of this is test and section-dependent
-}
-
-func (self *GimbalReportFactoryTestsProgress) MsgID() uint8 {
-	return 210
-}
-
-func (self *GimbalReportFactoryTestsProgress) MsgName() string {
-	return "GimbalReportFactoryTestsProgress"
-}
-
-func (self *GimbalReportFactoryTestsProgress) Pack(p *Packet) error {
-	payload := make([]byte, 4)
-	payload[0] = byte(self.Test)
-	payload[1] = byte(self.TestSection)
-	payload[2] = byte(self.TestSectionProgress)
-	payload[3] = byte(self.TestStatus)
-
-	p.MsgID = self.MsgID()
-	p.Payload = payload
-	return nil
-}
-
-func (self *GimbalReportFactoryTestsProgress) Unpack(p *Packet) error {
-	if len(p.Payload) < 4 {
-		return fmt.Errorf("payload too small")
-	}
-	self.Test = uint8(p.Payload[0])
-	self.TestSection = uint8(p.Payload[1])
-	self.TestSectionProgress = uint8(p.Payload[2])
-	self.TestStatus = uint8(p.Payload[3])
-	return nil
-}
-
-// Instruct a HeroBus attached GoPro to power on
-type GoproPowerOn struct {
-	TargetSystem    uint8 // System ID
-	TargetComponent uint8 // Component ID
-}
-
-func (self *GoproPowerOn) MsgID() uint8 {
+func (self *GoproHeartbeat) MsgID() uint8 {
 	return 215
 }
 
-func (self *GoproPowerOn) MsgName() string {
-	return "GoproPowerOn"
+func (self *GoproHeartbeat) MsgName() string {
+	return "GoproHeartbeat"
 }
 
-func (self *GoproPowerOn) Pack(p *Packet) error {
-	payload := make([]byte, 2)
-	payload[0] = byte(self.TargetSystem)
-	payload[1] = byte(self.TargetComponent)
+func (self *GoproHeartbeat) Pack(p *Packet) error {
+	payload := make([]byte, 3)
+	payload[0] = byte(self.Status)
+	payload[1] = byte(self.CaptureMode)
+	payload[2] = byte(self.Flags)
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
 	return nil
 }
 
-func (self *GoproPowerOn) Unpack(p *Packet) error {
-	if len(p.Payload) < 2 {
+func (self *GoproHeartbeat) Unpack(p *Packet) error {
+	if len(p.Payload) < 3 {
 		return fmt.Errorf("payload too small")
 	}
-	self.TargetSystem = uint8(p.Payload[0])
-	self.TargetComponent = uint8(p.Payload[1])
+	self.Status = uint8(p.Payload[0])
+	self.CaptureMode = uint8(p.Payload[1])
+	self.Flags = uint8(p.Payload[2])
 	return nil
 }
 
-// Instruct a HeroBus attached GoPro to power off
-type GoproPowerOff struct {
+// Request a GOPRO_COMMAND response from the GoPro
+type GoproGetRequest struct {
 	TargetSystem    uint8 // System ID
 	TargetComponent uint8 // Component ID
+	CmdId           uint8 // Command ID
 }
 
-func (self *GoproPowerOff) MsgID() uint8 {
+func (self *GoproGetRequest) MsgID() uint8 {
 	return 216
 }
 
-func (self *GoproPowerOff) MsgName() string {
-	return "GoproPowerOff"
+func (self *GoproGetRequest) MsgName() string {
+	return "GoproGetRequest"
 }
 
-func (self *GoproPowerOff) Pack(p *Packet) error {
-	payload := make([]byte, 2)
+func (self *GoproGetRequest) Pack(p *Packet) error {
+	payload := make([]byte, 3)
 	payload[0] = byte(self.TargetSystem)
 	payload[1] = byte(self.TargetComponent)
+	payload[2] = byte(self.CmdId)
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
 	return nil
 }
 
-func (self *GoproPowerOff) Unpack(p *Packet) error {
-	if len(p.Payload) < 2 {
+func (self *GoproGetRequest) Unpack(p *Packet) error {
+	if len(p.Payload) < 3 {
 		return fmt.Errorf("payload too small")
 	}
 	self.TargetSystem = uint8(p.Payload[0])
 	self.TargetComponent = uint8(p.Payload[1])
+	self.CmdId = uint8(p.Payload[2])
 	return nil
 }
 
-// Send a command to a HeroBus attached GoPro.  Will generate a GOPRO_RESPONSE message with results of the command
-type GoproCommand struct {
-	TargetSystem    uint8 // System ID
-	TargetComponent uint8 // Component ID
-	GpCmdName1      uint8 // First character of the 2 character GoPro command
-	GpCmdName2      uint8 // Second character of the 2 character GoPro command
-	GpCmdParm       uint8 // Parameter for the command
+// Response from a GOPRO_COMMAND get request
+type GoproGetResponse struct {
+	CmdId  uint8    // Command ID
+	Status uint8    // Status
+	Value  [4]uint8 // Value
 }
 
-func (self *GoproCommand) MsgID() uint8 {
+func (self *GoproGetResponse) MsgID() uint8 {
 	return 217
 }
 
-func (self *GoproCommand) MsgName() string {
-	return "GoproCommand"
+func (self *GoproGetResponse) MsgName() string {
+	return "GoproGetResponse"
 }
 
-func (self *GoproCommand) Pack(p *Packet) error {
-	payload := make([]byte, 5)
-	payload[0] = byte(self.TargetSystem)
-	payload[1] = byte(self.TargetComponent)
-	payload[2] = byte(self.GpCmdName1)
-	payload[3] = byte(self.GpCmdName2)
-	payload[4] = byte(self.GpCmdParm)
+func (self *GoproGetResponse) Pack(p *Packet) error {
+	payload := make([]byte, 6)
+	payload[0] = byte(self.CmdId)
+	payload[1] = byte(self.Status)
+	copy(payload[2:], self.Value[:])
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
 	return nil
 }
 
-func (self *GoproCommand) Unpack(p *Packet) error {
-	if len(p.Payload) < 5 {
+func (self *GoproGetResponse) Unpack(p *Packet) error {
+	if len(p.Payload) < 6 {
+		return fmt.Errorf("payload too small")
+	}
+	self.CmdId = uint8(p.Payload[0])
+	self.Status = uint8(p.Payload[1])
+	copy(self.Value[:], p.Payload[2:6])
+	return nil
+}
+
+// Request to set a GOPRO_COMMAND with a desired
+type GoproSetRequest struct {
+	TargetSystem    uint8    // System ID
+	TargetComponent uint8    // Component ID
+	CmdId           uint8    // Command ID
+	Value           [4]uint8 // Value
+}
+
+func (self *GoproSetRequest) MsgID() uint8 {
+	return 218
+}
+
+func (self *GoproSetRequest) MsgName() string {
+	return "GoproSetRequest"
+}
+
+func (self *GoproSetRequest) Pack(p *Packet) error {
+	payload := make([]byte, 7)
+	payload[0] = byte(self.TargetSystem)
+	payload[1] = byte(self.TargetComponent)
+	payload[2] = byte(self.CmdId)
+	copy(payload[3:], self.Value[:])
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *GoproSetRequest) Unpack(p *Packet) error {
+	if len(p.Payload) < 7 {
 		return fmt.Errorf("payload too small")
 	}
 	self.TargetSystem = uint8(p.Payload[0])
 	self.TargetComponent = uint8(p.Payload[1])
-	self.GpCmdName1 = uint8(p.Payload[2])
-	self.GpCmdName2 = uint8(p.Payload[3])
-	self.GpCmdParm = uint8(p.Payload[4])
+	self.CmdId = uint8(p.Payload[2])
+	copy(self.Value[:], p.Payload[3:7])
 	return nil
 }
 
-//
-//             Response to a command sent to a HeroBus attached GoPro with a GOPRO_COMMAND message.  Contains response from the camera as well as information about any errors encountered while attempting to communicate with the camera
-//
-type GoproResponse struct {
-	GpCmdResult           uint16 // Result of the command attempt to the GoPro, as defined by GOPRO_CMD_RESULT enum.
-	GpCmdName1            uint8  // First character of the 2 character GoPro command that generated this response
-	GpCmdName2            uint8  // Second character of the 2 character GoPro command that generated this response
-	GpCmdResponseStatus   uint8  // Response byte from the GoPro's response to the command.  0 = Success, 1 = Failure
-	GpCmdResponseArgument uint8  // Response argument from the GoPro's response to the command
+// Response from a GOPRO_COMMAND set request
+type GoproSetResponse struct {
+	CmdId  uint8 // Command ID
+	Status uint8 // Status
 }
 
-func (self *GoproResponse) MsgID() uint8 {
-	return 218
+func (self *GoproSetResponse) MsgID() uint8 {
+	return 219
 }
 
-func (self *GoproResponse) MsgName() string {
-	return "GoproResponse"
+func (self *GoproSetResponse) MsgName() string {
+	return "GoproSetResponse"
 }
 
-func (self *GoproResponse) Pack(p *Packet) error {
-	payload := make([]byte, 6)
-	binary.LittleEndian.PutUint16(payload[0:], uint16(self.GpCmdResult))
-	payload[2] = byte(self.GpCmdName1)
-	payload[3] = byte(self.GpCmdName2)
-	payload[4] = byte(self.GpCmdResponseStatus)
-	payload[5] = byte(self.GpCmdResponseArgument)
+func (self *GoproSetResponse) Pack(p *Packet) error {
+	payload := make([]byte, 2)
+	payload[0] = byte(self.CmdId)
+	payload[1] = byte(self.Status)
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
 	return nil
 }
 
-func (self *GoproResponse) Unpack(p *Packet) error {
-	if len(p.Payload) < 6 {
+func (self *GoproSetResponse) Unpack(p *Packet) error {
+	if len(p.Payload) < 2 {
 		return fmt.Errorf("payload too small")
 	}
-	self.GpCmdResult = uint16(binary.LittleEndian.Uint16(p.Payload[0:]))
-	self.GpCmdName1 = uint8(p.Payload[2])
-	self.GpCmdName2 = uint8(p.Payload[3])
-	self.GpCmdResponseStatus = uint8(p.Payload[4])
-	self.GpCmdResponseArgument = uint8(p.Payload[5])
+	self.CmdId = uint8(p.Payload[0])
+	self.Status = uint8(p.Payload[1])
 	return nil
 }
 
@@ -2591,60 +2585,55 @@ func (self *Rpm) Unpack(p *Packet) error {
 
 // Message IDs
 const (
-	MSG_ID_SENSOR_OFFSETS                        = 150
-	MSG_ID_SET_MAG_OFFSETS                       = 151
-	MSG_ID_MEMINFO                               = 152
-	MSG_ID_AP_ADC                                = 153
-	MSG_ID_DIGICAM_CONFIGURE                     = 154
-	MSG_ID_DIGICAM_CONTROL                       = 155
-	MSG_ID_MOUNT_CONFIGURE                       = 156
-	MSG_ID_MOUNT_CONTROL                         = 157
-	MSG_ID_MOUNT_STATUS                          = 158
-	MSG_ID_FENCE_POINT                           = 160
-	MSG_ID_FENCE_FETCH_POINT                     = 161
-	MSG_ID_FENCE_STATUS                          = 162
-	MSG_ID_AHRS                                  = 163
-	MSG_ID_SIMSTATE                              = 164
-	MSG_ID_HWSTATUS                              = 165
-	MSG_ID_RADIO                                 = 166
-	MSG_ID_LIMITS_STATUS                         = 167
-	MSG_ID_WIND                                  = 168
-	MSG_ID_DATA16                                = 169
-	MSG_ID_DATA32                                = 170
-	MSG_ID_DATA64                                = 171
-	MSG_ID_DATA96                                = 172
-	MSG_ID_RANGEFINDER                           = 173
-	MSG_ID_AIRSPEED_AUTOCAL                      = 174
-	MSG_ID_RALLY_POINT                           = 175
-	MSG_ID_RALLY_FETCH_POINT                     = 176
-	MSG_ID_COMPASSMOT_STATUS                     = 177
-	MSG_ID_AHRS2                                 = 178
-	MSG_ID_CAMERA_STATUS                         = 179
-	MSG_ID_CAMERA_FEEDBACK                       = 180
-	MSG_ID_BATTERY2                              = 181
-	MSG_ID_AHRS3                                 = 182
-	MSG_ID_AUTOPILOT_VERSION_REQUEST             = 183
-	MSG_ID_LED_CONTROL                           = 186
-	MSG_ID_MAG_CAL_PROGRESS                      = 191
-	MSG_ID_MAG_CAL_REPORT                        = 192
-	MSG_ID_EKF_STATUS_REPORT                     = 193
-	MSG_ID_PID_TUNING                            = 194
-	MSG_ID_GIMBAL_REPORT                         = 200
-	MSG_ID_GIMBAL_CONTROL                        = 201
-	MSG_ID_GIMBAL_RESET                          = 202
-	MSG_ID_GIMBAL_AXIS_CALIBRATION_PROGRESS      = 203
-	MSG_ID_GIMBAL_SET_HOME_OFFSETS               = 204
-	MSG_ID_GIMBAL_HOME_OFFSET_CALIBRATION_RESULT = 205
-	MSG_ID_GIMBAL_SET_FACTORY_PARAMETERS         = 206
-	MSG_ID_GIMBAL_FACTORY_PARAMETERS_LOADED      = 207
-	MSG_ID_GIMBAL_ERASE_FIRMWARE_AND_CONFIG      = 208
-	MSG_ID_GIMBAL_PERFORM_FACTORY_TESTS          = 209
-	MSG_ID_GIMBAL_REPORT_FACTORY_TESTS_PROGRESS  = 210
-	MSG_ID_GOPRO_POWER_ON                        = 215
-	MSG_ID_GOPRO_POWER_OFF                       = 216
-	MSG_ID_GOPRO_COMMAND                         = 217
-	MSG_ID_GOPRO_RESPONSE                        = 218
-	MSG_ID_RPM                                   = 226
+	MSG_ID_SENSOR_OFFSETS            = 150
+	MSG_ID_SET_MAG_OFFSETS           = 151
+	MSG_ID_MEMINFO                   = 152
+	MSG_ID_AP_ADC                    = 153
+	MSG_ID_DIGICAM_CONFIGURE         = 154
+	MSG_ID_DIGICAM_CONTROL           = 155
+	MSG_ID_MOUNT_CONFIGURE           = 156
+	MSG_ID_MOUNT_CONTROL             = 157
+	MSG_ID_MOUNT_STATUS              = 158
+	MSG_ID_FENCE_POINT               = 160
+	MSG_ID_FENCE_FETCH_POINT         = 161
+	MSG_ID_FENCE_STATUS              = 162
+	MSG_ID_AHRS                      = 163
+	MSG_ID_SIMSTATE                  = 164
+	MSG_ID_HWSTATUS                  = 165
+	MSG_ID_RADIO                     = 166
+	MSG_ID_LIMITS_STATUS             = 167
+	MSG_ID_WIND                      = 168
+	MSG_ID_DATA16                    = 169
+	MSG_ID_DATA32                    = 170
+	MSG_ID_DATA64                    = 171
+	MSG_ID_DATA96                    = 172
+	MSG_ID_RANGEFINDER               = 173
+	MSG_ID_AIRSPEED_AUTOCAL          = 174
+	MSG_ID_RALLY_POINT               = 175
+	MSG_ID_RALLY_FETCH_POINT         = 176
+	MSG_ID_COMPASSMOT_STATUS         = 177
+	MSG_ID_AHRS2                     = 178
+	MSG_ID_CAMERA_STATUS             = 179
+	MSG_ID_CAMERA_FEEDBACK           = 180
+	MSG_ID_BATTERY2                  = 181
+	MSG_ID_AHRS3                     = 182
+	MSG_ID_AUTOPILOT_VERSION_REQUEST = 183
+	MSG_ID_REMOTE_LOG_DATA_BLOCK     = 184
+	MSG_ID_REMOTE_LOG_BLOCK_STATUS   = 185
+	MSG_ID_LED_CONTROL               = 186
+	MSG_ID_MAG_CAL_PROGRESS          = 191
+	MSG_ID_MAG_CAL_REPORT            = 192
+	MSG_ID_EKF_STATUS_REPORT         = 193
+	MSG_ID_PID_TUNING                = 194
+	MSG_ID_GIMBAL_REPORT             = 200
+	MSG_ID_GIMBAL_CONTROL            = 201
+	MSG_ID_GIMBAL_TORQUE_CMD_REPORT  = 214
+	MSG_ID_GOPRO_HEARTBEAT           = 215
+	MSG_ID_GOPRO_GET_REQUEST         = 216
+	MSG_ID_GOPRO_GET_RESPONSE        = 217
+	MSG_ID_GOPRO_SET_REQUEST         = 218
+	MSG_ID_GOPRO_SET_RESPONSE        = 219
+	MSG_ID_RPM                       = 226
 )
 
 // DialectArdupilotmega is the dialect represented by ardupilotmega.xml
@@ -2653,7 +2642,7 @@ var DialectArdupilotmega *Dialect = &Dialect{
 	crcExtras: map[uint8]uint8{
 		150: 134, // MSG_ID_SENSOR_OFFSETS
 		151: 219, // MSG_ID_SET_MAG_OFFSETS
-		152: 208, // MSG_ID_MEMINFO
+		152: 112, // MSG_ID_MEMINFO
 		153: 188, // MSG_ID_AP_ADC
 		154: 84,  // MSG_ID_DIGICAM_CONFIGURE
 		155: 22,  // MSG_ID_DIGICAM_CONTROL
@@ -2684,6 +2673,8 @@ var DialectArdupilotmega *Dialect = &Dialect{
 		181: 174, // MSG_ID_BATTERY2
 		182: 229, // MSG_ID_AHRS3
 		183: 85,  // MSG_ID_AUTOPILOT_VERSION_REQUEST
+		184: 159, // MSG_ID_REMOTE_LOG_DATA_BLOCK
+		185: 186, // MSG_ID_REMOTE_LOG_BLOCK_STATUS
 		186: 72,  // MSG_ID_LED_CONTROL
 		191: 92,  // MSG_ID_MAG_CAL_PROGRESS
 		192: 36,  // MSG_ID_MAG_CAL_REPORT
@@ -2691,19 +2682,12 @@ var DialectArdupilotmega *Dialect = &Dialect{
 		194: 98,  // MSG_ID_PID_TUNING
 		200: 134, // MSG_ID_GIMBAL_REPORT
 		201: 205, // MSG_ID_GIMBAL_CONTROL
-		202: 94,  // MSG_ID_GIMBAL_RESET
-		203: 128, // MSG_ID_GIMBAL_AXIS_CALIBRATION_PROGRESS
-		204: 54,  // MSG_ID_GIMBAL_SET_HOME_OFFSETS
-		205: 63,  // MSG_ID_GIMBAL_HOME_OFFSET_CALIBRATION_RESULT
-		206: 112, // MSG_ID_GIMBAL_SET_FACTORY_PARAMETERS
-		207: 201, // MSG_ID_GIMBAL_FACTORY_PARAMETERS_LOADED
-		208: 221, // MSG_ID_GIMBAL_ERASE_FIRMWARE_AND_CONFIG
-		209: 226, // MSG_ID_GIMBAL_PERFORM_FACTORY_TESTS
-		210: 238, // MSG_ID_GIMBAL_REPORT_FACTORY_TESTS_PROGRESS
-		215: 241, // MSG_ID_GOPRO_POWER_ON
-		216: 155, // MSG_ID_GOPRO_POWER_OFF
-		217: 43,  // MSG_ID_GOPRO_COMMAND
-		218: 149, // MSG_ID_GOPRO_RESPONSE
+		214: 69,  // MSG_ID_GIMBAL_TORQUE_CMD_REPORT
+		215: 101, // MSG_ID_GOPRO_HEARTBEAT
+		216: 50,  // MSG_ID_GOPRO_GET_REQUEST
+		217: 202, // MSG_ID_GOPRO_GET_RESPONSE
+		218: 17,  // MSG_ID_GOPRO_SET_REQUEST
+		219: 162, // MSG_ID_GOPRO_SET_RESPONSE
 		226: 207, // MSG_ID_RPM
 	},
 }

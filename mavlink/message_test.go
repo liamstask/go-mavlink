@@ -2,6 +2,7 @@ package mavlink
 
 import (
 	"bytes"
+	"reflect"
 	"testing"
 )
 
@@ -53,6 +54,83 @@ func TestDecode(t *testing.T) {
 	_, err := NewDecoder(bytes.NewBuffer(pktbytes)).Decode()
 	if err != nil {
 		t.Errorf("Decode fail:", err)
+	}
+}
+
+func TestDecodeTwoMessages(t *testing.T) {
+	// decode a known good byte stream
+	pktbytes := []byte{0xfe, 0x09, 0x0, 0x01, 0xC8, 0x00, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5A, 0x3E,
+		0xfe, 0x0e, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x39, 0x30, 0x00, 0x00, 0x00, 0x00, 0x45, 0x40}
+	decoder := NewDecoder(bytes.NewBuffer(pktbytes))
+
+	msg1, err := decoder.Decode()
+	if err != nil {
+		t.Errorf("Decode fail:", err)
+	}
+
+	msg2, err := decoder.Decode()
+	if err != nil {
+		t.Errorf("Decode fail:", err)
+	}
+
+	if reflect.DeepEqual(msg1, msg2) {
+		t.Error("Messages should not match")
+	}
+}
+
+func TestDecodeFalseStart(t *testing.T) {
+	// a false start followed by a known good byte stream
+	pktbytes := []byte{0xfe, 0x00, 0xfe, 0x09, 0x0, 0x01, 0xC8, 0x00, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5A, 0x3E}
+	_, err := NewDecoder(bytes.NewBuffer(pktbytes)).Decode()
+	if err != nil {
+		t.Errorf("Decode fail:", err)
+	}
+}
+
+func TestDecodeMultipleFalseStarts(t *testing.T) {
+	// two false starts followed by a known good byte stream
+	pktbytes := []byte{0xfe, 0x00, 0xfe, 0x00, 0xfe, 0x09, 0x0, 0x01, 0xC8, 0x00, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5A, 0x3E}
+
+	decoder := NewDecoder(bytes.NewBuffer(pktbytes))
+	_, err := decoder.Decode()
+	// we can't trust message id while stream is corrupted
+	for err == ErrUnknownMsgID {
+		_, err = decoder.Decode()
+	}
+	if err != nil {
+		t.Errorf("Decode fail:", err)
+	}
+
+	pktbytes = append([]byte{0x00, 0xfe, 0x01, 0x02, 0xfe, 0x03, 0x04, 0x05, 0xfe, 0x07, 0x08, 0x09, 0x0a}, pktbytes[:]...)
+	decoder = NewDecoder(bytes.NewBuffer(pktbytes))
+	_, err = decoder.Decode()
+	// we can't trust message id while stream is corrupted
+	for err == ErrUnknownMsgID {
+		_, err = decoder.Decode()
+	}
+	if err != nil {
+		t.Errorf("Decode fail:", err)
+	}
+}
+
+func TestDecodeFalseStartTwoMessages(t *testing.T) {
+	// a false start followed by a known good byte stream followed by another false start followed by a known byte stream
+	pktbytes := []byte{0xfe, 0x00, 0xfe, 0x09, 0x0, 0x01, 0xC8, 0x00, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5A, 0x3E,
+		0xfe, 0x00, 0xfe, 0x0e, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x39, 0x30, 0x00, 0x00, 0x00, 0x00, 0x45, 0x40}
+	decoder := NewDecoder(bytes.NewBuffer(pktbytes))
+
+	msg1, err := decoder.Decode()
+	if err != nil {
+		t.Errorf("Decode fail:", err)
+	}
+
+	msg2, err := decoder.Decode()
+	if err != nil {
+		t.Errorf("Decode fail:", err)
+	}
+
+	if reflect.DeepEqual(msg1, msg2) {
+		t.Error("Messages should not match")
 	}
 }
 

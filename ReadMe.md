@@ -2,13 +2,11 @@
 
 a [Go](http://golang.org/) package for reading/writing [mavlink](http://qgroundcontrol.org/mavlink/start) messages.
 
-[![Build Status](https://travis-ci.org/liamstask/go-mavlink.svg)](https://travis-ci.org/liamstask/go-mavlink) [![GoDoc](https://godoc.org/github.com/liamstask/go-mavlink/mavlink?status.svg)](https://godoc.org/github.com/liamstask/go-mavlink/mavlink)
-
-still under development, not necessarily ready for production use
+Forked from: https://github.com/liamstask/go-mavlink with updates to V2_EXTENSION messages.
 
 ## installation
 
-* grab the files: `go get github.com/liamstask/go-mavlink`
+* grab the files: `go get github.com/cnord/go-mavlink`
 * generate classes from mavlink xml definitions: `go generate`
 
 xml definitions can be updated from https://github.com/mavlink/mavlink

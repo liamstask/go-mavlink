@@ -374,7 +374,6 @@ type SerialUdbExtraF2A struct {
 	SueCog            uint16 // Serial UDB Extra GPS Course Over Ground
 	SueSog            int16  // Serial UDB Extra Speed Over Ground
 	SueCpuLoad        uint16 // Serial UDB Extra CPU Load
-	SueVoltageMilis   int16  // Serial UDB Extra Voltage in MilliVolts
 	SueAirSpeed3dimu  uint16 // Serial UDB Extra 3D IMU Air Speed
 	SueEstimatedWind0 int16  // Serial UDB Extra Estimated Wind 0
 	SueEstimatedWind1 int16  // Serial UDB Extra Estimated Wind 1
@@ -396,7 +395,7 @@ func (self *SerialUdbExtraF2A) MsgName() string {
 }
 
 func (self *SerialUdbExtraF2A) Pack(p *Packet) error {
-	payload := make([]byte, 63)
+	payload := make([]byte, 61)
 	binary.LittleEndian.PutUint32(payload[0:], uint32(self.SueTime))
 	binary.LittleEndian.PutUint32(payload[4:], uint32(self.SueLatitude))
 	binary.LittleEndian.PutUint32(payload[8:], uint32(self.SueLongitude))
@@ -414,17 +413,16 @@ func (self *SerialUdbExtraF2A) Pack(p *Packet) error {
 	binary.LittleEndian.PutUint16(payload[36:], uint16(self.SueCog))
 	binary.LittleEndian.PutUint16(payload[38:], uint16(self.SueSog))
 	binary.LittleEndian.PutUint16(payload[40:], uint16(self.SueCpuLoad))
-	binary.LittleEndian.PutUint16(payload[42:], uint16(self.SueVoltageMilis))
-	binary.LittleEndian.PutUint16(payload[44:], uint16(self.SueAirSpeed3dimu))
-	binary.LittleEndian.PutUint16(payload[46:], uint16(self.SueEstimatedWind0))
-	binary.LittleEndian.PutUint16(payload[48:], uint16(self.SueEstimatedWind1))
-	binary.LittleEndian.PutUint16(payload[50:], uint16(self.SueEstimatedWind2))
-	binary.LittleEndian.PutUint16(payload[52:], uint16(self.SueMagfieldearth0))
-	binary.LittleEndian.PutUint16(payload[54:], uint16(self.SueMagfieldearth1))
-	binary.LittleEndian.PutUint16(payload[56:], uint16(self.SueMagfieldearth2))
-	binary.LittleEndian.PutUint16(payload[58:], uint16(self.SueSvs))
-	binary.LittleEndian.PutUint16(payload[60:], uint16(self.SueHdop))
-	payload[62] = byte(self.SueStatus)
+	binary.LittleEndian.PutUint16(payload[42:], uint16(self.SueAirSpeed3dimu))
+	binary.LittleEndian.PutUint16(payload[44:], uint16(self.SueEstimatedWind0))
+	binary.LittleEndian.PutUint16(payload[46:], uint16(self.SueEstimatedWind1))
+	binary.LittleEndian.PutUint16(payload[48:], uint16(self.SueEstimatedWind2))
+	binary.LittleEndian.PutUint16(payload[50:], uint16(self.SueMagfieldearth0))
+	binary.LittleEndian.PutUint16(payload[52:], uint16(self.SueMagfieldearth1))
+	binary.LittleEndian.PutUint16(payload[54:], uint16(self.SueMagfieldearth2))
+	binary.LittleEndian.PutUint16(payload[56:], uint16(self.SueSvs))
+	binary.LittleEndian.PutUint16(payload[58:], uint16(self.SueHdop))
+	payload[60] = byte(self.SueStatus)
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
@@ -432,7 +430,7 @@ func (self *SerialUdbExtraF2A) Pack(p *Packet) error {
 }
 
 func (self *SerialUdbExtraF2A) Unpack(p *Packet) error {
-	if len(p.Payload) < 63 {
+	if len(p.Payload) < 61 {
 		return fmt.Errorf("payload too small")
 	}
 	self.SueTime = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
@@ -452,55 +450,71 @@ func (self *SerialUdbExtraF2A) Unpack(p *Packet) error {
 	self.SueCog = uint16(binary.LittleEndian.Uint16(p.Payload[36:]))
 	self.SueSog = int16(binary.LittleEndian.Uint16(p.Payload[38:]))
 	self.SueCpuLoad = uint16(binary.LittleEndian.Uint16(p.Payload[40:]))
-	self.SueVoltageMilis = int16(binary.LittleEndian.Uint16(p.Payload[42:]))
-	self.SueAirSpeed3dimu = uint16(binary.LittleEndian.Uint16(p.Payload[44:]))
-	self.SueEstimatedWind0 = int16(binary.LittleEndian.Uint16(p.Payload[46:]))
-	self.SueEstimatedWind1 = int16(binary.LittleEndian.Uint16(p.Payload[48:]))
-	self.SueEstimatedWind2 = int16(binary.LittleEndian.Uint16(p.Payload[50:]))
-	self.SueMagfieldearth0 = int16(binary.LittleEndian.Uint16(p.Payload[52:]))
-	self.SueMagfieldearth1 = int16(binary.LittleEndian.Uint16(p.Payload[54:]))
-	self.SueMagfieldearth2 = int16(binary.LittleEndian.Uint16(p.Payload[56:]))
-	self.SueSvs = int16(binary.LittleEndian.Uint16(p.Payload[58:]))
-	self.SueHdop = int16(binary.LittleEndian.Uint16(p.Payload[60:]))
-	self.SueStatus = uint8(p.Payload[62])
+	self.SueAirSpeed3dimu = uint16(binary.LittleEndian.Uint16(p.Payload[42:]))
+	self.SueEstimatedWind0 = int16(binary.LittleEndian.Uint16(p.Payload[44:]))
+	self.SueEstimatedWind1 = int16(binary.LittleEndian.Uint16(p.Payload[46:]))
+	self.SueEstimatedWind2 = int16(binary.LittleEndian.Uint16(p.Payload[48:]))
+	self.SueMagfieldearth0 = int16(binary.LittleEndian.Uint16(p.Payload[50:]))
+	self.SueMagfieldearth1 = int16(binary.LittleEndian.Uint16(p.Payload[52:]))
+	self.SueMagfieldearth2 = int16(binary.LittleEndian.Uint16(p.Payload[54:]))
+	self.SueSvs = int16(binary.LittleEndian.Uint16(p.Payload[56:]))
+	self.SueHdop = int16(binary.LittleEndian.Uint16(p.Payload[58:]))
+	self.SueStatus = uint8(p.Payload[60])
 	return nil
 }
 
 // Backwards compatible version of SERIAL_UDB_EXTRA - F2: Part B
 type SerialUdbExtraF2B struct {
-	SueTime            uint32 // Serial UDB Extra Time
-	SueFlags           uint32 // Serial UDB Extra Status Flags
-	SuePwmInput1       int16  // Serial UDB Extra PWM Input Channel 1
-	SuePwmInput2       int16  // Serial UDB Extra PWM Input Channel 2
-	SuePwmInput3       int16  // Serial UDB Extra PWM Input Channel 3
-	SuePwmInput4       int16  // Serial UDB Extra PWM Input Channel 4
-	SuePwmInput5       int16  // Serial UDB Extra PWM Input Channel 5
-	SuePwmInput6       int16  // Serial UDB Extra PWM Input Channel 6
-	SuePwmInput7       int16  // Serial UDB Extra PWM Input Channel 7
-	SuePwmInput8       int16  // Serial UDB Extra PWM Input Channel 8
-	SuePwmInput9       int16  // Serial UDB Extra PWM Input Channel 9
-	SuePwmInput10      int16  // Serial UDB Extra PWM Input Channel 10
-	SuePwmOutput1      int16  // Serial UDB Extra PWM Output Channel 1
-	SuePwmOutput2      int16  // Serial UDB Extra PWM Output Channel 2
-	SuePwmOutput3      int16  // Serial UDB Extra PWM Output Channel 3
-	SuePwmOutput4      int16  // Serial UDB Extra PWM Output Channel 4
-	SuePwmOutput5      int16  // Serial UDB Extra PWM Output Channel 5
-	SuePwmOutput6      int16  // Serial UDB Extra PWM Output Channel 6
-	SuePwmOutput7      int16  // Serial UDB Extra PWM Output Channel 7
-	SuePwmOutput8      int16  // Serial UDB Extra PWM Output Channel 8
-	SuePwmOutput9      int16  // Serial UDB Extra PWM Output Channel 9
-	SuePwmOutput10     int16  // Serial UDB Extra PWM Output Channel 10
-	SueImuLocationX    int16  // Serial UDB Extra IMU Location X
-	SueImuLocationY    int16  // Serial UDB Extra IMU Location Y
-	SueImuLocationZ    int16  // Serial UDB Extra IMU Location Z
-	SueOscFails        int16  // Serial UDB Extra Oscillator Failure Count
-	SueImuVelocityX    int16  // Serial UDB Extra IMU Velocity X
-	SueImuVelocityY    int16  // Serial UDB Extra IMU Velocity Y
-	SueImuVelocityZ    int16  // Serial UDB Extra IMU Velocity Z
-	SueWaypointGoalX   int16  // Serial UDB Extra Current Waypoint Goal X
-	SueWaypointGoalY   int16  // Serial UDB Extra Current Waypoint Goal Y
-	SueWaypointGoalZ   int16  // Serial UDB Extra Current Waypoint Goal Z
-	SueMemoryStackFree int16  // Serial UDB Extra Stack Memory Free
+	SueTime                uint32 // Serial UDB Extra Time
+	SueFlags               uint32 // Serial UDB Extra Status Flags
+	SueBaromPress          int32  // SUE barometer pressure
+	SueBaromAlt            int32  // SUE barometer altitude
+	SuePwmInput1           int16  // Serial UDB Extra PWM Input Channel 1
+	SuePwmInput2           int16  // Serial UDB Extra PWM Input Channel 2
+	SuePwmInput3           int16  // Serial UDB Extra PWM Input Channel 3
+	SuePwmInput4           int16  // Serial UDB Extra PWM Input Channel 4
+	SuePwmInput5           int16  // Serial UDB Extra PWM Input Channel 5
+	SuePwmInput6           int16  // Serial UDB Extra PWM Input Channel 6
+	SuePwmInput7           int16  // Serial UDB Extra PWM Input Channel 7
+	SuePwmInput8           int16  // Serial UDB Extra PWM Input Channel 8
+	SuePwmInput9           int16  // Serial UDB Extra PWM Input Channel 9
+	SuePwmInput10          int16  // Serial UDB Extra PWM Input Channel 10
+	SuePwmInput11          int16  // Serial UDB Extra PWM Input Channel 11
+	SuePwmInput12          int16  // Serial UDB Extra PWM Input Channel 12
+	SuePwmOutput1          int16  // Serial UDB Extra PWM Output Channel 1
+	SuePwmOutput2          int16  // Serial UDB Extra PWM Output Channel 2
+	SuePwmOutput3          int16  // Serial UDB Extra PWM Output Channel 3
+	SuePwmOutput4          int16  // Serial UDB Extra PWM Output Channel 4
+	SuePwmOutput5          int16  // Serial UDB Extra PWM Output Channel 5
+	SuePwmOutput6          int16  // Serial UDB Extra PWM Output Channel 6
+	SuePwmOutput7          int16  // Serial UDB Extra PWM Output Channel 7
+	SuePwmOutput8          int16  // Serial UDB Extra PWM Output Channel 8
+	SuePwmOutput9          int16  // Serial UDB Extra PWM Output Channel 9
+	SuePwmOutput10         int16  // Serial UDB Extra PWM Output Channel 10
+	SuePwmOutput11         int16  // Serial UDB Extra PWM Output Channel 11
+	SuePwmOutput12         int16  // Serial UDB Extra PWM Output Channel 12
+	SueImuLocationX        int16  // Serial UDB Extra IMU Location X
+	SueImuLocationY        int16  // Serial UDB Extra IMU Location Y
+	SueImuLocationZ        int16  // Serial UDB Extra IMU Location Z
+	SueLocationErrorEarthX int16  // Serial UDB Location Error Earth X
+	SueLocationErrorEarthY int16  // Serial UDB Location Error Earth Y
+	SueLocationErrorEarthZ int16  // Serial UDB Location Error Earth Z
+	SueOscFails            int16  // Serial UDB Extra Oscillator Failure Count
+	SueImuVelocityX        int16  // Serial UDB Extra IMU Velocity X
+	SueImuVelocityY        int16  // Serial UDB Extra IMU Velocity Y
+	SueImuVelocityZ        int16  // Serial UDB Extra IMU Velocity Z
+	SueWaypointGoalX       int16  // Serial UDB Extra Current Waypoint Goal X
+	SueWaypointGoalY       int16  // Serial UDB Extra Current Waypoint Goal Y
+	SueWaypointGoalZ       int16  // Serial UDB Extra Current Waypoint Goal Z
+	SueAeroX               int16  // Aeroforce in UDB X Axis
+	SueAeroY               int16  // Aeroforce in UDB Y Axis
+	SueAeroZ               int16  // Aeroforce in UDB Z axis
+	SueBaromTemp           int16  // SUE barometer temperature
+	SueBatVolt             int16  // SUE battery voltage
+	SueBatAmp              int16  // SUE battery current
+	SueBatAmpHours         int16  // SUE battery milli amp hours used
+	SueDesiredHeight       int16  // Sue autopilot desired height
+	SueMemoryStackFree     int16  // Serial UDB Extra Stack Memory Free
 }
 
 func (self *SerialUdbExtraF2B) MsgID() uint8 {
@@ -512,40 +526,57 @@ func (self *SerialUdbExtraF2B) MsgName() string {
 }
 
 func (self *SerialUdbExtraF2B) Pack(p *Packet) error {
-	payload := make([]byte, 70)
+	payload := make([]byte, 108)
 	binary.LittleEndian.PutUint32(payload[0:], uint32(self.SueTime))
 	binary.LittleEndian.PutUint32(payload[4:], uint32(self.SueFlags))
-	binary.LittleEndian.PutUint16(payload[8:], uint16(self.SuePwmInput1))
-	binary.LittleEndian.PutUint16(payload[10:], uint16(self.SuePwmInput2))
-	binary.LittleEndian.PutUint16(payload[12:], uint16(self.SuePwmInput3))
-	binary.LittleEndian.PutUint16(payload[14:], uint16(self.SuePwmInput4))
-	binary.LittleEndian.PutUint16(payload[16:], uint16(self.SuePwmInput5))
-	binary.LittleEndian.PutUint16(payload[18:], uint16(self.SuePwmInput6))
-	binary.LittleEndian.PutUint16(payload[20:], uint16(self.SuePwmInput7))
-	binary.LittleEndian.PutUint16(payload[22:], uint16(self.SuePwmInput8))
-	binary.LittleEndian.PutUint16(payload[24:], uint16(self.SuePwmInput9))
-	binary.LittleEndian.PutUint16(payload[26:], uint16(self.SuePwmInput10))
-	binary.LittleEndian.PutUint16(payload[28:], uint16(self.SuePwmOutput1))
-	binary.LittleEndian.PutUint16(payload[30:], uint16(self.SuePwmOutput2))
-	binary.LittleEndian.PutUint16(payload[32:], uint16(self.SuePwmOutput3))
-	binary.LittleEndian.PutUint16(payload[34:], uint16(self.SuePwmOutput4))
-	binary.LittleEndian.PutUint16(payload[36:], uint16(self.SuePwmOutput5))
-	binary.LittleEndian.PutUint16(payload[38:], uint16(self.SuePwmOutput6))
-	binary.LittleEndian.PutUint16(payload[40:], uint16(self.SuePwmOutput7))
-	binary.LittleEndian.PutUint16(payload[42:], uint16(self.SuePwmOutput8))
-	binary.LittleEndian.PutUint16(payload[44:], uint16(self.SuePwmOutput9))
-	binary.LittleEndian.PutUint16(payload[46:], uint16(self.SuePwmOutput10))
-	binary.LittleEndian.PutUint16(payload[48:], uint16(self.SueImuLocationX))
-	binary.LittleEndian.PutUint16(payload[50:], uint16(self.SueImuLocationY))
-	binary.LittleEndian.PutUint16(payload[52:], uint16(self.SueImuLocationZ))
-	binary.LittleEndian.PutUint16(payload[54:], uint16(self.SueOscFails))
-	binary.LittleEndian.PutUint16(payload[56:], uint16(self.SueImuVelocityX))
-	binary.LittleEndian.PutUint16(payload[58:], uint16(self.SueImuVelocityY))
-	binary.LittleEndian.PutUint16(payload[60:], uint16(self.SueImuVelocityZ))
-	binary.LittleEndian.PutUint16(payload[62:], uint16(self.SueWaypointGoalX))
-	binary.LittleEndian.PutUint16(payload[64:], uint16(self.SueWaypointGoalY))
-	binary.LittleEndian.PutUint16(payload[66:], uint16(self.SueWaypointGoalZ))
-	binary.LittleEndian.PutUint16(payload[68:], uint16(self.SueMemoryStackFree))
+	binary.LittleEndian.PutUint32(payload[8:], uint32(self.SueBaromPress))
+	binary.LittleEndian.PutUint32(payload[12:], uint32(self.SueBaromAlt))
+	binary.LittleEndian.PutUint16(payload[16:], uint16(self.SuePwmInput1))
+	binary.LittleEndian.PutUint16(payload[18:], uint16(self.SuePwmInput2))
+	binary.LittleEndian.PutUint16(payload[20:], uint16(self.SuePwmInput3))
+	binary.LittleEndian.PutUint16(payload[22:], uint16(self.SuePwmInput4))
+	binary.LittleEndian.PutUint16(payload[24:], uint16(self.SuePwmInput5))
+	binary.LittleEndian.PutUint16(payload[26:], uint16(self.SuePwmInput6))
+	binary.LittleEndian.PutUint16(payload[28:], uint16(self.SuePwmInput7))
+	binary.LittleEndian.PutUint16(payload[30:], uint16(self.SuePwmInput8))
+	binary.LittleEndian.PutUint16(payload[32:], uint16(self.SuePwmInput9))
+	binary.LittleEndian.PutUint16(payload[34:], uint16(self.SuePwmInput10))
+	binary.LittleEndian.PutUint16(payload[36:], uint16(self.SuePwmInput11))
+	binary.LittleEndian.PutUint16(payload[38:], uint16(self.SuePwmInput12))
+	binary.LittleEndian.PutUint16(payload[40:], uint16(self.SuePwmOutput1))
+	binary.LittleEndian.PutUint16(payload[42:], uint16(self.SuePwmOutput2))
+	binary.LittleEndian.PutUint16(payload[44:], uint16(self.SuePwmOutput3))
+	binary.LittleEndian.PutUint16(payload[46:], uint16(self.SuePwmOutput4))
+	binary.LittleEndian.PutUint16(payload[48:], uint16(self.SuePwmOutput5))
+	binary.LittleEndian.PutUint16(payload[50:], uint16(self.SuePwmOutput6))
+	binary.LittleEndian.PutUint16(payload[52:], uint16(self.SuePwmOutput7))
+	binary.LittleEndian.PutUint16(payload[54:], uint16(self.SuePwmOutput8))
+	binary.LittleEndian.PutUint16(payload[56:], uint16(self.SuePwmOutput9))
+	binary.LittleEndian.PutUint16(payload[58:], uint16(self.SuePwmOutput10))
+	binary.LittleEndian.PutUint16(payload[60:], uint16(self.SuePwmOutput11))
+	binary.LittleEndian.PutUint16(payload[62:], uint16(self.SuePwmOutput12))
+	binary.LittleEndian.PutUint16(payload[64:], uint16(self.SueImuLocationX))
+	binary.LittleEndian.PutUint16(payload[66:], uint16(self.SueImuLocationY))
+	binary.LittleEndian.PutUint16(payload[68:], uint16(self.SueImuLocationZ))
+	binary.LittleEndian.PutUint16(payload[70:], uint16(self.SueLocationErrorEarthX))
+	binary.LittleEndian.PutUint16(payload[72:], uint16(self.SueLocationErrorEarthY))
+	binary.LittleEndian.PutUint16(payload[74:], uint16(self.SueLocationErrorEarthZ))
+	binary.LittleEndian.PutUint16(payload[76:], uint16(self.SueOscFails))
+	binary.LittleEndian.PutUint16(payload[78:], uint16(self.SueImuVelocityX))
+	binary.LittleEndian.PutUint16(payload[80:], uint16(self.SueImuVelocityY))
+	binary.LittleEndian.PutUint16(payload[82:], uint16(self.SueImuVelocityZ))
+	binary.LittleEndian.PutUint16(payload[84:], uint16(self.SueWaypointGoalX))
+	binary.LittleEndian.PutUint16(payload[86:], uint16(self.SueWaypointGoalY))
+	binary.LittleEndian.PutUint16(payload[88:], uint16(self.SueWaypointGoalZ))
+	binary.LittleEndian.PutUint16(payload[90:], uint16(self.SueAeroX))
+	binary.LittleEndian.PutUint16(payload[92:], uint16(self.SueAeroY))
+	binary.LittleEndian.PutUint16(payload[94:], uint16(self.SueAeroZ))
+	binary.LittleEndian.PutUint16(payload[96:], uint16(self.SueBaromTemp))
+	binary.LittleEndian.PutUint16(payload[98:], uint16(self.SueBatVolt))
+	binary.LittleEndian.PutUint16(payload[100:], uint16(self.SueBatAmp))
+	binary.LittleEndian.PutUint16(payload[102:], uint16(self.SueBatAmpHours))
+	binary.LittleEndian.PutUint16(payload[104:], uint16(self.SueDesiredHeight))
+	binary.LittleEndian.PutUint16(payload[106:], uint16(self.SueMemoryStackFree))
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
@@ -553,42 +584,59 @@ func (self *SerialUdbExtraF2B) Pack(p *Packet) error {
 }
 
 func (self *SerialUdbExtraF2B) Unpack(p *Packet) error {
-	if len(p.Payload) < 70 {
+	if len(p.Payload) < 108 {
 		return fmt.Errorf("payload too small")
 	}
 	self.SueTime = uint32(binary.LittleEndian.Uint32(p.Payload[0:]))
 	self.SueFlags = uint32(binary.LittleEndian.Uint32(p.Payload[4:]))
-	self.SuePwmInput1 = int16(binary.LittleEndian.Uint16(p.Payload[8:]))
-	self.SuePwmInput2 = int16(binary.LittleEndian.Uint16(p.Payload[10:]))
-	self.SuePwmInput3 = int16(binary.LittleEndian.Uint16(p.Payload[12:]))
-	self.SuePwmInput4 = int16(binary.LittleEndian.Uint16(p.Payload[14:]))
-	self.SuePwmInput5 = int16(binary.LittleEndian.Uint16(p.Payload[16:]))
-	self.SuePwmInput6 = int16(binary.LittleEndian.Uint16(p.Payload[18:]))
-	self.SuePwmInput7 = int16(binary.LittleEndian.Uint16(p.Payload[20:]))
-	self.SuePwmInput8 = int16(binary.LittleEndian.Uint16(p.Payload[22:]))
-	self.SuePwmInput9 = int16(binary.LittleEndian.Uint16(p.Payload[24:]))
-	self.SuePwmInput10 = int16(binary.LittleEndian.Uint16(p.Payload[26:]))
-	self.SuePwmOutput1 = int16(binary.LittleEndian.Uint16(p.Payload[28:]))
-	self.SuePwmOutput2 = int16(binary.LittleEndian.Uint16(p.Payload[30:]))
-	self.SuePwmOutput3 = int16(binary.LittleEndian.Uint16(p.Payload[32:]))
-	self.SuePwmOutput4 = int16(binary.LittleEndian.Uint16(p.Payload[34:]))
-	self.SuePwmOutput5 = int16(binary.LittleEndian.Uint16(p.Payload[36:]))
-	self.SuePwmOutput6 = int16(binary.LittleEndian.Uint16(p.Payload[38:]))
-	self.SuePwmOutput7 = int16(binary.LittleEndian.Uint16(p.Payload[40:]))
-	self.SuePwmOutput8 = int16(binary.LittleEndian.Uint16(p.Payload[42:]))
-	self.SuePwmOutput9 = int16(binary.LittleEndian.Uint16(p.Payload[44:]))
-	self.SuePwmOutput10 = int16(binary.LittleEndian.Uint16(p.Payload[46:]))
-	self.SueImuLocationX = int16(binary.LittleEndian.Uint16(p.Payload[48:]))
-	self.SueImuLocationY = int16(binary.LittleEndian.Uint16(p.Payload[50:]))
-	self.SueImuLocationZ = int16(binary.LittleEndian.Uint16(p.Payload[52:]))
-	self.SueOscFails = int16(binary.LittleEndian.Uint16(p.Payload[54:]))
-	self.SueImuVelocityX = int16(binary.LittleEndian.Uint16(p.Payload[56:]))
-	self.SueImuVelocityY = int16(binary.LittleEndian.Uint16(p.Payload[58:]))
-	self.SueImuVelocityZ = int16(binary.LittleEndian.Uint16(p.Payload[60:]))
-	self.SueWaypointGoalX = int16(binary.LittleEndian.Uint16(p.Payload[62:]))
-	self.SueWaypointGoalY = int16(binary.LittleEndian.Uint16(p.Payload[64:]))
-	self.SueWaypointGoalZ = int16(binary.LittleEndian.Uint16(p.Payload[66:]))
-	self.SueMemoryStackFree = int16(binary.LittleEndian.Uint16(p.Payload[68:]))
+	self.SueBaromPress = int32(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.SueBaromAlt = int32(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.SuePwmInput1 = int16(binary.LittleEndian.Uint16(p.Payload[16:]))
+	self.SuePwmInput2 = int16(binary.LittleEndian.Uint16(p.Payload[18:]))
+	self.SuePwmInput3 = int16(binary.LittleEndian.Uint16(p.Payload[20:]))
+	self.SuePwmInput4 = int16(binary.LittleEndian.Uint16(p.Payload[22:]))
+	self.SuePwmInput5 = int16(binary.LittleEndian.Uint16(p.Payload[24:]))
+	self.SuePwmInput6 = int16(binary.LittleEndian.Uint16(p.Payload[26:]))
+	self.SuePwmInput7 = int16(binary.LittleEndian.Uint16(p.Payload[28:]))
+	self.SuePwmInput8 = int16(binary.LittleEndian.Uint16(p.Payload[30:]))
+	self.SuePwmInput9 = int16(binary.LittleEndian.Uint16(p.Payload[32:]))
+	self.SuePwmInput10 = int16(binary.LittleEndian.Uint16(p.Payload[34:]))
+	self.SuePwmInput11 = int16(binary.LittleEndian.Uint16(p.Payload[36:]))
+	self.SuePwmInput12 = int16(binary.LittleEndian.Uint16(p.Payload[38:]))
+	self.SuePwmOutput1 = int16(binary.LittleEndian.Uint16(p.Payload[40:]))
+	self.SuePwmOutput2 = int16(binary.LittleEndian.Uint16(p.Payload[42:]))
+	self.SuePwmOutput3 = int16(binary.LittleEndian.Uint16(p.Payload[44:]))
+	self.SuePwmOutput4 = int16(binary.LittleEndian.Uint16(p.Payload[46:]))
+	self.SuePwmOutput5 = int16(binary.LittleEndian.Uint16(p.Payload[48:]))
+	self.SuePwmOutput6 = int16(binary.LittleEndian.Uint16(p.Payload[50:]))
+	self.SuePwmOutput7 = int16(binary.LittleEndian.Uint16(p.Payload[52:]))
+	self.SuePwmOutput8 = int16(binary.LittleEndian.Uint16(p.Payload[54:]))
+	self.SuePwmOutput9 = int16(binary.LittleEndian.Uint16(p.Payload[56:]))
+	self.SuePwmOutput10 = int16(binary.LittleEndian.Uint16(p.Payload[58:]))
+	self.SuePwmOutput11 = int16(binary.LittleEndian.Uint16(p.Payload[60:]))
+	self.SuePwmOutput12 = int16(binary.LittleEndian.Uint16(p.Payload[62:]))
+	self.SueImuLocationX = int16(binary.LittleEndian.Uint16(p.Payload[64:]))
+	self.SueImuLocationY = int16(binary.LittleEndian.Uint16(p.Payload[66:]))
+	self.SueImuLocationZ = int16(binary.LittleEndian.Uint16(p.Payload[68:]))
+	self.SueLocationErrorEarthX = int16(binary.LittleEndian.Uint16(p.Payload[70:]))
+	self.SueLocationErrorEarthY = int16(binary.LittleEndian.Uint16(p.Payload[72:]))
+	self.SueLocationErrorEarthZ = int16(binary.LittleEndian.Uint16(p.Payload[74:]))
+	self.SueOscFails = int16(binary.LittleEndian.Uint16(p.Payload[76:]))
+	self.SueImuVelocityX = int16(binary.LittleEndian.Uint16(p.Payload[78:]))
+	self.SueImuVelocityY = int16(binary.LittleEndian.Uint16(p.Payload[80:]))
+	self.SueImuVelocityZ = int16(binary.LittleEndian.Uint16(p.Payload[82:]))
+	self.SueWaypointGoalX = int16(binary.LittleEndian.Uint16(p.Payload[84:]))
+	self.SueWaypointGoalY = int16(binary.LittleEndian.Uint16(p.Payload[86:]))
+	self.SueWaypointGoalZ = int16(binary.LittleEndian.Uint16(p.Payload[88:]))
+	self.SueAeroX = int16(binary.LittleEndian.Uint16(p.Payload[90:]))
+	self.SueAeroY = int16(binary.LittleEndian.Uint16(p.Payload[92:]))
+	self.SueAeroZ = int16(binary.LittleEndian.Uint16(p.Payload[94:]))
+	self.SueBaromTemp = int16(binary.LittleEndian.Uint16(p.Payload[96:]))
+	self.SueBatVolt = int16(binary.LittleEndian.Uint16(p.Payload[98:]))
+	self.SueBatAmp = int16(binary.LittleEndian.Uint16(p.Payload[100:]))
+	self.SueBatAmpHours = int16(binary.LittleEndian.Uint16(p.Payload[102:]))
+	self.SueDesiredHeight = int16(binary.LittleEndian.Uint16(p.Payload[104:]))
+	self.SueMemoryStackFree = int16(binary.LittleEndian.Uint16(p.Payload[106:]))
 	return nil
 }
 
@@ -651,12 +699,10 @@ func (self *SerialUdbExtraF4) Unpack(p *Packet) error {
 
 // Backwards compatible version of SERIAL_UDB_EXTRA F5: format
 type SerialUdbExtraF5 struct {
-	SueYawkpAileron            float32 // Serial UDB YAWKP_AILERON Gain for Proporional control of navigation
-	SueYawkdAileron            float32 // Serial UDB YAWKD_AILERON Gain for Rate control of navigation
-	SueRollkp                  float32 // Serial UDB Extra ROLLKP Gain for Proportional control of roll stabilization
-	SueRollkd                  float32 // Serial UDB Extra ROLLKD Gain for Rate control of roll stabilization
-	SueYawStabilizationAileron float32 // YAW_STABILIZATION_AILERON Proportional control
-	SueAileronBoost            float32 // Gain For Boosting Manual Aileron control When Plane Stabilized
+	SueYawkpAileron float32 // Serial UDB YAWKP_AILERON Gain for Proporional control of navigation
+	SueYawkdAileron float32 // Serial UDB YAWKD_AILERON Gain for Rate control of navigation
+	SueRollkp       float32 // Serial UDB Extra ROLLKP Gain for Proportional control of roll stabilization
+	SueRollkd       float32 // Serial UDB Extra ROLLKD Gain for Rate control of roll stabilization
 }
 
 func (self *SerialUdbExtraF5) MsgID() uint8 {
@@ -668,13 +714,11 @@ func (self *SerialUdbExtraF5) MsgName() string {
 }
 
 func (self *SerialUdbExtraF5) Pack(p *Packet) error {
-	payload := make([]byte, 24)
+	payload := make([]byte, 16)
 	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.SueYawkpAileron))
 	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.SueYawkdAileron))
 	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.SueRollkp))
 	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.SueRollkd))
-	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.SueYawStabilizationAileron))
-	binary.LittleEndian.PutUint32(payload[20:], math.Float32bits(self.SueAileronBoost))
 
 	p.MsgID = self.MsgID()
 	p.Payload = payload
@@ -682,15 +726,13 @@ func (self *SerialUdbExtraF5) Pack(p *Packet) error {
 }
 
 func (self *SerialUdbExtraF5) Unpack(p *Packet) error {
-	if len(p.Payload) < 24 {
+	if len(p.Payload) < 16 {
 		return fmt.Errorf("payload too small")
 	}
 	self.SueYawkpAileron = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
 	self.SueYawkdAileron = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
 	self.SueRollkp = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
 	self.SueRollkd = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
-	self.SueYawStabilizationAileron = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
-	self.SueAileronBoost = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[20:]))
 	return nil
 }
 
@@ -871,7 +913,7 @@ func (self *SerialUdbExtraF13) Unpack(p *Packet) error {
 // Backwards compatible version of SERIAL_UDB_EXTRA F14: format
 type SerialUdbExtraF14 struct {
 	SueTrapSource     uint32 // Serial UDB Extra Type Program Address of Last Trap
-	SueRcon           int16  // Serial UDB Extra Reboot Regitster of DSPIC
+	SueRcon           int16  // Serial UDB Extra Reboot Register of DSPIC
 	SueTrapFlags      int16  // Serial UDB Extra  Last dspic Trap Flags
 	SueOscFailCount   int16  // Serial UDB Extra Number of Ocillator Failures
 	SueWindEstimation uint8  // Serial UDB Extra Wind Estimation Enabled
@@ -928,7 +970,7 @@ func (self *SerialUdbExtraF14) Unpack(p *Packet) error {
 	return nil
 }
 
-// Backwards compatible version of SERIAL_UDB_EXTRA F15 and F16: format
+// Backwards compatible version of SERIAL_UDB_EXTRA F15 format
 type SerialUdbExtraF15 struct {
 	SueIdVehicleModelName    [40]uint8 // Serial UDB Extra Model Name Of Vehicle
 	SueIdVehicleRegistration [20]uint8 // Serial UDB Extra Registraton Number of Vehicle
@@ -961,7 +1003,7 @@ func (self *SerialUdbExtraF15) Unpack(p *Packet) error {
 	return nil
 }
 
-//
+// Backwards compatible version of SERIAL_UDB_EXTRA F16 format
 type SerialUdbExtraF16 struct {
 	SueIdLeadPilot    [40]uint8 // Serial UDB Extra Name of Expected Lead Pilot
 	SueIdDiyDronesUrl [70]uint8 // Serial UDB Extra URL of Lead Pilot or Team
@@ -1090,6 +1132,291 @@ func (self *Airspeeds) Unpack(p *Packet) error {
 	return nil
 }
 
+// Backwards compatible version of SERIAL_UDB_EXTRA F17 format
+type SerialUdbExtraF17 struct {
+	SueFeedForward float32 // SUE Feed Forward Gain
+	SueTurnRateNav float32 // SUE Max Turn Rate when Navigating
+	SueTurnRateFbw float32 // SUE Max Turn Rate in Fly By Wire Mode
+}
+
+func (self *SerialUdbExtraF17) MsgID() uint8 {
+	return 183
+}
+
+func (self *SerialUdbExtraF17) MsgName() string {
+	return "SerialUdbExtraF17"
+}
+
+func (self *SerialUdbExtraF17) Pack(p *Packet) error {
+	payload := make([]byte, 12)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.SueFeedForward))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.SueTurnRateNav))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.SueTurnRateFbw))
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *SerialUdbExtraF17) Unpack(p *Packet) error {
+	if len(p.Payload) < 12 {
+		return fmt.Errorf("payload too small")
+	}
+	self.SueFeedForward = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.SueTurnRateNav = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.SueTurnRateFbw = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	return nil
+}
+
+// Backwards compatible version of SERIAL_UDB_EXTRA F18 format
+type SerialUdbExtraF18 struct {
+	AngleOfAttackNormal   float32 // SUE Angle of Attack Normal
+	AngleOfAttackInverted float32 // SUE Angle of Attack Inverted
+	ElevatorTrimNormal    float32 // SUE Elevator Trim Normal
+	ElevatorTrimInverted  float32 // SUE Elevator Trim Inverted
+	ReferenceSpeed        float32 // SUE reference_speed
+}
+
+func (self *SerialUdbExtraF18) MsgID() uint8 {
+	return 184
+}
+
+func (self *SerialUdbExtraF18) MsgName() string {
+	return "SerialUdbExtraF18"
+}
+
+func (self *SerialUdbExtraF18) Pack(p *Packet) error {
+	payload := make([]byte, 20)
+	binary.LittleEndian.PutUint32(payload[0:], math.Float32bits(self.AngleOfAttackNormal))
+	binary.LittleEndian.PutUint32(payload[4:], math.Float32bits(self.AngleOfAttackInverted))
+	binary.LittleEndian.PutUint32(payload[8:], math.Float32bits(self.ElevatorTrimNormal))
+	binary.LittleEndian.PutUint32(payload[12:], math.Float32bits(self.ElevatorTrimInverted))
+	binary.LittleEndian.PutUint32(payload[16:], math.Float32bits(self.ReferenceSpeed))
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *SerialUdbExtraF18) Unpack(p *Packet) error {
+	if len(p.Payload) < 20 {
+		return fmt.Errorf("payload too small")
+	}
+	self.AngleOfAttackNormal = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[0:]))
+	self.AngleOfAttackInverted = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[4:]))
+	self.ElevatorTrimNormal = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[8:]))
+	self.ElevatorTrimInverted = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[12:]))
+	self.ReferenceSpeed = math.Float32frombits(binary.LittleEndian.Uint32(p.Payload[16:]))
+	return nil
+}
+
+// Backwards compatible version of SERIAL_UDB_EXTRA F19 format
+type SerialUdbExtraF19 struct {
+	SueAileronOutputChannel  uint8 // SUE aileron output channel
+	SueAileronReversed       uint8 // SUE aileron reversed
+	SueElevatorOutputChannel uint8 // SUE elevator output channel
+	SueElevatorReversed      uint8 // SUE elevator reversed
+	SueThrottleOutputChannel uint8 // SUE throttle output channel
+	SueThrottleReversed      uint8 // SUE throttle reversed
+	SueRudderOutputChannel   uint8 // SUE rudder output channel
+	SueRudderReversed        uint8 // SUE rudder reversed
+}
+
+func (self *SerialUdbExtraF19) MsgID() uint8 {
+	return 185
+}
+
+func (self *SerialUdbExtraF19) MsgName() string {
+	return "SerialUdbExtraF19"
+}
+
+func (self *SerialUdbExtraF19) Pack(p *Packet) error {
+	payload := make([]byte, 8)
+	payload[0] = byte(self.SueAileronOutputChannel)
+	payload[1] = byte(self.SueAileronReversed)
+	payload[2] = byte(self.SueElevatorOutputChannel)
+	payload[3] = byte(self.SueElevatorReversed)
+	payload[4] = byte(self.SueThrottleOutputChannel)
+	payload[5] = byte(self.SueThrottleReversed)
+	payload[6] = byte(self.SueRudderOutputChannel)
+	payload[7] = byte(self.SueRudderReversed)
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *SerialUdbExtraF19) Unpack(p *Packet) error {
+	if len(p.Payload) < 8 {
+		return fmt.Errorf("payload too small")
+	}
+	self.SueAileronOutputChannel = uint8(p.Payload[0])
+	self.SueAileronReversed = uint8(p.Payload[1])
+	self.SueElevatorOutputChannel = uint8(p.Payload[2])
+	self.SueElevatorReversed = uint8(p.Payload[3])
+	self.SueThrottleOutputChannel = uint8(p.Payload[4])
+	self.SueThrottleReversed = uint8(p.Payload[5])
+	self.SueRudderOutputChannel = uint8(p.Payload[6])
+	self.SueRudderReversed = uint8(p.Payload[7])
+	return nil
+}
+
+// Backwards compatible version of SERIAL_UDB_EXTRA F20 format
+type SerialUdbExtraF20 struct {
+	SueTrimValueInput1  int16 // SUE UDB PWM Trim Value on Input 1
+	SueTrimValueInput2  int16 // SUE UDB PWM Trim Value on Input 2
+	SueTrimValueInput3  int16 // SUE UDB PWM Trim Value on Input 3
+	SueTrimValueInput4  int16 // SUE UDB PWM Trim Value on Input 4
+	SueTrimValueInput5  int16 // SUE UDB PWM Trim Value on Input 5
+	SueTrimValueInput6  int16 // SUE UDB PWM Trim Value on Input 6
+	SueTrimValueInput7  int16 // SUE UDB PWM Trim Value on Input 7
+	SueTrimValueInput8  int16 // SUE UDB PWM Trim Value on Input 8
+	SueTrimValueInput9  int16 // SUE UDB PWM Trim Value on Input 9
+	SueTrimValueInput10 int16 // SUE UDB PWM Trim Value on Input 10
+	SueTrimValueInput11 int16 // SUE UDB PWM Trim Value on Input 11
+	SueTrimValueInput12 int16 // SUE UDB PWM Trim Value on Input 12
+	SueNumberOfInputs   uint8 // SUE Number of Input Channels
+}
+
+func (self *SerialUdbExtraF20) MsgID() uint8 {
+	return 186
+}
+
+func (self *SerialUdbExtraF20) MsgName() string {
+	return "SerialUdbExtraF20"
+}
+
+func (self *SerialUdbExtraF20) Pack(p *Packet) error {
+	payload := make([]byte, 25)
+	binary.LittleEndian.PutUint16(payload[0:], uint16(self.SueTrimValueInput1))
+	binary.LittleEndian.PutUint16(payload[2:], uint16(self.SueTrimValueInput2))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.SueTrimValueInput3))
+	binary.LittleEndian.PutUint16(payload[6:], uint16(self.SueTrimValueInput4))
+	binary.LittleEndian.PutUint16(payload[8:], uint16(self.SueTrimValueInput5))
+	binary.LittleEndian.PutUint16(payload[10:], uint16(self.SueTrimValueInput6))
+	binary.LittleEndian.PutUint16(payload[12:], uint16(self.SueTrimValueInput7))
+	binary.LittleEndian.PutUint16(payload[14:], uint16(self.SueTrimValueInput8))
+	binary.LittleEndian.PutUint16(payload[16:], uint16(self.SueTrimValueInput9))
+	binary.LittleEndian.PutUint16(payload[18:], uint16(self.SueTrimValueInput10))
+	binary.LittleEndian.PutUint16(payload[20:], uint16(self.SueTrimValueInput11))
+	binary.LittleEndian.PutUint16(payload[22:], uint16(self.SueTrimValueInput12))
+	payload[24] = byte(self.SueNumberOfInputs)
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *SerialUdbExtraF20) Unpack(p *Packet) error {
+	if len(p.Payload) < 25 {
+		return fmt.Errorf("payload too small")
+	}
+	self.SueTrimValueInput1 = int16(binary.LittleEndian.Uint16(p.Payload[0:]))
+	self.SueTrimValueInput2 = int16(binary.LittleEndian.Uint16(p.Payload[2:]))
+	self.SueTrimValueInput3 = int16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.SueTrimValueInput4 = int16(binary.LittleEndian.Uint16(p.Payload[6:]))
+	self.SueTrimValueInput5 = int16(binary.LittleEndian.Uint16(p.Payload[8:]))
+	self.SueTrimValueInput6 = int16(binary.LittleEndian.Uint16(p.Payload[10:]))
+	self.SueTrimValueInput7 = int16(binary.LittleEndian.Uint16(p.Payload[12:]))
+	self.SueTrimValueInput8 = int16(binary.LittleEndian.Uint16(p.Payload[14:]))
+	self.SueTrimValueInput9 = int16(binary.LittleEndian.Uint16(p.Payload[16:]))
+	self.SueTrimValueInput10 = int16(binary.LittleEndian.Uint16(p.Payload[18:]))
+	self.SueTrimValueInput11 = int16(binary.LittleEndian.Uint16(p.Payload[20:]))
+	self.SueTrimValueInput12 = int16(binary.LittleEndian.Uint16(p.Payload[22:]))
+	self.SueNumberOfInputs = uint8(p.Payload[24])
+	return nil
+}
+
+// Backwards compatible version of SERIAL_UDB_EXTRA F21 format
+type SerialUdbExtraF21 struct {
+	SueAccelXOffset int16 // SUE X accelerometer offset
+	SueAccelYOffset int16 // SUE Y accelerometer offset
+	SueAccelZOffset int16 // SUE Z accelerometer offset
+	SueGyroXOffset  int16 // SUE X gyro offset
+	SueGyroYOffset  int16 // SUE Y gyro offset
+	SueGyroZOffset  int16 // SUE Z gyro offset
+}
+
+func (self *SerialUdbExtraF21) MsgID() uint8 {
+	return 187
+}
+
+func (self *SerialUdbExtraF21) MsgName() string {
+	return "SerialUdbExtraF21"
+}
+
+func (self *SerialUdbExtraF21) Pack(p *Packet) error {
+	payload := make([]byte, 12)
+	binary.LittleEndian.PutUint16(payload[0:], uint16(self.SueAccelXOffset))
+	binary.LittleEndian.PutUint16(payload[2:], uint16(self.SueAccelYOffset))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.SueAccelZOffset))
+	binary.LittleEndian.PutUint16(payload[6:], uint16(self.SueGyroXOffset))
+	binary.LittleEndian.PutUint16(payload[8:], uint16(self.SueGyroYOffset))
+	binary.LittleEndian.PutUint16(payload[10:], uint16(self.SueGyroZOffset))
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *SerialUdbExtraF21) Unpack(p *Packet) error {
+	if len(p.Payload) < 12 {
+		return fmt.Errorf("payload too small")
+	}
+	self.SueAccelXOffset = int16(binary.LittleEndian.Uint16(p.Payload[0:]))
+	self.SueAccelYOffset = int16(binary.LittleEndian.Uint16(p.Payload[2:]))
+	self.SueAccelZOffset = int16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.SueGyroXOffset = int16(binary.LittleEndian.Uint16(p.Payload[6:]))
+	self.SueGyroYOffset = int16(binary.LittleEndian.Uint16(p.Payload[8:]))
+	self.SueGyroZOffset = int16(binary.LittleEndian.Uint16(p.Payload[10:]))
+	return nil
+}
+
+// Backwards compatible version of SERIAL_UDB_EXTRA F22 format
+type SerialUdbExtraF22 struct {
+	SueAccelXAtCalibration int16 // SUE X accelerometer at calibration time
+	SueAccelYAtCalibration int16 // SUE Y accelerometer at calibration time
+	SueAccelZAtCalibration int16 // SUE Z accelerometer at calibration time
+	SueGyroXAtCalibration  int16 // SUE X gyro at calibration time
+	SueGyroYAtCalibration  int16 // SUE Y gyro at calibration time
+	SueGyroZAtCalibration  int16 // SUE Z gyro at calibration time
+}
+
+func (self *SerialUdbExtraF22) MsgID() uint8 {
+	return 188
+}
+
+func (self *SerialUdbExtraF22) MsgName() string {
+	return "SerialUdbExtraF22"
+}
+
+func (self *SerialUdbExtraF22) Pack(p *Packet) error {
+	payload := make([]byte, 12)
+	binary.LittleEndian.PutUint16(payload[0:], uint16(self.SueAccelXAtCalibration))
+	binary.LittleEndian.PutUint16(payload[2:], uint16(self.SueAccelYAtCalibration))
+	binary.LittleEndian.PutUint16(payload[4:], uint16(self.SueAccelZAtCalibration))
+	binary.LittleEndian.PutUint16(payload[6:], uint16(self.SueGyroXAtCalibration))
+	binary.LittleEndian.PutUint16(payload[8:], uint16(self.SueGyroYAtCalibration))
+	binary.LittleEndian.PutUint16(payload[10:], uint16(self.SueGyroZAtCalibration))
+
+	p.MsgID = self.MsgID()
+	p.Payload = payload
+	return nil
+}
+
+func (self *SerialUdbExtraF22) Unpack(p *Packet) error {
+	if len(p.Payload) < 12 {
+		return fmt.Errorf("payload too small")
+	}
+	self.SueAccelXAtCalibration = int16(binary.LittleEndian.Uint16(p.Payload[0:]))
+	self.SueAccelYAtCalibration = int16(binary.LittleEndian.Uint16(p.Payload[2:]))
+	self.SueAccelZAtCalibration = int16(binary.LittleEndian.Uint16(p.Payload[4:]))
+	self.SueGyroXAtCalibration = int16(binary.LittleEndian.Uint16(p.Payload[6:]))
+	self.SueGyroYAtCalibration = int16(binary.LittleEndian.Uint16(p.Payload[8:]))
+	self.SueGyroZAtCalibration = int16(binary.LittleEndian.Uint16(p.Payload[10:]))
+	return nil
+}
+
 // Message IDs
 const (
 	MSG_ID_FLEXIFUNCTION_SET                 = 150
@@ -1113,6 +1440,12 @@ const (
 	MSG_ID_SERIAL_UDB_EXTRA_F16              = 180
 	MSG_ID_ALTITUDES                         = 181
 	MSG_ID_AIRSPEEDS                         = 182
+	MSG_ID_SERIAL_UDB_EXTRA_F17              = 183
+	MSG_ID_SERIAL_UDB_EXTRA_F18              = 184
+	MSG_ID_SERIAL_UDB_EXTRA_F19              = 185
+	MSG_ID_SERIAL_UDB_EXTRA_F20              = 186
+	MSG_ID_SERIAL_UDB_EXTRA_F21              = 187
+	MSG_ID_SERIAL_UDB_EXTRA_F22              = 188
 )
 
 // DialectMatrixpilot is the dialect represented by matrixpilot.xml
@@ -1127,10 +1460,10 @@ var DialectMatrixpilot *Dialect = &Dialect{
 		156: 218, // MSG_ID_FLEXIFUNCTION_DIRECTORY_ACK
 		157: 133, // MSG_ID_FLEXIFUNCTION_COMMAND
 		158: 208, // MSG_ID_FLEXIFUNCTION_COMMAND_ACK
-		170: 150, // MSG_ID_SERIAL_UDB_EXTRA_F2_A
-		171: 169, // MSG_ID_SERIAL_UDB_EXTRA_F2_B
+		170: 103, // MSG_ID_SERIAL_UDB_EXTRA_F2_A
+		171: 245, // MSG_ID_SERIAL_UDB_EXTRA_F2_B
 		172: 191, // MSG_ID_SERIAL_UDB_EXTRA_F4
-		173: 121, // MSG_ID_SERIAL_UDB_EXTRA_F5
+		173: 54,  // MSG_ID_SERIAL_UDB_EXTRA_F5
 		174: 54,  // MSG_ID_SERIAL_UDB_EXTRA_F6
 		175: 171, // MSG_ID_SERIAL_UDB_EXTRA_F7
 		176: 142, // MSG_ID_SERIAL_UDB_EXTRA_F8
@@ -1140,5 +1473,11 @@ var DialectMatrixpilot *Dialect = &Dialect{
 		180: 222, // MSG_ID_SERIAL_UDB_EXTRA_F16
 		181: 55,  // MSG_ID_ALTITUDES
 		182: 154, // MSG_ID_AIRSPEEDS
+		183: 175, // MSG_ID_SERIAL_UDB_EXTRA_F17
+		184: 41,  // MSG_ID_SERIAL_UDB_EXTRA_F18
+		185: 87,  // MSG_ID_SERIAL_UDB_EXTRA_F19
+		186: 144, // MSG_ID_SERIAL_UDB_EXTRA_F20
+		187: 134, // MSG_ID_SERIAL_UDB_EXTRA_F21
+		188: 91,  // MSG_ID_SERIAL_UDB_EXTRA_F22
 	},
 }
