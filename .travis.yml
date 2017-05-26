@@ -9,5 +9,5 @@ go:
 # run mavgen on the mavlink package, and run tests
 
 script:
-  - go generate github.com/liamstask/go-mavlink/mavlink
+  - go generate github.com/cnord/go-mavlink/mavlink
   - go test -v ./...
